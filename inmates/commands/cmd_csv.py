@@ -1,6 +1,7 @@
 import click
 import inmates
 
+from csv import DictReader
 from os.path import dirname
 
 from ..cli import pass_environment
@@ -10,5 +11,8 @@ from ..cli import pass_environment
 @pass_environment
 def cli(ctx):
     """Extracts infromation from inmates.csv"""
-    pass
-
+    with open('inmates.csv') as csvfile:
+        print(csvfile)
+        reader = DictReader(csvfile)
+        for row in reader:
+            print(dict(row))
