@@ -16,6 +16,12 @@ class Environment(object):
         self.home = os.getcwd()
 
     def log(self, msg, *args):
+        """Logs a message to stdout."""
+        if args:
+            msg %= args
+        click.echo(msg, file=sys.stdout)
+
+    def error(self, msg, *args):
         """Logs a message to stderr."""
         if args:
             msg %= args
@@ -55,4 +61,5 @@ class CommandAdapter(click.MultiCommand):
 @click.option('-v', '--verbose', is_flag=True, help='Enables verbose mode.')
 @pass_environment
 def cli(ctx, verbose):
+    """a tool for collating inmate rosters."""
     pass
