@@ -11,7 +11,8 @@ setup(
     url='',
     include_package_data=True,
     install_requires=[
-        'click==7.0'
+        'click==7.0',
+        'httpx==0.11.1'
     ],
     entry_points="""
         [console_scripts]
