@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="generator" content="New World Systems http://www.newworldsystems.com" />
+	<meta name="viewport" content="width=device-width" />
+	<title>Inmate Search</title>
+	<link type="text/css" rel="stylesheet" href="/NewWorld.InmateInquiry/Content/jquery-ui-1.8.7.custom.css" />
+	<link type="text/css" rel="stylesheet" href="/NewWorld.InmateInquiry/Content/Site.css" />
+	<link type="text/css" rel="stylesheet" href="/NewWorld.InmateInquiry/IL0460000/Inmate/Css" />
+	<script type="text/javascript" src="/NewWorld.InmateInquiry/Content/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="/NewWorld.InmateInquiry/Content/jquery-ui-1.8.7.custom.datepicker.min.js"></script>
+	<script type="text/javascript" src="/NewWorld.InmateInquiry/Content/InmateInquiry.js"></script>
+</head>
+<body id="View_IL0460000">
+	<div id="SiteContainer">
+		<input type="hidden" id="Base" value="/NewWorld.InmateInquiry/" />
+		<div class="Header">
+			<h1>Inmate Inquiry</h1>
+		</div>
+		<div class="Article" id="Inmate_Index">
+			
+<h1>Inmate Search</h1>
+<div class="Search">
+<form action="/NewWorld.InmateInquiry/IL0460000" method="get">		<div>
+			<ul>
+				<li class="Name">
+					<label for="uxName">Name</label>
+					<input id="uxName" type="text" name="Name" />
+				</li>
+				<li class="SubjectNumber">
+					<label for="uxSubjectNumber">Subject Number</label>
+					<input id="uxSubjectNumber" type="text" name="SubjectNumber" />
+				</li>
+				<li class="BookingNumber">
+					<label for="uxBookingNumber">Booking Number</label>
+					<input id="uxBookingNumber" type="text" name="BookingNumber" />
+				</li>
+				<li class="InCustody">
+					<label for="uxInCustody">In Custody</label>
+					<input id="uxInCustody" type="checkbox" name="InCustody" value="True"  title="Currently jailed only" />
+				</li>
+				<li class="FromDate">
+					<label for="uxBookingFromDate">Booking From Date</label>
+					<input id="uxBookingFromDate" type="text" class="Date" name="BookingFromDate" value="02/25/2020" />
+				</li>
+				<li class="ToDate">
+					<label for="uxBookingToDate">Booking To Date</label>
+					<input id="uxBookingToDate" type="text" class="Date" name="BookingToDate" value="02/26/2020" />
+				</li>
+				<li class="Facility">
+					<label for="uxFacility">Housing Facility</label>
+					<select id="uxFacility" class="Facility" name="Facility">
+						<option></option>
+						<option value="Jerome Combs Detention Center" >Jerome Combs Detention Center</option>
+						<option value="Kankakee County Detention Center" >Kankakee County Detention Center</option>
+					</select>
+				</li>
+
+			</ul>
+			<div class="SearchButtons">
+				<input type="submit" value="Search" />
+				<input type="submit" name="Clear" value="Clear" />
+			</div>
+		</div>
+</form></div>
+	<div class="Results">
+		<div class="Grid">
+<table border="1">
+<thead>
+<tr>
+<th class="Name">Name</th>
+<th class="SubjectNumber">Subject Number</th>
+<th class="InCustody">In Custody</th>
+<th class="ScheduledReleaseDate">Scheduled Release Date</th>
+<th class="Race">Race</th>
+<th class="Gender">Gender</th>
+<th class="DateOfBirth">Date of Birth</th>
+<th class="Height">Height</th>
+<th class="Weight">Weight</th>
+<th class="MultipleBookings">Multiple Bookings</th>
+<th class="HousingFacility">Housing Facility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="Name"><a href="/NewWorld.InmateInquiry/IL0460000/Inmate/Detail/-4336">Bennett, William T</a></td>
+<td class="SubjectNumber">203455</td>
+<td class="InCustody">Yes</td>
+<td class="ScheduledReleaseDate"></td>
+<td class="Race">White</td>
+<td class="Gender">Male</td>
+<td class="DateOfBirth">03/25/1969</td>
+<td class="Height">5&#39; 4&quot;</td>
+<td class="Weight">245.0 lbs</td>
+<td class="MultipleBookings"></td>
+<td class="HousingFacility">Jerome Combs Detention Center</td>
+</tr>
+<tr>
+<td class="Name"><a href="/NewWorld.InmateInquiry/IL0460000/Inmate/Detail/-3853">Hutchins, Daniel J</a></td>
+<td class="SubjectNumber">202984</td>
+<td class="InCustody">Yes</td>
+<td class="ScheduledReleaseDate">4/20/2020 8:00 PM</td>
+<td class="Race">Black</td>
+<td class="Gender">Male</td>
+<td class="DateOfBirth">03/17/1983</td>
+<td class="Height">6&#39; 0&quot;</td>
+<td class="Weight">195.0 lbs</td>
+<td class="MultipleBookings"></td>
+<td class="HousingFacility">Kankakee County Detention Center</td>
+</tr>
+<tr>
+<td class="Name"><a href="/NewWorld.InmateInquiry/IL0460000/Inmate/Detail/-527456">REEVES, SAMANTHA JO</a></td>
+<td class="SubjectNumber">474753</td>
+<td class="InCustody">Yes</td>
+<td class="ScheduledReleaseDate"></td>
+<td class="Race">White</td>
+<td class="Gender">Female</td>
+<td class="DateOfBirth">02/05/1988</td>
+<td class="Height">5&#39; 7&quot;</td>
+<td class="Weight">190.0 lbs</td>
+<td class="MultipleBookings"></td>
+<td class="HousingFacility">Jerome Combs Detention Center</td>
+</tr>
+<tr>
+<td class="Name"><a href="/NewWorld.InmateInquiry/IL0460000/Inmate/Detail/-46167">Wilbanks, Richard D</a></td>
+<td class="SubjectNumber">220959</td>
+<td class="InCustody">Yes</td>
+<td class="ScheduledReleaseDate">3/1/2020 7:30 PM</td>
+<td class="Race">White</td>
+<td class="Gender">Male</td>
+<td class="DateOfBirth">08/08/1971</td>
+<td class="Height">5&#39; 7&quot;</td>
+<td class="Weight">185.0 lbs</td>
+<td class="MultipleBookings"></td>
+<td class="HousingFacility">Kankakee County Detention Center</td>
+</tr>
+<tr>
+<td class="Name"><a href="/NewWorld.InmateInquiry/IL0460000/Inmate/Detail/-696656">Wilson, Wyatt R</a></td>
+<td class="SubjectNumber">507054</td>
+<td class="InCustody">Yes</td>
+<td class="ScheduledReleaseDate"></td>
+<td class="Race">White</td>
+<td class="Gender">Male</td>
+<td class="DateOfBirth">05/21/1995</td>
+<td class="Height">5&#39; 10&quot;</td>
+<td class="Weight">180.0 lbs</td>
+<td class="MultipleBookings"></td>
+<td class="HousingFacility">Jerome Combs Detention Center</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+	</div>
+<div class="ContentEnd"></div>
+		</div>
+		<div class="Footer">
+			Copyright &#169; Tyler Technologies
+		</div>
+	</div>
+</body>
+</html>

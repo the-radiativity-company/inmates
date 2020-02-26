@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+<!--Google Analytics-->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-36379918-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-36379918-1');
+</script>
+<!--End Google Analytics-->
+		<title>Confined Inmates</title>
+        <LINK REL="SHORTCUT ICON" HREF="images/favicon.ico">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,600|Source+Code+Pro" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+		<!--[if lte IE 8]><script src="js/html5shiv.js" type="text/javascript"></script><![endif]-->
+		<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery.dropotron.min.js" type="text/javascript"></script>		
+		<script src="js/skel.min.js" type="text/javascript">
+		{
+			prefix: 'css/style',
+			preloadStyleSheets: true,
+			resetCSS: true,
+			boxModel: 'border',
+			grid: { gutters: 30 },
+			breakpoints: {
+				wide: { range: '1200-', containers: 1350, grid: { gutters: 50 } },
+				narrow: { range: '481-1199', containers: 960 },
+				mobile: { range: '-480', containers: 'fluid', lockViewport: true, grid: { collapse: true } }
+			}
+		}
+		</script>
+		<script>
+			$(function() {
+
+				// Note: make sure you call dropotron on the top level <ul>
+				$('#main-nav > ul').dropotron({ 
+					offsetY: -10 // Nudge up submenus by 10px to account for padding
+				});
+
+			});
+		</script>
+		<script>
+			// DOM ready
+			$(function() {
+    
+			// Create the dropdown base
+			$("<select />").appendTo("nav");
+   
+			// Create default option "Go to..."
+			$("<option />", {
+				"selected": "selected",
+				"value"   : "",
+				"text"    : "Menu"
+			}).appendTo("nav select");
+   
+			// Populate dropdown with menu items
+			$("nav a").each(function() {
+			var el = $(this);
+			$("<option />", {
+				"value"   : el.attr("href"),
+				"text"    : el.text()
+			}).appendTo("nav select");
+			});
+   
+			// To make dropdown actually work
+			// To make more unobtrusive: http://css-tricks.com/4064-unobtrusive-page-changer/
+			$("nav select").change(function() {
+				window.location = $(this).find("option:selected").val();
+			});
+  
+			});
+		</script>	
+	</head>
+	<body>
+		<div id="header_container">		
+		    <div class="container">
+			<!-- Header -->
+				<div id="header" class="row">
+					<div class="4u">
+						<div class="wrapper">
+							<h1><a href="index.html">Coles County Sheriff's Office</a></h1>
+							<h2>701 7th St<br>Charleston, IL 61920</h2>
+					    </div>
+					</div>
+					
+					<nav id="main-nav" class="8u">
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li><a href="#">Departments</a>
+                            	<ul>
+                                	<li><a href="civilProcess.html#civilProcess">Civil Process</a></li>
+                                    <li><a href="corrections.html#corrections">Corrections</a>
+                                    	<ul>
+                                            <li><a href="mail.html#mail">Mail Regulations</a></li>
+                                            <li><a href="bond.html#bond">Posting Bond</a></li>
+                                            <li><a href="visitation.html#visitation">Visitation</a></li>
+                                            <li><a href="Jail Rules  Regulations.pdf" target="_blank">Inmate Rules</a></li>
+                                            <li><a href="documentation/InmateProductMenuLetter.pdf" target="_blank">Commissary List</a></li>
+                                        </ul>
+                                    </li>
+                                    <!--<li><a href="tour.html#tour">Jail Tours</a></li>-->
+                                    <!--<li><a href="warrants.html#warrants">Warrants</a></li>-->
+                                </ul>
+                            </li>
+							<li><a class="active" href="#">Reports &amp; Documents</a>
+								<ul>
+                                	<li><a href="reports.html#reports">Annual Reports</a></li>
+                                    <li><a href="inmates.html#inmates">Confined Inmates</a>
+                                    	<ul>
+                                        	<li><a href="https://www.co.coles.il.us/sheriff/Web_Files/Confined_Inmates.pdf" target="_blank">Currently Confined</a></li>
+                                        	<li><a href="https://www.co.coles.il.us/Sheriff/Web_Files/Recently%20Confined%20Inmates.pdf" target="_blank">Recently Confined</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="employment.html#employment">Employment Opportunities</a></li>
+                                    <li><a href="CCSO Employment Application.pdf" target="_blank">Employment Application</a></li>
+									<li><a href="Jail_Inspection.pdf" target="_blank">Jail Inspection</a></li>
+                                    <li><a href="mission.html#mission">Mission Statement</a></li>
+								</ul>
+							</li>
+							<li><a href="#">Victim Notification</a>
+                            	<ul>
+                                	<li><a href="http://www.ice.gov/victim-notification/" target="_blank">Immigration Victim Notification</a></li>
+                                	<li><a href="http://www.sheriffalerts.com/cap_main.php?office=54912" target="_blank">Offender Watch (Track Sex Offenders)</a></li>
+                                </ul>
+                            </li>
+							<li><a href="#">Related Links</a>
+                            	<ul>
+                                	<li><a href="http://www.charlestonillinois.org/index.asp?Type=B_BASIC&SEC=%7BA9F70091-E0BF-47E5-BFFD-BD58956194EF%7D" target="_blank">Charleston Police Department</a></li>
+                                    <li><a href="http://mattoon.illinois.gov/index.php?option=com_content&view=article&id=815&Itemid=307" target="_blank">Mattoon Police Department</a></li>
+                                    <li><a href="http://wrc.gettingaroundillinois.com/pages/wrc.htm" target="_blank">Illinois Road Conditions</a></li>
+                                </ul>
+                            </li>							
+							<li><a href="topTen.php#topTen">Top Ten List</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>	
+			
+		    <div class="container">						
+				<div class="12u">
+					<div id="wrapper-banner">						
+						<!-- Banner -->								
+						<!--<div id="banner">-->
+                        <div align="center">
+							<img id="CCSO" src="images/CCSO2015.png" width="75%" alt="CCSO 2015" style="position:relative; left:275px; bottom:100px;"  />
+                        </div>
+						<!--</div>-->	
+					</div>
+				</div>						
+			</div>
+			
+        </div>		
+
+		<div id="site_content">
+			<div class="container">			
+			
+				<!-- Features -->			
+				<div class="row">									
+					
+					<section class="4u">
+						<div id="sidebar">
+							<section class="12u">
+								<h3>Contact Us</h3>
+									<h4>Phone: (217) 348-7332</h4>
+                            </section>
+							<section class="12u">
+								<h3>Useful Links</h3>
+								<ul>
+									
+									<li><a href="topTen.php#topTen">Top Ten List</a></li>
+									<li><a href="https://www.vinelink.com/vinelink/initMap.do" target="_blank">Inmate Status</a></li>
+									<li><a href="http://www.isp.state.il.us/sor/" target="_blank">Illinois Sex Offender Site</a></li>
+                                    <li><a href="http://www.tigerdeposits.com" target="_blank">Online Deposits to Detainees</a></li>
+								</ul>
+							</section>
+							<section class="12u">
+								<h3>More Useful Links</h3>
+								<ul>
+									<li><a href="http://www.colescountycrimestoppers.org/" target="_blank">Coles County CrimeStoppers</a></li>
+									<li><a href="https://www.co.coles.il.us/sheriff/Web_Files/Confined_Inmates.pdf" target="_blank">Current Coles County Detainees</a></li>
+									<li><a href="https://www.co.coles.il.us/Sheriff/Web_Files/Recently%20Confined%20Inmates.pdf" target="_blank">Recently Confined Inmates</a></li>
+									<li><a href="http://www.appriss.com/MobilePatrol.html" target="_blank">VineLink Mobile App</a></li>
+                                    <li><a href="findus.html#find">Find Us</a></li>
+								</ul>
+							</section>
+						</div>
+					</section>
+
+					<section class="8u">				
+						
+						<a name="inmates"></a><h1 align="center">Confined Inmates</h1>
+                        <div align="center">
+                        <table width="50%">
+                        	<tr>
+                            	<td align="center"><a href="https://www.co.coles.il.us/sheriff/Web_Files/Confined_Inmates.pdf" target="_blank"><img src="images/currentlyConfined.png" alt="Currently Confined Inmates" /></a></td>
+                                <td align="center"><a href="https://www.co.coles.il.us/Sheriff/Web_Files/Recently%20Confined%20Inmates.pdf" target="_blank"><img src="images/recentlyConfined.png" alt="Recently Confined Inmates" /></a></td>
+                            </tr>
+                        	<tr>
+                                <td align="center"><a href="https://www.co.coles.il.us/sheriff/Web_Files/Confined_Inmates.pdf" target="_blank">Currently Confined Inmates</a></td>
+                                <td align="center"><a href="https://www.co.coles.il.us/Sheriff/Web_Files/Recently%20Confined%20Inmates.pdf" target="_blank">Recently Confined Inmates</a></td>
+                            </tr>
+                        </table>                        
+                     	</div>				
+					</section>					
+
+				</div>
+			</div>
+        </div>		
+		
+		<div class="container">					
+			<!-- Footer -->
+				<footer>
+					<p><a href="index.html">Home</a> | <a href="https://www.co.coles.il.us/sheriff/Web_Files/Confined_Inmates.pdf" target="_blank">Currently Confined Inmates</a> | <a href="reports.html#reports">Annual Reports</a> </p>
+					<p><i>Copyright 2017 &copy; Coles County</i></p>
+				</footer>		
+		</div>		
+			
+	<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//www.co.coles.il.us/piwik/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 2]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//www.co.coles.il.us/piwik/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+</body>
+</html>
