@@ -1,6 +1,7 @@
 import click
 import concurrent.futures
 import inmates
+import magic
 import urllib.request
 
 from csv import DictReader
@@ -22,12 +23,18 @@ def cli(ctx):
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         call = {executor.submit(GET, rl['link'], timeout=10): rl for rl in roster_links}
         for future in concurrent.futures.as_completed(call):
-            url = call[future]
+            rl = call[future]
             try:
-                data = future.result()
+                response = future.result()
             except Exception as exc:
-                print(f'{url} generated an exception: {exc}')
+                ctx.error(f'generated an exception: {exc}')
             else:
-                print(f'{url} page is {data} bytes')
+                if response.status_code == 200:
+                    ctx.log(f'{rl}')
+                    filetype = magic.from_buffer(response.content[:2048])
+                    filetype_extension = filetype.split(' ')[0].lower()
+                    roster_artifact = rl['county'].rstrip(' County').lower()
+                    with open(f'commissary/{roster_artifact}.{filetype_extension}', 'wb') as binfile:
+                        binfile.write(response.content)
 
     csvfile.close()
