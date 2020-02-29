@@ -33,7 +33,7 @@ uninstall: $(VENV) $(VENV_PYTHON) clean-install
 reinstall: uninstall install
 
 tree:
-	@tree -C $(CURDIR) -I '$(VENV)|__pycache__|*.egg-info|build|dist'
+	@tree -C $(CURDIR) -I '.*|$(VENV)|__pycache__|*.egg-info|build|dist'
 
 clean: clean-install clean-venv clean-pyc
 
