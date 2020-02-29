@@ -33,7 +33,7 @@ def cli(ctx):
                     ctx.log(f'{rl}')
                     filetype = magic.from_buffer(response.content[:2048])
                     filetype_extension = filetype.split(' ')[0].lower()
-                    roster_artifact = rl['county'].rstrip(' County').lower()
+                    roster_artifact = rl['county'].rstrip('County').strip().lower().replace('. ', '-')
                     with open(f'commissary/{roster_artifact}.{filetype_extension}', 'wb') as binfile:
                         binfile.write(response.content)
 
