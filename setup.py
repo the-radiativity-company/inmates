@@ -3,8 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='inmates',
-    version='0.0.1',
     description='a CLI tool for listing inmates',
+    version_format='{tag}.dev{commitcount}+{gitsha}',
+    setup_requires=[
+        'setuptools-git-version'
+    ],
     packages=find_packages(),
     maintainer='Emmanuel I. Obi',
     maintainer_email='withtwoemms@gmail.com',
