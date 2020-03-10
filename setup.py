@@ -17,8 +17,9 @@ setup(
     include_package_data=True,
     install_requires=[
         'click==7.0',
-        'python-magic==0.4.15',
-        'httpx==0.11.1'
+        'flask==1.1.1',
+        'httpx==0.11.1',
+        'python-magic==0.4.15'
     ],
     entry_points="""
         [console_scripts]
