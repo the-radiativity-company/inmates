@@ -1,0 +1,1732 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta charset="utf-8" />
+	<title>Jail Management</title>
+
+	<!--Bootstrap CSS-->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+
+	<!--Custom CSS-->
+	<link rel="stylesheet" type="text/css" href="css/custom.css" />
+	<link rel="stylesheet" type="text/css" href="css/jquery.fancybox.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	<script src="js/jquery-latest.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/ajax.js"></script>
+	<link type="text/css" rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+	<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script type="text/javascript">
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+				(i[r].q = i[r].q || []).push(arguments);
+			}, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-54733907-1', 'auto');
+		ga('send', 'pageview');
+
+	</script>
+
+	<script type="text/javascript">
+		function theRotator() {
+			if ($('#r1-1').is(":visible")) {
+				$('#r1-1').hide(500);
+				$('#r1-2').show(500);
+				$('#r1-3').hide(500);
+			}
+			else if ($('#r1-2').is(":visible")) {
+				$('#r1-1').hide(500);
+				$('#r1-2').hide(500);
+				$('#r1-3').show(500);
+			}
+			else if ($('#r1-3').is(":visible")) {
+				$('#r1-1').show(500);
+				$('#r1-2').hide(500);
+				$('#r1-3').hide(500);
+			}
+			if ($('#r2-1').is(":visible")) {
+				$('#r2-1').hide(500);
+				$('#r2-2').show(500);
+				$('#r2-3').hide(500);
+			}
+			else if ($('#r2-2').is(":visible")) {
+				$('#r2-1').hide(500);
+				$('#r2-2').hide(500);
+				$('#r2-3').show(500);
+			}
+			else if ($('#r2-3').is(":visible")) {
+				$('#r2-1').show(500);
+				$('#r2-2').hide(500);
+				$('#r2-3').hide(500);
+			}
+			if ($('#r3-1').is(":visible")) {
+				$('#r3-1').hide(500);
+				$('#r3-2').show(500);
+				$('#r3-3').hide(500);
+			}
+			else if ($('#r3-2').is(":visible")) {
+				$('#r3-1').hide(500);
+				$('#r3-2').hide(500);
+				$('#r3-3').show(500);
+			}
+			else if ($('#r3-3').is(":visible")) {
+				$('#r3-1').show(500);
+				$('#r3-2').hide(500);
+				$('#r3-3').hide(500);
+			}
+		}
+
+		$(document).ready(function () {
+			$.urlParam = function (name) {
+				var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+				return results[1] || 0;
+			};
+			var facId = $.urlParam('ID');
+			$('#problemLinker').attr("href", "http://www.bluhorse.com/website/problem.html?ID=" + facId);
+			//Load the slideshow
+			var randNum = Math.floor((Math.random() * 3) + 1);
+			$('.rotator div div:nth-child(' + randNum + ')').show();
+			$('.rotator2 div div:nth-child(' + randNum + ')').show();
+			$('.rotator3 div div:nth-child(' + randNum + ')').show();
+			setInterval('theRotator()', 30000);
+			loadAds(facId);
+		});
+
+		function loadAds(facId) {
+			var constants = {
+				'AdHostURL': 'http://bluhorse.com/adds/',
+			};
+			DoAjax("InmateService.svc/GetAdds?Facility=" + facId, null, "GET", function (data) {
+				var result = data.GetAddsResult;
+
+				//Populate the Left Side
+				//First rotation
+				if (result.Add1 !== "") {
+					$("#r1-1").append("<a href='" + result.Url1 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add1 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add2 !== "") {
+					$("#r1-1").append("<a href='" + result.Url2 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add2 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add3 !== "") {
+					$("#r1-1").append("<a href='" + result.Url3 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add3 + "' width='auto height='auto;'/></a>");
+				}
+				//Second rotation
+				if (result.Add10 !== "") {
+					$("#r1-2").append("<a href='" + result.Url10 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add10 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add11 !== "") {
+					$("#r1-2").append("<a href='" + result.Url11 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add11 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add12 !== "") {
+					$("#r1-2").append("<a href='" + result.Url12 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add12 + "' width='auto height='auto;'/></a>");
+				}
+				//Third rotation
+				if (result.Add19 !== "") {
+					$("#r1-3").append("<a href='" + result.Url19 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add19 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add20 !== "") {
+					$("#r1-3").append("<a href='" + result.Url20 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add20 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add21 !== "") {
+					$("#r1-3").append("<a href='" + result.Url21 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add21 + "' width='auto height='auto;'/></a>");
+				}
+
+				//Populate the Right Side
+				//First rotation
+				if (result.Add9 !== "") {
+					$("#r2-1").append("<a href='" + result.Url9 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add9 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add8 !== "") {
+					$("#r2-1").append("<a href='" + result.Url8 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add8 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add7 !== "") {
+					$("#r2-1").append("<a href='" + result.Url7 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add7 + "' width='auto height='auto;'/></a>");
+				}
+				//Second rotation
+				if (result.Add18 !== "") {
+					$("#r2-2").append("<a href='" + result.Url18 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add18 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add17 !== "") {
+					$("#r2-2").append("<a href='" + result.Url17 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add17 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add16 !== "") {
+					$("#r2-2").append("<a href='" + result.Url16 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add16 + "' width='auto height='auto;'/></a>");
+				}
+				//Third rotation
+				if (result.Add27 !== "") {
+					$("#r2-3").append("<a href='" + result.Url27 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add27 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add26 !== "") {
+					$("#r2-3").append("<a href='" + result.Url26 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add26 + "' width='auto height='auto;'/></a><br />");
+				}
+				if (result.Add25 !== "") {
+					$("#r2-3").append("<a href='" + result.Url25 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add25 + "' width='auto height='auto;'/></a>");
+				}
+
+				//Populate the Bottom
+				//First rotation
+				if (result.Add4 !== "") {
+					$("#r3-1").append("<a href='" + result.Url4 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add4 + "' width='auto height='auto;'/></a>");
+				}
+				if (result.Add5 !== "") {
+					$("#r3-1").append("<a href='" + result.Url5 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add5 + "' width='auto height='auto;'/></a>");
+				}
+				if (result.Add6 !== "") {
+					$("#r3-1").append("<a href='" + result.Url6 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add6 + "' width='auto height='auto;'/></a>");
+				}
+				//Second rotation
+				if (result.Add13 !== "") {
+					$("#r3-2").append("<a href='" + result.Url13 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add13 + "' width='auto height='auto;'/></a>");
+				}
+				if (result.Add14 !== "") {
+					$("#r3-2").append("<a href='" + result.Url14 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add14 + "' width='auto height='auto;'/></a>");
+				}
+				if (result.Add15 !== "") {
+					$("#r3-2").append("<a href='" + result.Url15 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add15 + "' width='auto height='auto;'/></a>");
+				}
+				//Third rotation
+				if (result.Add22 !== "") {
+					$("#r3-3").append("<a href='" + result.Url22 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add22 + "' width='auto height='auto;'/></a>");
+				}
+				if (result.Add23 !== "") {
+					$("#r3-3").append("<a href='" + result.Url23 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add23 + "' width='auto height='auto;'/></a>");
+				}
+				if (result.Add24 !== "") {
+					$("#r3-3").append("<a href='" + result.Url24 + "' target='_blank'><img src='" + constants.AdHostURL + jail + "/" + result.Add24 + "' width='auto height='auto;'/></a>");
+				}
+
+			}, function (error) { });
+
+		};
+
+
+	</script>
+
+	<style type="text/css">
+		/* rotator in-page placement */
+		div.rotator {
+			height: 100px;
+			margin-left: 0;
+		}
+			/* rotator css */
+			div.rotator div div {
+				float: left;
+				position: absolute;
+				list-style: none;
+				display: none;
+			}
+
+		div.rotator2 {
+			height: 100px;
+			margin-left: 0;
+		}
+			/* rotator css */
+			div.rotator2 div div {
+				float: left;
+				position: absolute;
+				list-style: none;
+				display: none;
+			}
+
+		div.rotator3 {
+			height: 100px;
+			margin-left: 0;
+		}
+			/* rotator css */
+			div.rotator3 div div {
+				float: left;
+				position: absolute;
+				list-style: none;
+				display: none;
+			}
+	</style>
+	<style type="text/css">
+		.ui-widget-header {
+			height: 33px;
+			padding: 0px;
+			border-radius: 0px;
+			background: url(img/strip-line.jpg) repeat-x;
+		}
+
+		.fancybox-margin {
+			margin: 0 !important;
+		}
+	</style>
+
+<script type="text/javascript">
+	var myFacilityName;
+	var PastInmatesPublic;
+	var WebFields;
+	var key;
+	var ans;
+	var jail;
+
+
+
+	//8-19-15 Jonathan D
+	//jail grabs the id of jail to switch
+	jail = location.search.split('ID=')[1];
+
+	//9-23-15 Ben DeBoer
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+		window.location.replace("tab.aspx?ID=" + jail);
+	}
+
+	//10-23-15 Lucas
+	//Redirects to an informational page if Grayson County is selected
+	if (jail == "GCDC") {
+		window.location.replace("Info.aspx");
+	}
+
+
+	function secure(control) {
+		$(control).css("color", "gray");
+		$(control).css("cursor", "none");
+
+		$(control).bind("click", function (event) {
+			event.preventDefault();
+
+		});
+		$(control).unbind("click", ClickeOnSecure);
+	}
+
+	function unsecure(control) {
+		$(control).css("color", "White");
+		$(control).css("cursor", "pointer");
+
+		$(control).bind("click", ClickeOnSecure);
+	}
+	$(document).ready(function () {
+
+		$(".mainClikable").click(function () {
+
+			$(".mainClikable").each(function (index, value) {
+
+				if ($(value).hasClass("secure")) {
+					if (isLogin) {
+						$(value).css("color", "white");
+					} else {
+						$(value).css("color", "gray");
+					}
+				} else {
+
+					$(value).css("color", "white");
+				}
+			});
+
+
+			if ($(this).hasClass("secure")) {
+				if (isLogin) {
+					$(this).css("color", "yellow");
+				} else {
+					$(this).css("color", "gray");
+				}
+			} else {
+				$(this).css("color", "yellow");
+			}
+
+
+
+		});
+
+		$(".tabClikable").click(function () {
+
+			$(".tabClikable").each(function (index, value) {
+
+				if ($(value).hasClass("secure")) {
+					if (isLogin) {
+						$(value).css("color", "white");
+					} else {
+						$(value).css("color", "gray");
+					}
+				} else {
+
+					$(value).css("color", "white");
+				}
+			});
+
+
+			if ($(this).hasClass("secure")) {
+				if (isLogin) {
+					$(this).css("color", "yellow");
+				} else {
+					$(this).css("color", "gray");
+				}
+			} else {
+				$(this).css("color", "yellow");
+			}
+
+
+
+		});
+		$(".leftTabClikable").click(function () {
+
+			$(".leftTabClikable").each(function (index, value) {
+
+				if ($(value).hasClass("secure")) {
+					if (isLogin) {
+						$(value).css("color", "white");
+					} else {
+						$(value).css("color", "gray");
+					}
+				} else {
+
+					$(value).css("color", "white");
+				}
+			});
+
+
+			if ($(this).hasClass("secure")) {
+				if (isLogin) {
+					$(this).css("color", "yellow");
+				} else {
+					$(this).css("color", "gray");
+				}
+			} else {
+				$(this).css("color", "yellow");
+			}
+
+
+
+		});
+		$(".default").click();
+		$(".secure").css("color", "gray");
+		$(".secure").css("cursor", "none");
+
+		$(".secure").bind("click", function (event) {
+			event.preventDefault();
+
+		});
+		$("#btnPSearch").click(function (e) {
+			ClearData();
+			event.preventDefault();
+			GetPastInmate();
+
+		});
+
+		$("#btnPClear").click(function (e) {
+			event.preventDefault();
+			$("#txtPFirstName").val("");
+			$("#txtPLastName").val("");
+			$("#txtPPermId").val("");
+			$("#txtPStateId").val("");
+			$("#txtPStartDate").val("");
+			$("#txtPEndDate").val("");
+			$("#lstPastInmate li").remove();
+			ClearData();
+
+		});
+		$("#txtPStartDate").datepicker();
+		$("#txtPEndDate").datepicker();
+		$("#txtPStartDate").datepicker("option", "dateFormat", "mm/dd/yy");
+		$("#txtPEndDate").datepicker("option", "dateFormat", "mm/dd/yy");
+		$("#btnOK").click(function (e) {
+			e.preventDefault();
+
+			Login();
+
+		});
+		$("#btnCancel").click(function (e) {
+			e.preventDefault();
+			ClearCredentials();
+			$.fancybox.close();
+			//$("#MyCart").dialog('close');
+		});
+
+
+
+		//$("#btnLogin").click(function () {
+		//    ClearData();
+		//    ClearCredentials();
+		//    if (!isLogin) {
+
+
+		//    } else {
+		//        isLogin = false;
+		//        $("#btnLogin span").text("Agency Login");
+		//        $("#spnUserName").text("NOT LOGGED IN");
+		//        secure(".incinfo");
+		//        secure(".inminfo");
+		//        secure(".court");
+		//        secure(".report");
+		//        secure(".Commissary");
+		//        secure(".inimate");
+		//        $(".default").click();
+
+
+		//    }
+
+
+
+		//});
+
+		DoAjax("InmateService.svc/GeneratePassKey", null, "GET", function (data) {
+			var result = data.GeneratePassKeyResult;
+			var keyAns = result.split("|||");
+			key = keyAns[0];
+			ans = keyAns[1];
+
+			DoAjax("InmateService.svc/GetInmates2?Jail=" + jail + "&key=" + key + "&ans=" + ans, null, "GET", function (data) {
+				var result = data.GetInmates2Result;
+				$.each(result, function (index, value) {
+
+					$("#inmateList").append("<li fname='" + value.FName + "' lname='" + value.LName + "' id=\"" + value.BookNo + "\">" + value.FullName + "</li>");
+
+
+				});
+
+				$("#inmateList").find('li').each(function (index, value) {
+
+					$(value).click(function () {
+
+						LoadInmate(this.id);
+
+						LoadCharges(this.id);
+						LoadDetainers(this.id);
+						LoadBond(this.id);
+						LoadArrestInfo(this.id);
+						LoadImage(this.id);
+						LoadCourt(this.id);
+
+					});
+
+				});
+
+			}, function (error) { });
+			DoAjax("InmateService.svc/GetJailInfo1?Jail=" + jail + "&key=" + key + "&Answer=" + ans, null, "GET", function (data) {
+				var result = data.GetJailInfo1Result;
+				PastInmatesPublic = result.PastInmatesPublic;
+				WebFields = result.WebFields;
+				SetSecurity();
+				$("#lblFacilityName").text(result.Name);
+				document.title = "Current Inmates - " + toTitleCase(result.Name);
+				//if (document.title == "Current Inmates - Keogh-dwyer Correctional Institute") { document.title = "Current Inmates - Keogh-Dwyer Correctional Institute" };
+				//displayNextImage();
+			}, function (error) {
+
+			});
+
+		}, function (error) { });
+	});
+
+	function toTitleCase(str) {
+		return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+	}
+
+
+	function GetPastInmate() {
+
+		DoAjax("InmateService.svc/GetPastInmates?Jail=" + jail + "&StateID=" + $("#txtPStateId").val().trim() + "&PermID=" + $("#txtPPermId").val().trim() + "&LName=" + $("#txtPLastName").val().trim() + "&FName=" + $("#txtPFirstName").val().trim() + "&BegDate=" + $("#txtPStartDate").val().trim() + "&EndDate=" + $("#txtPEndDate").val().trim() + "&key=" + key + "&answer=" + ans, null, "GET", function (data) {
+			var result = data.GetPastInmatesResult;
+			$("#lstPastInmate li").remove();
+			$.each(result, function (index, value) {
+
+				$("#lstPastInmate").append("<li fname='" + value.FName + "' lname='" + value.LName + "' id=\"" + value.BookNo + "\">" + value.FullName + "</li>");
+
+
+			});
+
+			$("#lstPastInmate").find('li').each(function (index, value) {
+
+				$(value).click(function () {
+
+					LoadInmate(this.id);
+					LoadCharges(this.id);
+					LoadDetainers(this.id);
+					LoadBond(this.id);
+					LoadArrestInfo(this.id);
+					LoadImage(this.id);
+					LoadCourt(this.id);
+
+				});
+			});
+
+		}, function (error) { });
+
+	}
+	function ClearData() {
+		$("#lblSex").text('');
+		$("#pUserName").text('');
+		$("#lblSex").text('');
+		$("#lblDOB").text('');
+		$("#lblHeight").text('');
+		$("#lblWeight").text('');
+		$("#lblRace").text('');
+		$("#lblHair").text('');
+		$("#lblNationality").text('');
+		$("#lblEye").text('');
+		$("#lblSkin").text('');
+		$("#lblBuild").text('');
+		$("#tdBookingNo").text('');
+
+		$("#tdCob").text('');
+
+
+		$("#tdFBI").text('');
+		$("#tdAFIS").text('');
+		$("#tdStateId").text('');
+		$("#tdStateAltId").text('');
+		$("#tdKOMS").text('');
+		$("#tdTomis").text('');
+		$("#tdBookDate").text('');
+		$("#tdrelaseDate").text('');
+		$("#tdFarMout").text('');
+		$("#tblCharges tbody").find("tr").remove();
+		$("#imgInmate").attr("src", "img/user.png");
+		$("#tblDetainers tbody").find("tr").remove();
+		$("#tblBonds tbody").find("tr").remove();
+		$(".tab:first").click();
+
+	}
+	function LoadInmate(BookNO) {
+
+	    DoAjax("InmateService.svc/GetInmate?Jail=" + jail + "&bookno=" + BookNO + "&key=" + key + "&answer=" + ans + "&Fields=" + WebFields + "&isLogin=" + isLogin, null, "GET", function (data) {
+	        var result = data.GetInmateResult;
+			window.$("#lblSex").text(result.Sex);
+			window.$("#pUserName").text(result.Fname + " " + result.Lname);
+			window.$("#lblSex").text(result.Sex);
+			window.$("#lblDOB").text(result.BDate);
+			window.$("#lblHeight").text(result.Height + "''");
+			window.$("#lblWeight").text(result.Weight);
+			window.$("#lblRace").text(result.Race);
+			window.$("#lblHair").text(result.Hair);
+			window.$("#lblNationality").text(result.Nationality);
+			window.$("#lblEye").text(result.Eye);
+			window.$("#lblSkin").text(result.Skin);
+			window.$("#lblBuild").text(result.Build);
+			window.$("#tdAddress").text(result.Address);
+			window.$("#tdCity").text(result.City);
+			window.$("#tdState").text(result.State);
+			window.$("#tdZip").text(result.Zip);
+			window.$("#tdPhone").text(result.HPhone);
+			window.$("#tdCitizen").text(result.Citizen);
+
+			if (result.Citizen == '1') {
+				window.$("#tdCitizen").text('True');
+			}
+			else
+			{
+				window.$("#tdCitizen").text("False");
+			}
+
+			if (isLogin) {
+			   LoadBooking(result.JacketNo);
+				window.$("#bookingPrevTable").show();
+				window.$("#bookingPrevious").show();
+				window.$("#bookingPreviousLabel").show();
+				window.$("#mainInfo").css("width", "55%");
+				window.$("#bookingPrevTable").css("width", "45%");
+
+			}
+			else {
+
+				window.$("#mainInfo").css("width", "100%");
+				window.$("#bookingPrevTable").css("width", "0");
+			}
+
+
+
+		}, function (error) { });
+
+	}
+
+	function LoadArrestInfo(BookNO) {
+		//DoAjax("InmateService.svc/GetInmate_Arrest_Info?Jail=" + jail + "&bookno=" + BookNO + "&key=" + key + "&answer=" + ans + "&Fields=" + WebFields, null, "GET", function (data) {
+		DoAjax("InmateService.svc/GetInmate_Arrest_Info?Jail=" + jail + "&bookno=" + BookNO + "&key=" + key + "&answer=" + ans + "&Fields=" + WebFields + "&isLogin=" + isLogin, null, "GET", function (data) {
+			var result = data.GetInmate_Arrest_InfoResult;
+
+			window.$("#tdBookingNo").text(BookNO);
+			window.$("#tdJacketNo").text(result.JacketNo);
+			window.$("#tdCob").text(result.Birthplace);
+			window.$("#tdFBI").text(result.FBINo);
+			window.$("#tdAFIS").text(result.AFISNo);
+			window.$("#tdStateId").text(result.SIDNo);
+			window.$("#tdStateAltId").text(result.StateAltID);
+			window.$("#tdKOMS").text(result.KOMS);
+			window.$("#tdTomis").text(result.TomisNo);
+			window.$("#tdBookDate").text(result.BookDate);
+			window.$("#tdrelaseDate").text(result.RDate);
+			window.$("#tdFarMout").text(result.Farmout);
+			window.$("#tdPOD").text(result.Pod);
+			window.$("#tdCell").text(result.Cell);
+			window.$("#tdBed").text(result.Bed);
+			var i = result.Location.split(" ");
+			if (i.length < 5) return;
+
+			window.$("#tdBuilding").text(i(0));
+			//If Me.lblLocBuilding.Content = "" Then Me.lblLocBuilding.Content = "MAIN"
+			if (window.$("#tdBuilding").text() === "") window.$("#tdBuilding").text("MAIN");
+
+
+		}, function (error) { });
+
+	}
+
+
+	function LoadCharges(bookNo) {
+		DoAjax("InmateService.svc/GetInmateCharges?Jail=" + jail + "&BookNo=" + bookNo + "&Fields=" + WebFields + "&isLogin=" + isLogin, null, "GET", function (data) {
+			var result = data.GetInmateChargesResult;
+
+
+			$("#tblCharges tbody").find("tr").remove();
+			//alert(JSON.stringify(result));
+			$.each(result, function (index, value) {
+				var tr = "<tr><td style='text-align:left'>" + value.Code + "</td><td style='text-align:left'>" + value.Description + "</td><td>" + value.ChargeType + "</td><td>" + value.Disposition + "</td><td>" +  value.CaseNo + "</td><td>" + value.OTN + "</td><td>" + value.OffenseDate + "</td><td></tr>";
+				$("#tblCharges tbody").append(tr);
+			});
+
+
+		}, function (error) { });
+
+	}
+	//JD 9/1/2015 Created to cut of time of date for offense date
+	function trimDate(input) {
+		input = input.substring(0, 10);
+		if (input < '1/2/1900') {
+			input = "";
+		}
+		return input;
+	}
+
+	function stringToDate(date,format,delimiter)
+	{
+		var formatLowerCase=format.toLowerCase();
+		var formatItems=formatLowerCase.split(delimiter);
+		var dateItems=date.split(delimiter);
+		var monthIndex=formatItems.indexOf("mm");
+		var dayIndex=formatItems.indexOf("dd");
+		var yearIndex=formatItems.indexOf("yyyy");
+		var month=parseInt(dateItems[monthIndex]);
+		month-=1;
+		//var formatedDate = dateItems[yearIndex]+"/"+month+"/"+dateItems[dayIndex];
+		var formatedDate = month + "/" + dateItems[dayIndex] + "/" + dateItems[yearIndex];
+		return formatedDate;
+	}
+
+	function parseDate(input) {
+		input = input.split(' ');
+		//var parts = input[0].split('/');
+		// new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+		//alert(parts[0]);
+		//alert(parts[1]);
+		//alert(parts[2]);
+		//return parts[2] + "/" + parts[1] - 1 + "/" + parts[0]; // Note: months are 0-based
+		return input[0];
+	}
+
+	function LoadImage(BookNO) {
+
+		$("#imgInmate").attr("src", "img/user.png");
+		DoAjax("InmateService.svc/GetImageSkt?Jail=" + jail + "&bookNo=" + BookNO + "&isLogin=" + isLogin, null, "GET", function (data) {
+			var result = data.GetImageSktResult;
+			if (result != null)
+				$("#imgInmate").attr("src", "data:image/jpeg;base64," + result);
+			else
+				$("#imgInmate").attr("src", "img/user.png");
+
+
+		}, function (error) { });
+
+	}
+	var isLogin = false;
+	function ClearCredentials() {
+		$("#txtUserName").val('');
+		$("#txtPassword").val('');
+		$("#spnMsg").text("");
+	}
+	function Login() {
+
+		var postData = new Object();
+		postData.UserName = $("#txtUserName").val();
+		postData.Password = $("#txtPassword").val();
+		postData.Facility = jail;
+		var o = new Object();
+		o.Data = postData;
+		DoAjax("InmateService.svc/UserLogin", JSON.stringify(o), "POST", function (data) {
+			var result = data.UserLoginResult;
+			if (result.UserName != null) {
+				ApplySecurity(data.UserLoginResult.SEC1);
+				$(".fancybox").text("Logout");
+				$("#spnUserName").text(result.FullUserName);
+				isLogin = true;
+				$.fancybox.close();
+				$.fancybox.close();
+				ClearCredentials();
+				$(".rotator").css("display", "none");
+				$(".rotator2").css("display", "none");
+				$(".rotator3").css("display", "none");
+			} else {
+				$("#spnMsg").text("Invalid Credentials !");
+
+			}
+
+
+		}, function (error) { });
+
+	}
+
+	function ApplySecurity(sec) {
+		unsecure(".inimate");
+		unsecure(".court");
+		unsecure(".inDetainers");
+		unsecure(".inBonds");
+		unsecure(".incinfo");
+		unsecure(".inminfo");
+
+	}
+
+
+	function LoadDetainers(BookNO) {
+		DoAjax("InmateService.svc/GetInmateHolds?Jail=" + jail + "&BookNo=" + BookNO + "&Fields=" + WebFields + "&isLogin=" + isLogin, null, "GET", function (data) {
+			var result = data.GetInmateHoldsResult;
+			$("#tblDetainers tbody").find("tr").remove();
+
+			$.each(result, function (index, value) {
+				var tr = "<tr></td><td>" + value.Description + "</td><td>" + value.Agency + "</td><td>" + value.BondAmount + "</td><td>" + value.BondMethod + "</td><tr>";
+
+				$("#tblDetainers tbody").append(tr);
+			});
+
+
+		}, function (error) { });
+
+	}
+
+	function LoadBond(BookNO) {
+		DoAjax("InmateService.svc/GetInmateBonds?Jail=" + jail + "&BookNo=" + BookNO + "&Fields=" + WebFields + "&isLogin=" + isLogin, null, "GET", function (data) {
+			var result = data.GetInmateBondsResult;
+			$("#tblBonds tbody").find("tr").remove();
+
+			$.each(result, function (index, value) {
+				//alert(value.BondType);
+				/*
+				var tr = "<tr><td style='width: 25%; text-align: center;'>" + value.Agency + "</td>< td style='width: 25%; text-align: center;'>" + value.BondType + "</td><td style='width: 25%; text-align: center;'>" + value.BondAmount + "</td><td style='width: 25%; text-align: center;'>" + value.BondStatus + "</td></tr>";
+				*/
+				/*
+				var tr = "<tr><td style='text-align:left'>" + value.Agency + "</td>< td>" + value.BondType + "</td><td>" + value.BondAmount + "</td><td>" + value.BondStatus + "</td></tr>";
+				*/
+				var tr = "<tr><td style='text-align:center;'>" + value.Agency + "</td><td style='text-align:center; padding: 2px;'>" + value.BondType + "</td><td style='text-align:center;'>" + value.BondAmount + "</td><td style='text-align:center;'>" + value.BondStatus + "</td></tr>";
+
+				$("#tblBonds tbody").append(tr);
+			});
+
+
+		}, function (error) { });
+
+	}
+
+
+	function LoadCourt(BookNO) {
+		DoAjax("InmateService.svc/GetInmateCourtHistory?Jail=" + jail + "&BookNo=" + BookNO + "&Fields=" + WebFields + "&isLogin=" + isLogin, null, "GET", function (data) {
+			var result = data.GetInmateCourtHistoryResult;
+			$("#Table1 thead").find("tr").remove();
+			var tr1 = "<tr id='courtHolder' style='height: 26px; background: url(img/header-strip.jpg) repeat;'><th style='width: 16%;text-align: center'>Court</th><th style='width: 16%;text-align: center'>Date</th><th style='width: 16%;text-align: center'>Room</th><th style='width: 16%;text-align: center'>Hearing Type</th></tr>";
+			$("#Table1 thead").append(tr1);
+			$.each(result, function (index, value) {
+				var tr = "<tr><td style='width: 16%;text-align: center'>" + value.Court + "</td><td style='width: 16%;text-align: center'>" + value.CourtDate + "</td><td style='width: 16%;text-align: center'>" + value.CourtRoom + "</td><td style='width: 16%;text-align: center'>" + value.HearingType + "</td></tr>";
+
+				$("#Table1 thead").append(tr);
+			});
+		}, function (error) { });
+	}
+
+	function LoadBooking(JacketNo) {
+
+		DoAjax("InmateService.svc/GetAllBookings?Facility=" + jail + "&JacketNo=" + JacketNo, null, "GET", function (data) {
+			var result = data.GetAllBookingsResult;
+			$("#bookingPrevious").find("li").remove();
+			$.each(result, function (index, value) {
+				var li = "<li onclick='doFunctions(this.id)' id=\"" + value.BookNo + "\">" + value.BookDate + "</li>";
+				$("#bookingPrevious").append(li);
+			});
+		}, function (error) { });
+	}
+
+	function doFunctions(id) {
+		LoadInmate(id);
+		LoadCharges(id);
+		LoadDetainers(id);
+		LoadBond(id);
+		LoadArrestInfo(id);
+		LoadImage(id);
+		LoadCourt(id);
+	}
+
+	function ClickeOnSecure(event) {
+		if (this.text.trim() == "Inmate Information" || this.text.trim() == "Incarceration Info" || this.text.trim() == "Court" || this.text.trim() == "Bonds" || this.text.trim() == "Detainers") {
+			// Lucas Bragg -10/7/15 -- appended --- || this.text.trim() == "Bonds" || this.text.trim() == "Detainers" ---
+			DisplayBottomTab(this);
+			return;
+		}
+		if (this.text.trim() == "Past Inmate") {
+			DisplayInmateTab(this);
+			return;
+		}
+
+
+
+
+
+	}
+	function DisplayInmateTab(thisp) {
+		ClearData();
+		$("#PastInmate").css("display", "none");
+		$("#CurrentInmate").css("display", "none");
+		if (thisp.text.trim() == "Inmates") {
+
+			$("#CurrentInmate").css("display", "block");
+		} else if (thisp.text.trim() == "Past Inmate") {
+			$("#PastInmate").css("display", "block");
+
+		}
+	}
+	function DisplayBottomTab(thisp) {
+
+		$("#divCharges").css("display", "none");
+		$("#divDetainers").css("display", "none");
+		$("#divBonds").css("display", "none");
+		$("#divInc").css("display", "none");
+		$("#divCourt").css("display", "none");
+		$("#divInmInfo").css("display", "none");
+		//event.preventDefault();
+		if (thisp.text == "Charges") {
+
+			$("#divCharges").css("display", "block");
+		} else if (thisp.text == "Detainers") {
+			$("#divDetainers").css("display", "block");
+
+		}
+
+		else if (thisp.text == "Bonds") {
+			$("#divBonds").css("display", "block");
+
+		}
+		else if (thisp.text == "Court") {
+			$("#divCourt").css("display", "block");
+
+		}
+		else if (thisp.text == "Inmate Information") {
+			$("#divInmInfo").css("display", "block");
+
+		}
+		else if (thisp.text == "Incarceration Info") {
+			$("#divInc").css("display", "block");
+
+		}
+
+
+	}
+
+	function SetSecurity() {
+		if (PastInmatesPublic === "1") {
+			unsecure(".inimate");
+			$(".inimate").removeClass("secure");
+		}
+		else {
+		}
+
+		if (WebFields.indexOf('1') === -1) {
+
+		}
+		else {
+
+			unsecure(".inDetainers");
+			$(".inDetainers").removeClass("secure").addClass("tab");
+
+		}
+
+		if (WebFields.indexOf('2') === -1) {
+
+		}
+		else {
+
+			unsecure(".inBonds");
+			$(".inBonds").removeClass("secure").addClass("tab");
+		}
+
+		if (WebFields.indexOf('3') === -1) {
+
+		}
+		else {
+
+			unsecure(".incinfo");
+			$(".incinfo").removeClass("secure").addClass("tab");
+		}
+
+		if (WebFields.indexOf('4') === -1) {
+
+		}
+		else {
+			unsecure(".inminfo");
+			$(".inminfo").removeClass("secure").addClass("tab");
+		}
+
+
+		if (WebFields.indexOf('5') === -1) {
+
+		}
+		else {
+
+			unsecure(".court");
+			$(".court").removeClass("secure").addClass("tab");
+		}
+
+	}
+
+	$(document).ready(function () {
+
+		$(".leftTab").click(function (event) {
+			$("#PastInmate").css("display", "none");
+			$("#CurrentInmate").css("display", "none");
+			if (this.text.trim() == "Inmates") {
+
+				$("#CurrentInmate").css("display", "block");
+			} else if (this.text.trim() == "Past Inmate") {
+				$("#PastInmate").css("display", "block");
+
+			}
+
+		});
+		$(".tab").click(function (event) {
+
+			$("#divCharges").css("display", "none");
+			$("#divDetainers").css("display", "none");
+			$("#divBonds").css("display", "none");
+			$("#divInc").css("display", "none");
+			$("#divCourt").css("display", "none");
+			$("#divInmInfo").css("display", "none");
+			event.preventDefault();
+			if (this.text == "Charges") {
+
+				$("#divCharges").css("display", "block");
+			} else if (this.text == "Detainers") {
+				$("#divDetainers").css("display", "block");
+
+			}
+
+			else if (this.text == "Bonds") {
+				$("#divBonds").css("display", "block");
+
+			}
+			else if (this.text == "Court") {
+				$("#divCourt").css("display", "block");
+
+			}
+			else if (this.text == "Inmate Information") {
+				$("#divInmInfo").css("display", "block");
+
+			}
+			else if (this.text == "Incarceration Info") {
+				$("#divInc").css("display", "block");
+
+			}
+
+		});
+
+	});
+
+	$(document).ready(function () {
+
+		$("#fname").keyup(function () {
+			if ($("#fname").val().trim() == "" && $("#lname").val().trim() == "") {
+
+				$('#inmateList li').css("display", "block");
+			}
+			else {
+				$('#inmateList li').css("display", "none");
+				$('#inmateList li[fname*=' + $("#fname").val().toUpperCase() + ']').css("display", "block");
+			}
+		});
+		$("#lname").keyup(function () {
+			if ($("#fname").val().trim() == "" && $("#lname").val().trim() == "") {
+
+				$('#inmateList li').css("display", "block");
+			}
+			else {
+				$('#inmateList li').css("display", "none");
+				$('#inmateList li[lname*=' + $("#lname").val().toUpperCase() + ']').css("display", "block");
+			}
+
+		});
+
+
+	});
+</script>
+</head>
+
+<body  id="body">
+	<div id="desktop">
+		
+		<div class="row " style="background: url(img/content-bg.png) repeat; min-height: 55px; height: 55px; max-height: 55px; margin: 0px; margin-bottom: 20px; width: 100%">
+			<div class="container" style="text-align: right; width: 100%">
+				<div style="text-align: left; float: left; width: 50%">
+					<label style="text-align: left; color: white; font-size: 18px; margin-left: 30%;" id="lblFacilityName">Loading, please wait...</label>
+				</div>
+				<div style="text-align: right; float: right; width: 49%">
+
+					<a class="fancybox btn btn-primary rounded-textbox round-btn" id="btnLogin" href="#inline1" title="Agency Login">Agency Login</a>
+
+					<div id="inline1" style="width: 400px; display: none;">
+                        <div class="fancy-form"></div>
+							<div class="login-form">
+								<input type="text" placeholder="User Name" id="txtUserName" class="form-control rounded-textbox" />
+								<input type="password" placeholder="Password" id="txtPassword" class="form-control rounded-textbox" onkeydown="if (event.keyCode === 13) document.getElementById('btnOK').click();"/>
+								<div class="btn-box">
+
+									<button id="btnOK" class="btn btn-primary rounded-textbox round-btn" type="button" ><span class="img-centered">Ok</span></button>
+
+									<button id="btnCancel" class="btn btn-primary rounded-textbox round-btn" type="button"><span class="img-centered">Cancel</span></button>
+								</div>
+							</div>
+                    </div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row main-container">
+		<!--Left Sidebar ADS column-->
+		<div class="col-lg-2 col-md-2 left-side-ads">
+			<div class="rotator" style="width:131px;height:654px;margin: auto;">
+				<div>
+					<div id="r1-1"></div>
+					<div id="r1-2"></div>
+					<div id="r1-3"></div>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+			<!-- <img src="img/left-add.jpg" class="img-responsive img-centered" /> -->
+		</div>
+		<div class="col-lg-2 col-md-2 left-side-ads responsive-ads">
+		   <!-- <img class="img-centered img-responsive" src="img/footer-add.jpg" />-->
+		</div>
+		<!--left Sidebar ADS column Ends-->
+		<!--Middle Main Content-->
+		<div class="col-lg-8 col-md-8 middle-main-content">
+			<!--Navigation Tab-->
+
+			<nav role="navigation" class="navbar-default">
+  <div class="navbar-header">
+	<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+  </div>
+  <div class="navbar-collapse collapse" style="height: 1px;">
+	<ul class="nav navbar-nav menu-ul breadcrumb">
+	  <li> <a href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a> </li>
+	  <li> <a class="maintab default mainClikable" href="#">Inmates</a> </li>
+	  <!--<li> <a href="#" class="secure maintab report mainClikable">Report</a> </li>
+	  <li> <a href="#" class="secure maintab Commissary mainClikable">Commissary</a> </li>
+	  <li> <a href="#" class="secure maintab Email mainClikable">Email</a> </li>
+	  <li> <a class="maintab mainClikable" href="#">About</a> </li>-->
+	  <p id="spnUserName"  style="text-align: right; margin-right:12px; margin-top: 8px;color:white; padding: 5px;"> NOT LOGGED IN </p>
+	</ul>
+  </div>
+</nav>
+			<p id="P1" class="login" style="text-align: right; margin-right: 12px; margin-top: 8px; color: white; padding: 5px;">NOT LOGGED IN </p>
+			<!--Navigation Ends-->
+
+			<!--left sidebar starts-->
+			<div class="col-lg-3 col-md-3 left-sidebar col-sm-4 col-xs-12">
+				<ul class="breadcrumb" style="height: 33px; padding: 0px; border-radius: 0px; background: url(img/strip-line.jpg) repeat-x;">
+					<li><a class="leftTab default leftTabClikable" href="#">&nbsp;Inmates</a> <span class="divider">&nbsp;</span> </li>
+					<li><a class="secure inimate leftTabClikable" href="#">Past Inmate</a></li>
+                    
+				</ul>
+				<div id="CurrentInmate">
+					<div class="col-lg-12 col-md-12">
+						<input type="text" class="form-control rounded-textbox" id="fname" placeholder="First Name" />
+						<input type="text" class="form-control rounded-textbox" id="lname" placeholder="Last Name" />
+					</div>
+					<br clear="all" />
+					<div class="custom_scrollbar">
+						<ul class="list" id="inmateList">
+						</ul>
+					</div>
+				</div>
+				<div id="PastInmate" style="display: none">
+					<div class="col-lg-12 col-md-12">
+						<table style="width: 100%; height: 170px;">
+							<tr style="font-size: 11px; color: white">
+								<td style="width: 45%">First Name</td>
+								<td style="width: 10%"></td>
+								<td>Last Name</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" class="form-control rounded-textbox" id="txtPFirstName" placeholder="First Name" onkeydown="if (event.keyCode == 13) document.getElementById('btnPSearch').click();" /></td>
+								<td></td>
+								<td>
+									<input type="text" class="form-control rounded-textbox" id="txtPLastName" placeholder="Last Name" onkeydown="if (event.keyCode == 13) document.getElementById('btnPSearch').click();" /></td>
+							</tr>
+							<tr style="font-size: 11px; color: white">
+								<td style="width: 45%;">Perm Id</td>
+								<td></td>
+								<td>StateId</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" class="form-control rounded-textbox" id="txtPPermId" placeholder="Perm Id" onkeydown="if (event.keyCode == 13) document.getElementById('btnPSearch').click();" /></td>
+								<td></td>
+								<td>
+									<input type="text" class="form-control rounded-textbox" id="txtPStateId" placeholder="State Id" onkeydown="if (event.keyCode == 13) document.getElementById('btnPSearch').click();" /></td>
+							</tr>
+							<tr style="font-size: 11px; color: white">
+								<td style="width: 45%;">Start Date</td>
+								<td></td>
+								<td>End Date</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" class="form-control rounded-textbox" id="txtPStartDate" placeholder="Start Date" /></td>
+								<td></td>
+								<td>
+									<input type="text" class="form-control rounded-textbox" id="txtPEndDate" placeholder="End Date" /></td>
+							</tr>
+							<tr style="font-size: 11px; color: white; height: 12px"></tr>
+							<tr>
+								<td>
+									<button id="btnPClear" type="button" class="btn btn-primary rounded-textbox round-btn"><span class="img-centered">Clear</span>&nbsp;&nbsp;</button></td>
+								<td></td>
+								<td>
+									<button id="btnPSearch" type="button" class="btn btn-primary rounded-textbox round-btn"><span class="img-centered">Search</span>&nbsp;&nbsp;<img src="img/search.png" /></button></td>
+							</tr>
+						</table>
+					</div>
+					<br clear="all" />
+					<div class="custom_scrollbar1">
+						<ul class="list" id="lstPastInmate">
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!---left sidebar ends-->
+
+
+			<!--right sidebar starts-->
+			<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 right-sidebar">
+				<!--USER IMG STARTS-->
+				<div class="col-lg-4 col-md-4 col-sm-4" style="padding-left: 2px; padding-right: 0px;">
+					<div class="user-img-block" style="">
+						<img style="height: 220px; width: 240px" id="imgInmate" src="img/user.png" class="img-centered img-responsive" />
+					</div>
+					<div class="user-img-btn" style="" align="center">
+				  <!--      <button type="button" class="btn btn-primary backward img-centered"><</button>
+						<button type="button" class="btn btn-primary forward img-centered">></button> -->
+					</div>
+				</div>
+				<!--USER IMG ENDS-->
+
+				<!--RIGHT SIDE INFORMATION STARTS-->
+
+				<div class="user-info-box">
+					<div class="user-info" style="float: left;width: 65%;">
+						<table id="mainInfo" style="width:100%;float:left;">
+							<tr>
+								<td colspan="2">
+									<p class="user-name" id="pUserName"></p>
+								</td>
+
+							</tr>
+							<tr>
+								<td style="width: 25%">
+									<p class="halfp">Gender</p>
+								</td>
+								<td>
+									<p id="lblSex" class="halfp"></p>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<p class="halfp">DOB</p>
+								</td>
+								<td>
+									<p id="lblDOB" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Height</p>
+								</td>
+								<td>
+									<p id="lblHeight" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Weight</p>
+								</td>
+								<td>
+									<p id="lblWeight" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Race</p>
+								</td>
+								<td>
+									<p id="lblRace" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Hair Color</p>
+								</td>
+								<td>
+									<p id="lblHair" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Eye Color</p>
+								</td>
+								<td>
+									<p id="lblEye" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Skin Tone</p>
+								</td>
+								<td>
+									<p id="lblSkin" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Build</p>
+								</td>
+								<td>
+									<p id="lblBuild" class="halfp"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p class="halfp">Nationality</p>
+								</td>
+								<td>
+									<p id="lblNationality" class="halfp"></p>
+								</td>
+							</tr>
+
+						</table>
+						<table id="bookingPrevTable" style="float:left;display:none;">
+							<tr>
+								<td>
+									<p class="user-name"></p>
+								</td>
+							</tr>
+							<tr>
+								<td id="bookingPreviousLabel" class="user-name" style="border-left:1px solid grey;border-right:1px solid grey;border-top:1px solid grey;display:none;">Previous Bookings</td>
+							</tr>
+							<tr style="border-left:1px solid grey;border-right:1px solid grey;border-bottom:1px solid grey;">
+								<td>
+									<ul id="bookingPrevious" style="color:white;display:none;list-style:none;overflow-y:scroll;height:200px;background: url(../img/content-bg.png) repeat;">
+									</ul>
+								</td>
+							</tr>
+						</table>
+						<br clear="all" />
+						<br />
+					</div>
+				</div>
+				<!--RIGHT SIDE INFORMATION ENDS-->
+				<br clear="all" />
+				<br />
+				<!--down side div starts-->
+				<div class="col-lg-12 col-md-12 charges-detail">
+					<!--<ul class="breadcrumb" style="height: 33px; padding: 0px; border-radius: 0px; background: url(img/strip-line.jpg) repeat-x;">
+
+						<li>
+							<a class="tab tabClikable default" href="#">Charges</a>
+					  <span class="divider">&nbsp;</span>
+						</li>
+						<li>
+							<a class="tab tabClikable" href="#">Detainers</a>
+				  <span class="divider">&nbsp;</span>
+						</li>
+						<li>
+							<a class="tab tabClikable" href="#">Bonds</a>
+					   <span class="divider">&nbsp;</span>
+						</li>
+						<li>
+							<a class="secure incinfo tabClikable" style="color: gray" href="#">Incarceration Info</a>
+				 <span class="divider">&nbsp;</span>
+						</li>
+						<li>
+							<a class="secure inminfo tabClikable" style="color: gray" href="#">Inmate Information</a>
+						   <span class="divider">&nbsp;</span>
+						</li>
+						<li>
+							<a class="secure court tabClikable" style="color: gray" href="#">Court</a>
+						<span class="divider">&nbsp;</span>
+						</li>
+					</ul>-->
+
+
+
+
+
+					<div class="navbar-collapse1 collapse1" style="height: 1px;">
+						<ul class="nav navbar-nav menu-ul breadcrumb">
+
+							<li>
+								<a class="tab inCharges tabClikable default" href="#">Charges</a>
+
+							</li>
+							<li>
+								<a class="secure inDetainers tabClikable" href="#">Detainers</a>
+
+							</li>
+							<li>
+								<a class="secure inBonds tabClikable" href="#">Bonds</a>
+
+							</li>
+							<li>
+								<a class="secure incinfo tabClikable" style="color: gray" href="#">Incarceration Info</a>
+
+							</li>
+							<li>
+								<a class="secure inminfo tabClikable" style="color: gray" href="#">Inmate Information</a>
+
+							</li>
+							<li>
+								<a class="court secure tabClikable" style="color: gray" href="#">Court</a>
+
+							</li>
+						</ul>
+					</div>
+
+
+
+
+
+					<div id="divCharges" class="custom_scrollbar" style="margin: -1px 20px; width: 94%; height: 257px; overflow: auto; margin-bottom: 20px; padding: 0px; background: url(img/content-bg.png) repeat; border: 1px solid #466e98;">
+
+						<table id="tblCharges" class="breadcrumb second" style="width: 100%; text-align: center; padding: 0px; border-radius: 0px; font-size: 10px; background-color: transparent; color: white">
+							<thead>
+								<tr class="blue-bg" style="height: 26px; background: url(img/header-strip.jpg) repeat">
+									<th style="width: 16%; text-align: center;">Code</th>
+									<th style="width: 16%; text-align: center;">Description</th>
+									<th style="width: 16%; text-align: center;">Type</th>
+									<th style="width: 16%; text-align: center;">Disposition</th>
+									<th style="width: 16%; text-align: center;">Case #</th>
+                                    <th style="width: 8%; text-align: center;">OTN #</th>
+									<th style="width: 16%; text-align: center;">Offense Date</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+
+					</div>
+
+					<div id="divDetainers" class="custom_scrollbar" style="display: none; margin: -1px 20px; width: 94%; height: 257px; overflow: auto; margin-bottom: 20px; padding: 0px; background: url(img/content-bg.png) repeat; border: 1px solid #466e98;">
+
+						<table id="tblDetainers" class="breadcrumb second" style="width: 100%; padding: 0px; border-radius: 0px; font-size: 10px; background-color: transparent; color: white">
+							<thead>
+								<tr style="height: 26px; background: url(img/header-strip.jpg) repeat;">
+
+									<th style="width: 25%; text-align: center;">Description</th>
+									<th style="width: 25%; text-align: center;">Agency</th>
+									<th style="width: 25%; text-align: center;">Bond Amount</th>
+									<th style="width: 25%; text-align: center;">Bond Type</th>
+
+
+								</tr>
+
+							</thead>
+							<tbody></tbody>
+						</table>
+
+					</div>
+					<div id="divBonds" class="custom_scrollbar" style="display: none; margin: -1px 20px; width: 94%; height: 257px; overflow: auto; margin-bottom: 20px; padding: 0px; background: url(img/content-bg.png) repeat; border: 1px solid #466e98;">
+
+						<table id="tblBonds" class="breadcrumb second" style="width: 100%; padding: 0px; border-radius: 0px; font-size: 10px; background-color: transparent; color: white">
+							<thead>
+								<tr style="height: 26px; background: url(img/header-strip.jpg) repeat;">
+
+									<th style="width: 25%; text-align: center;">Agency</th>
+									<th style="width: 25%; text-align: center;">Bond Type</th>
+									<th style="width: 25%; text-align: center;">Bond Amount</th>
+									<th style="width: 25%; text-align: center;">Bond Status</th>
+
+
+								</tr>
+
+							</thead>
+							<tbody></tbody>
+						</table>
+
+					</div>
+					<div id="divInc" class="custom_scrollbar" style="display: none; padding: 20px; margin: -1px 20px; width: 94%; height: 257px; overflow: auto; margin-bottom: 20px; padding: 0px; background: url(img/content-bg.png) repeat; border: 1px solid #466e98;">
+						<table style="width: 100%; color: white; font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 13px; margin-left: 10px; margin-top: 10px">
+
+							<tr>
+								<td style="width: 15%"><b>Building</b></td>
+								<td style="width: 35%" id="tdBuilding"></td>
+								<td style="width: 15%"></td>
+								<td style="width: 35%"></td>
+							</tr>
+							<tr>
+								<td><b>Pod</b></td>
+								<td id="tdPOD"></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><b>Cell</b></td>
+								<td id="tdCell"></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><b>Bed</b></td>
+								<td id="tdBed"></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><b>Book Date</b></td>
+								<td id="tdBookDate"></td>
+								<td></td>
+								<td></td>
+
+							</tr>
+							<tr>
+								<td><b>Release Date</b></td>
+								<td id="tdrelaseDate"></td>
+								<td></td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td><b>Farm-Out Loc</b></td>
+								<td id="tdFarMout"></td>
+								<td></td>
+								<td></td>
+							</tr>
+
+						</table>
+
+					</div>
+					<div id="divCourt" class="custom_scrollbar" style="display: none; margin: -1px 20px; width: 94%; height: 257px; overflow: auto; margin-bottom: 20px; padding: 0px; background: url(img/content-bg.png) repeat; border: 1px solid #466e98;">
+						<table id="Table1" class="breadcrumb second" style="width: 100%; padding: 0px; border-radius: 0px; font-size: 10px; background-color: transparent; color: white">
+							<thead>
+								<tr style="height: 26px; background: url(img/header-strip.jpg) repeat;">
+
+									<th style="width: 16%">Court</th>
+									<th style="width: 16%">Date</th>
+									<th style="width: 16%">Room</th>
+									<th style="width: 16%">Hearing Type</th>
+
+
+								</tr>
+
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<div id="divInmInfo" class="custom_scrollbar" style="display: none; padding: 20px; margin: -1px 20px; width: 94%; height: 257px; overflow: auto; margin-bottom: 20px; padding: 0px; background: url(img/content-bg.png) repeat; border: 1px solid #466e98;">
+						<div style="width: 40%; float: left; border: 1px solid #466e98; height: 175px; margin: 20px;">
+							<table style="width: 100%; color: white; font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 13px; margin-left: 10px; margin-top: 10px">
+
+								<tr>
+									<td style="width: 15%"><b>Booking #</b></td>
+									<td style="width: 35%" id="tdBookingNo"></td>
+
+								</tr>
+								<tr>
+									<td><b>Jacket #</b></td>
+									<td id="tdJacketNo"></td>
+
+								</tr>
+								<tr>
+									<td><b>FBI</b></td>
+									<td id="tdFBI"></td>
+
+								</tr>
+								<tr>
+									<td><b>State ID</b></td>
+									<td id="tdStateId"></td>
+
+								</tr>
+								<tr>
+									<td><b>State Alt ID</b></td>
+									<td id="tdStateAltId"></td>
+
+								</tr>
+								<tr>
+									<td><b>INS</b></td>
+									<td id="tdINS"></td>
+
+								</tr>
+								<tr>
+									<td><b>KOMS</b></td>
+									<td id="tdKOMS"></td>
+
+								</tr>
+								<tr>
+									<td><b>Tomis</b></td>
+									<td id="tdTomis"></td>
+
+								</tr>
+							</table>
+
+						</div>
+						<div style="width: 40%; float: right; border: 1px solid #466e98; height: 175px; margin: 20px;">
+
+							<table style="width: 100%; color: white; font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 13px; margin-left: 10px; margin-top: 10px">
+
+								<tr>
+
+									<td style="width: 15%"><b>Citizen</b></td>
+									<td style="width: 35%" id="tdCitizen"></td>
+								</tr>
+								<tr>
+
+									<td><b>COB</b></td>
+									<td id="tdCob"></td>
+								</tr>
+								<tr>
+
+									<td><b>AFIS Tran</b>
+									</td>
+									<td id="tdAFIS"></td>
+								</tr>
+								<tr>
+
+									<td><b>Address</b></td>
+									<td id="tdAddress"></td>
+								</tr>
+								<tr>
+									<td><b>City</b></td>
+									<td id="tdCity"></td>
+								</tr>
+								<tr>
+									<td><b>State</b></td>
+									<td id="tdState"></td>
+								</tr>
+								<tr>
+									<td><b>Zip</b></td>
+									<td id="tdZip"></td>
+								</tr>
+								<tr>
+
+									<td><b>Phone</b></td>
+									<td id="tdPhone"></td>
+								</tr>
+								<tr>
+
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+
+									<td></td>
+									<td></td>
+								</tr>
+							</table>
+
+
+						</div>
+
+
+					</div>
+
+				</div>
+				<!--down side div ends-->
+			</div>
+			<!---right sidebar ends-->
+			<br clear="all" />
+
+			<div class="col-lg-12 col-md-12" style="padding: 10px; font-size: 13px; text-align: center; color: #fff;">
+                <p style="margin-bottom: 3px;">Any questions about site content should be directed to the facility.</p>
+				<p style="margin-bottom: 3px;">To report a problem with website functionality. <a id="problemLinker" href="#" target="_blank">Please Click Here</a></p>
+			</div>
+		</div>
+
+		<!---Middle Main Content Ends-->
+
+		<!--Right Sidebar ADS column-->
+
+		<div class="col-lg-2 col-md-2 right-side-ads">
+			<div class="rotator2" style="width:131px;height:654px;margin:auto;">
+				<div>
+					<div id="r2-1"></div>
+					<div id="r2-2"></div>
+					<div id="r2-3"></div>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+			<!-- <img src="img/left-add.jpg"  class="img-centered img-responsive" id="right-side-ad" alt="advertising" /> -->
+		</div>
+		<div class="col-lg-2 col-md-2 right-side-ads responsive-ads">
+			<!-- <img class="img-centered img-responsive" alt ="ad" src="img/footer-add.jpg"/> -->
+		</div>
+
+
+
+		<!--Right Sidebar ADS column Ends-->
+	</div>
+	<br clear="all" />
+	<div class="col-lg-12 col-md-12 footer-ads">
+		<div class="rotator3" style="width:750px;height:113px;margin:auto;">
+				<div>
+					<div id="r3-1"></div>
+					<div id="r3-2"></div>
+					<div id="r3-3"></div>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+		<!-- <img src= "img/footer-add.jpg" alt ="ad" class="img-centered img-responsive" /> -->
+	</div>
+	<br clear="all" />
+	<br />
+
+
+	<!--Jquery library file-->
+	<!--Bootstrap Javascript -->
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap1.min.js"></script>
+	<script type="text/javascript" src="js/jquery.fancybox.pack.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			/*
+			 *  Simple image gallery. Uses default settings
+			 */
+
+			$('.fancybox').fancybox({
+				"beforeClose": function () {
+
+					ClearCredentials();
+				}, "beforeShow": function () {
+					ClearData();
+					ClearCredentials();
+					if (!isLogin) {
+
+
+					} else {
+						isLogin = false;
+						$.fancybox.close();
+						$("#btnLogin").text("Agency Login");
+						$("#spnUserName").text("NOT LOGGED IN");
+						$(".default").click();
+
+
+					}
+				}
+			});
+
+			/*
+			 *  Different effects
+			 */
+		});
+	</script>
+</body>
+</html>
