@@ -25,7 +25,7 @@ def cli(ctx):
     csvfile = open('inmates.csv')
     filtered = filter(lambda r: r['Roster Link'], (row for row in DictReader(csvfile)))
     roster_links = ({'county': row['IL County'], 'link': row['Roster Link']} for row in filtered)
-    artifact_direcotry = 'commissary'
+    artifact_directory = 'commissary'
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         call = {executor.submit(GET, rl['link'], timeout=10): rl for rl in roster_links}
@@ -41,13 +41,13 @@ def cli(ctx):
                     filetype = magic.from_buffer(response.content[:2048])
                     filetype_extension = filetype.split(' ')[0].lower()
                     roster_artifact = rl['county'].rstrip('County').strip().lower().replace('. ', '-')
-                    with open(f'{artifact_direcotry}/{roster_artifact}.{filetype_extension}', 'wb') as binfile:
+                    with open(f'{artifact_directory}/{roster_artifact}.{filetype_extension}', 'wb') as binfile:
                         hasher.update(response.content)
                         ctx.log(hasher.hexdigest())
                         binfile.write(response.content)
 
     csvfile.close()
-    snapshot(artifact_direcotry, Path(f'{artifact_direcotry}/.hashfile'))
+    snapshot(artifact_directory, Path(f'{artifact_directory}/.hashfile'))
 
 
 def snapshot(directory, hashfile=None):
