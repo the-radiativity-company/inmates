@@ -7,22 +7,26 @@ from pathlib import Path
 hasher = sha256()
 
 
-def snapshot(directory, hashfile=None):
-    old, new = snapshot_filehashes(directory, hashfile)
+# TODO -- improve efficiency
+def snapshot(directory, hashfile=None, changedfile=None):
+    old, new = snapshot_filehashes(directory, hashfile, changedfile)
+    changed = dict(set(new).difference(set(old)))
     merged = {**dict(old), **dict(new)}
     with open(hashfile, 'w') as hfile:
-        hfile.writelines(list(f'{pair[0]},{pair[1]}\n' for pair in merged.items()))
+        hfile.writelines(list(f'{pair[0]},{pair[1]}\n' for pair in sorted(merged.items())))
+    with open(changedfile, 'w') as cfile:
+        cfile.writelines(list(f'{pair[0]},{pair[1]}\n' for pair in sorted(changed.items())))
 
 
 # TODO -- improve efficiency
-def snapshot_filehashes(directory, hashfile=None):
+def snapshot_filehashes(directory, hashfile=None, changedfile=None):
     hfile_contents = None
 
     if hashfile.exists():
         with open(hashfile.resolve(), 'r') as hfile:
             old_hfile_contents = list(tuple(pair.strip().split(',')) for pair in hfile.readlines())
 
-        new_hfile_contents = hashdir(directory, hashfile)
+        new_hfile_contents = hashdir(directory, hashfile, changedfile)
 
         open(hashfile.resolve(), 'w').close()
         # TODO -- move functionality, below, to own function
@@ -31,15 +35,15 @@ def snapshot_filehashes(directory, hashfile=None):
                 hfile.write(f'{county},{filehash}\n')
         return old_hfile_contents, new_hfile_contents
     else:
-        for county, filehash in hashdir(directory, hashfile):
+        for county, filehash in hashdir(directory, hashfile, changedfile):
             with open(hashfile.resolve(), 'a') as hfile:
                 hfile.write(f'{county},{filehash}\n')
 
         with open(hashfile, 'r') as hfile:
             new_hfile_contents = list(tuple(pair.strip().split(',')) for pair in hfile.readlines())
 
-
         return list(), new_hfile_contents
+
 
 def all_files_in(directory):
     all_files_and_directories_below = []
@@ -50,10 +54,13 @@ def all_files_in(directory):
     return all_files_and_directories_below
 
 
-def hashdir(directory, hashfile=None):
+def hashdir(directory, hashfile=None, changedfile=None):
     files = set(Path(f'{directory}/{filename}').resolve() for filename in all_files_in(directory))
+    # TODO -- devise more convenient means of excluding files
     if hashfile is not None:
-        files.discard(hashfile.resolve()); files.discard(Path(f'{directory}/.gitignore').resolve())
+        files.discard(hashfile.resolve())
+        files.discard(changedfile.resolve())
+        files.discard(Path(f'{directory}/.gitignore').resolve())
 
     hashes = set()
     for f in files:

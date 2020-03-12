@@ -43,5 +43,5 @@ def cli(ctx):
                         binfile.write(response.content)
 
     csvfile.close()
-    snapshot(artifact_directory, Path(f'{artifact_directory}/.hashfile'))
+    snapshot(artifact_directory, Path(f'{artifact_directory}/.hashfile'), Path(f'{artifact_directory}/.changedfile'))
 
