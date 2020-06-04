@@ -53,3 +53,10 @@ clean-venv:
 
 test: $(VENV_PYTHON) $(TESTDIR)
 	@$(VENV_PYTHON) -m unittest discover $(TESTDIR)
+
+targets:
+	@echo
+	@tput bold setaf 2; echo $(shell basename $(CURDIR)); echo
+	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sed 's/^/  ->  /'
+	@tput sgr0
+	@echo
