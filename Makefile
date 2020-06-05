@@ -18,8 +18,11 @@ venv:
 venv-dir:
 	@echo $(CURDIR)/$(VENV)
 
-publish: build
-	@$(VENV_PYTHON) setup.py bdist_wheel --skip-build upload --repository nexus
+image:
+	@docker build -t inmates .
+
+publish:
+	@echo 'TODO (withtwoemms) -- push to heroku here'
 
 build: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) setup.py bdist_wheel
