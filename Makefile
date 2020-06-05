@@ -21,6 +21,9 @@ venv-dir:
 image:
 	@docker build -t inmates .
 
+image-run:
+	@docker run -it --env PORT=5000 --publish 5000:5000 inmates
+
 publish:
 	@echo 'TODO (withtwoemms) -- push to heroku here'
 
