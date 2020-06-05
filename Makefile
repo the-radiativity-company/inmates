@@ -19,13 +19,23 @@ venv-dir:
 	@echo $(CURDIR)/$(VENV)
 
 image:
-	@docker build -t $(PROJECT_NAME):$(shell git tag | head -1) .
+	@docker build -t $(shell make image-tag) .
 
 image-run:
 	@docker run -it --env PORT=5000 --publish 5000:5000 $(PROJECT_NAME)
 
+image-tag:
+	@echo $(PROJECT_NAME):$(shell git tag | head -1)
+
+image-remote-tag:
+	@echo registry.heroku.com/$(PROJECT_NAME)/web
+
 publish:
-	@echo 'TODO (withtwoemms) -- push to heroku here'
+	@docker tag $(shell make image-tag) $(shell make image-remote-tag)
+	@docker push $(shell make image-remote-tag)
+
+release:
+	@heroku container:release web
 
 build: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) setup.py bdist_wheel
