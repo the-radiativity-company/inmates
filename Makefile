@@ -25,7 +25,7 @@ image-run:
 	@docker run -it --env PORT=5000 --publish 5000:5000 $(PROJECT_NAME)
 
 image-tag:
-	@echo $(PROJECT_NAME):$(shell git tag | head -1)
+	@echo $(PROJECT_NAME):$(shell git tag | tail -1)
 
 image-remote-tag:
 	@echo registry.heroku.com/$(PROJECT_NAME)/web
