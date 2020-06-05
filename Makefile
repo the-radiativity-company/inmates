@@ -19,10 +19,10 @@ venv-dir:
 	@echo $(CURDIR)/$(VENV)
 
 image:
-	@docker build -t inmates .
+	@docker build -t $(PROJECT_NAME) .
 
 image-run:
-	@docker run -it --env PORT=5000 --publish 5000:5000 inmates
+	@docker run -it --env PORT=5000 --publish 5000:5000 $(PROJECT_NAME)
 
 publish:
 	@echo 'TODO (withtwoemms) -- push to heroku here'
