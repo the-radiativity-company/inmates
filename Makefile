@@ -18,8 +18,24 @@ venv:
 venv-dir:
 	@echo $(CURDIR)/$(VENV)
 
-publish: build
-	@$(VENV_PYTHON) setup.py bdist_wheel --skip-build upload --repository nexus
+image:
+	@docker build -t $(shell make image-tag) .
+
+image-run:
+	@docker run -it --env PORT=5000 --publish 5000:5000 $(PROJECT_NAME)
+
+image-tag:
+	@echo $(PROJECT_NAME):$(shell git tag | tail -1)
+
+image-remote-tag:
+	@echo registry.heroku.com/$(PROJECT_NAME)/web
+
+publish:
+	@docker tag $(shell make image-tag) $(shell make image-remote-tag)
+	@docker push $(shell make image-remote-tag)
+
+release:
+	@heroku container:release web
 
 build: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) setup.py bdist_wheel
@@ -53,3 +69,10 @@ clean-venv:
 
 test: $(VENV_PYTHON) $(TESTDIR)
 	@$(VENV_PYTHON) -m unittest discover $(TESTDIR)
+
+targets:
+	@echo
+	@tput bold setaf 2; echo $(shell basename $(CURDIR)); echo
+	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sed 's/^/  ->  /'
+	@tput sgr0
+	@echo
