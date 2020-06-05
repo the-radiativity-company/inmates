@@ -19,7 +19,7 @@ venv-dir:
 	@echo $(CURDIR)/$(VENV)
 
 image:
-	@docker build -t $(PROJECT_NAME) .
+	@docker build -t $(PROJECT_NAME):$(shell git tag | head -1) .
 
 image-run:
 	@docker run -it --env PORT=5000 --publish 5000:5000 $(PROJECT_NAME)
