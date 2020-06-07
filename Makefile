@@ -41,7 +41,7 @@ build: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) setup.py bdist_wheel
 
 install: $(VENV) $(VENV_PYTHON)
-	@$(VENV_PYTHON) setup.py install --skip-build
+	@$(VENV_PYTHON) -m pip install -r requirements.txt
 
 uninstall: $(VENV) $(VENV_PYTHON) clean-install
 	@$(VENV_PYTHON) -m pip uninstall $(PROJECT_NAME)
