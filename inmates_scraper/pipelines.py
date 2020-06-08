@@ -6,6 +6,6 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-class DemoPipeline:
+class inmates_scraperPipeline:
     def process_item(self, item, spider):
         return item

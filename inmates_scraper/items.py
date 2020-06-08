@@ -8,7 +8,7 @@
 import scrapy
 
 
-class DemoItem(scrapy.Item):
+class inmates_scraperItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
