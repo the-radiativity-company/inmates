@@ -3,11 +3,11 @@ import scrapy
 
 
 class MaconRoster(scrapy.Spider):
-    name = "Macon County"
+    name = "macon"
 
     def start_requests(self):
         urls = [
-            'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&BookingFromDate=&BookingToDate=&Facility=',
+            'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&InCustody=True&BookingFromDate=&BookingToDate=&Facility=',
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
