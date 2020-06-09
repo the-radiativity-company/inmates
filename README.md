@@ -31,7 +31,7 @@ Luckily, these are all spaces where an automated solution can greatly increase t
 
 There are many ways to contribute to any of the above goals!
 
-The biggest current need is for code contributions to begin scrapping the data from the various county websites. These are currently documented here: https://docs.google.com/spreadsheets/d/1bzZqnXFybr_Hf7iTdalVAZa9VjLtRouhIMsgOoy6ARA/edit?usp=drive_web&ouid=117025765328028106544
+The biggest current need is for code contributions to begin scrapping the data from the various county websites. These are currently documented [here](https://docs.google.com/spreadsheets/d/1bzZqnXFybr_Hf7iTdalVAZa9VjLtRouhIMsgOoy6ARA/edit?usp=drive_web&ouid=117025765328028106544).
 
 This work is in early stages, so expect more detailed process documentation.
 
