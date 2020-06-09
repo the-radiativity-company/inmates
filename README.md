@@ -8,7 +8,7 @@ Chicago Community Bond fund is struggling to meet capacity. New donations have i
 ability to conduct their mission at a much larger scale as they are growing their efforts state-wide.
 
 One bottleneck is the various sites that have inmate information. The current process is to
-manually check these sites to see if they have new information.
+manually check these sites to see if they have new information. This information can be used for advocacy and policy work. 
 
 It is difficult for volunteers to track the current list of county sites to check.
 
@@ -23,7 +23,7 @@ Luckily, these are all spaces where an automated solution can greatly increase t
 
 - Be able to know when county sites have been updated with new data.(snapshots)
 
-- Programatically persist all scracped inmate information to a secure place where authorized CCBF individuals can access and use for their advocacy work. For rosters not easily scraped, we will provide a way for data to also be manually entered (via api, database, etc.).
+- Programatically persist all scraped inmate information to a secure place where authorized CCBF individuals can access and use for their advocacy work. For rosters not easily scraped, we will provide a way for data to also be manually entered (via api, database, etc.).
 
 - Through the above efforts, we'll help cut down on the amount of human effort to conduct routine tasks, and we can build a rich dataset not only of inmate information, but also of the ways counties differ in their dissemination practices. This entire process can potentially generate valuable information to help affect policy goals and ultimately end the cash bail system in Illinois.(advocacy, policy)
 
