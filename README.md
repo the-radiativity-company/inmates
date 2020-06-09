@@ -23,7 +23,7 @@ Luckily, these are all spaces where an automated solution can greatly increase t
 
 - Be able to know when county sites have been updated with new data.(snapshots)
 
-- Collect all this information in a managed way, in a secure place where CCBF individuals can use and manage the data in the way that works best for them. Provide a way for data to also be manually entered.(api, database)
+- Programatically persist all scracped inmate information to a secure place where authorized CCBF individuals can access and use for their advocacy work. For rosters not easily scraped, we will provide a way for data to also be manually entered (via api, database, etc.).
 
 - Through the above efforts, we'll help cut down on the amount of human effort to conduct routine tasks, and we can build a rich dataset not only of inmate information, but also of the ways counties differ in their dissemination practices. This entire process can potentially generate valuable information to help affect policy goals and ultimately end the cash bail system in Illinois.(advocacy, policy)
 
