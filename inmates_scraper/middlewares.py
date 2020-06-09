@@ -8,7 +8,7 @@
 from scrapy import signals
 
 
-class inmates_scraperSpiderMiddleware:
+class InmatesScraperSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -56,7 +56,7 @@ class inmates_scraperSpiderMiddleware:
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class inmates_scraperDownloaderMiddleware:
+class InmatesScraperDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
