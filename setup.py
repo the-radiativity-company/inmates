@@ -15,12 +15,6 @@ setup(
     maintainer_email='withtwoemms@gmail.com',
     url='',
     include_package_data=True,
-    install_requires=[
-        'click==7.0',
-        'flask==1.1.1',
-        'httpx==0.11.1',
-        'python-magic==0.4.15'
-    ],
     entry_points="""
         [console_scripts]
         inmates=inmates.cli:cli
