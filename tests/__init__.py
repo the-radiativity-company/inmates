@@ -23,7 +23,7 @@ def run(spiders: List[Path]):
         with Proc(command, stdout=PIPE, stderr=PIPE) as proc:
             output, err = proc.communicate()
 
-            if err:
+            if err and b'ERROR' in err:
                 failure = err.decode("utf-8").strip().split('\n')[-1]
                 raise TestSetupException(failure) from CalledProcessError(stderr=err, returncode=187, cmd=' '.join(proc.args))
 
