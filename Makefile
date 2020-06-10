@@ -67,7 +67,7 @@ clean-pyc:
 clean-venv:
 	@rm -rf $(VENV)
 
-test: $(VENV_PYTHON) $(TESTDIR)
+tests: $(VENV_PYTHON) $(TESTDIR)
 	@$(VENV_PYTHON) -m unittest discover $(TESTDIR)
 
 targets:

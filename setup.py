@@ -9,7 +9,7 @@ setup(
     setup_requires=[
         'setuptools-git-version==1.0.3'
     ],
-    packages=find_packages(),
+    packages=find_packages(exclude='tests'),
     package_data={'inmates': [str(Path('inmates.csv').absolute())]},
     maintainer='Emmanuel I. Obi',
     maintainer_email='withtwoemms@gmail.com',
