@@ -2,6 +2,7 @@ import json
 import os
 
 from pathlib import Path
+from re import match
 from shlex import split
 from subprocess import CalledProcessError
 from subprocess import PIPE
@@ -18,7 +19,9 @@ test_spiders_dir = 'tests/scraper/spiders'
 test_fixtures_dir = 'tests/fixtures'
 
 test_spiders = [Path(os.path.join(test_spiders_dir, file)) for file in os.listdir(test_spiders_dir)
-    if file.endswith('.py')]
+    if file.endswith('.py')
+    and not match(r'__.+__\.py', file)]
+
 
 def run(spiders: List[Path]) -> None:
     print('\nGenerating fixtures for:')
