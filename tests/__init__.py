@@ -33,35 +33,13 @@ def prepare_fixtures(spiders: List[Path]) -> None:
         spider_fixture.write_text('')
 
         fixture_generation_command = split(f'scrapy runspider --set=ROBOTSTXT_OBEY=False {str(spider)} -o {str(spider_fixture)}')
-        handle(*execute(Proc(fixture_generation_command, stderr=PIPE)))
+        runProc(fixture_generation_command, stderr=PIPE)
 
-        contents_proc = Proc(split(f'cat {str(spider_fixture)}'), stdout=PIPE)
-        contents_dict = json.loads(handle(*execute(contents_proc)).decode('utf-8'))
-        ran = runProc(split('jq .'), stdout=PIPE, input=json.dumps(contents_dict[-5:]).encode())
-        spider_fixture.write_text(ran.stdout.decode('utf-8'))
+        gotten_contents = runProc(split(f'cat {str(spider_fixture)}'), stdout=PIPE).stdout.decode('utf-8')
+        contents_dict = json.loads(gotten_contents)
+        formatted_json = runProc(split('jq .'), stdout=PIPE, input=json.dumps(contents_dict[-5:]).encode())
 
-
-def execute(proc: Proc = None) -> Tuple[bytes, bytes]:
-    out, err = b'', b''
-    if proc:
-        out, err = proc.communicate()
-        proc.wait()
-    return out, err
-
-
-def handle(out: ByteString, err: ByteString):
-    if err and b'ERROR' in err:
-        failure = err.decode("utf-8").strip().split('\n')[-1]
-        raise TestSetupException(failure) from CalledProcessError(stderr=err, returncode=187, cmd=' '.join(proc.args))
-    return out
-
-
-def chain(proc: Proc, *commands: List[str]):
-    commands = list(commands)
-    if commands:
-        return chain(Proc(commands.pop(0), stdin=proc.stdout, stdout=PIPE), *commands)
-    else:
-        return proc
+        spider_fixture.write_text(formatted_json.stdout.decode('utf-8'))
 
 
 prepare_fixtures(test_spiders)
