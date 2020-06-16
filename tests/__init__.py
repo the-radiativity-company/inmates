@@ -24,13 +24,12 @@ test_spiders = [Path(os.path.join(test_spiders_dir, file)) for file in os.listdi
     and not match(r'__.+__\.py', file)]
 
 
-def prepare_fixtures(spiders: List[Path]) -> None:
+def prepare_fixtures_for(spiders: List[Path]) -> None:
     print('\nGenerating fixtures for:')
     # TODO (withtwoemms) -- use concurrent.futures to better handle multiple spiders
     for spider in spiders:
         print(f'....{spider}')
         spider_fixture = Path(f'{test_fixtures_dir}/{spider.stem}.json')
-        spider_fixture.write_text('')
 
         fixture_generation_command = split(f'scrapy runspider --set=ROBOTSTXT_OBEY=False {str(spider)} -o {str(spider_fixture)}')
         runProc(fixture_generation_command, stderr=PIPE)
@@ -42,4 +41,6 @@ def prepare_fixtures(spiders: List[Path]) -> None:
         spider_fixture.write_text(formatted_json.stdout.decode('utf-8'))
 
 
-prepare_fixtures(test_spiders)
+def prepare_fixtures():
+    prepare_fixtures_for(test_spiders)
+
