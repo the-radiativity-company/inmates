@@ -15,16 +15,14 @@ class MaconRoster(scrapy.Spider):
     for now I think we can scrape with the anchor tag so volunteers
     can look at the info?
     might need to process this in a pipeline
-
-    TODO: tests 
     """
     name = "macon"
+    urls = [
+        'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&InCustody=True&BookingFromDate=&BookingToDate=&Facility=',
+    ]
 
     def start_requests(self):
-        urls = [
-            'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&InCustody=True&BookingFromDate=&BookingToDate=&Facility=',
-        ]
-        for url in urls:
+        for url in self.urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
