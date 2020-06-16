@@ -3,7 +3,7 @@ from inmates.scraper.spiders.macon import MaconRoster
 
 class TestMaconRoster(MaconRoster):
     name = 'test-macon'
-    urls = [
+    start_urls = [
         'file:///Users/withtwoemms/programming/python/inmates/commissary/macon.html'
     ]
 

@@ -17,13 +17,9 @@ class MaconRoster(scrapy.Spider):
     might need to process this in a pipeline
     """
     name = "macon"
-    urls = [
+    start_urls = [
         'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&InCustody=True&BookingFromDate=&BookingToDate=&Facility=',
     ]
-
-    def start_requests(self):
-        for url in self.urls:
-            yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
