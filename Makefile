@@ -1,4 +1,4 @@
-.PHONY: build clean clean-pyc clean-venv clean-install install publish reinstall test tree uninstall
+.PHONY: build clean clean-pyc clean-venv clean-install install publish reinstall tests tree uninstall
 
 SYSTEM_PYTHON = $(shell which python3)
 PROJECT_NAME = $(shell basename $(CURDIR))
