@@ -30,6 +30,7 @@ def prepare_fixtures_for(spiders: List[Path]) -> None:
     for spider in spiders:
         print(f'....{spider}')
         spider_fixture = Path(f'{test_fixtures_dir}/{spider.stem}.json')
+        spider_fixture.write_text('')
 
         fixture_generation_command = split(f'scrapy runspider --set=ROBOTSTXT_OBEY=False {str(spider)} -o {str(spider_fixture)}')
         runProc(fixture_generation_command, stderr=PIPE)
