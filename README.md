@@ -4,23 +4,27 @@ This project is being conducted on behalf of Chicago Community Bond Fund.
 
 # Problem Space
 
-Chicago Community Bond fund is struggling to meet capacity. New donations have increased their
-ability to conduct their mission at a much larger scale as they are growing their efforts state-wide.
+Chicago Community Bond fund is struggling to meet capacity. New donations have increased their ability to conduct their mission at a much larger scale as they are growing their efforts state-wide.
 
-One bottleneck is the various sites that have inmate information. The current process is to
-manually check these sites to see if they have new information. This information can be used for advocacy and policy work. 
+One bottleneck is the various sites that have inmate information. The current process is to manually check these sites to see if they have new information. This information is to be used for advocacy purposes. 
 
 It is difficult for volunteers to track the current list of county sites to check.
 
-It is even more difficult for a person to verify whether there is new information on that site or not.
-It is also difficult to then combine that manually collected information together to create actionable data.
+It is even more difficult for a person to verify whether there is new information on that site or not. It is also difficult to then combine that manually collected information together to create actionable data.
 
-Luckily, these are all spaces where an automated solution can greatly increase the efficiency of human efforts.
+Luckily, these are all spaces where an automated solution can greatly increase the efficiency of human efforts!
 
 # Goals
 
-- Be able to extract as much information about inmates as each county makes available in an automated fashion. (scrapers/spiders)
-
+- Be able to extract as much information about inmates as each county makes available in an automated fashion. (scrapers/spiders), the most important data points (if available) being:  
+    * bail amount 
+    * name 
+    * DOB 
+    * sex 
+    * race
+    * booking date
+    * charge
+    
 - Be able to know when county sites have been updated with new data.(snapshots)
 
 - Programatically persist all scraped inmate information to a secure place where authorized CCBF individuals can access and use for their advocacy work. For rosters not easily scraped, we will provide a way for data to also be manually entered (via api, database, etc.).
