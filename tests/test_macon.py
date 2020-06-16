@@ -11,7 +11,19 @@ class InmatesScraperSpiderMaconTest(TestCase):
 
     def test_macon(self):
         inmates_attributes = [struct.keys() for struct in self.fixtures]
-        expected_attributes = ['Photo', 'Name', 'SubjectNumber', 'InCustody', 'ScheduledReleaseDate', 'Race', 'Gender', 'Height', 'Weight', 'MultipleBookings', 'HousingFacility']
+        expected_attributes = [
+            'Gender',
+            'Height',
+            'HousingFacility',
+            'InCustody',
+            'MultipleBookings',
+            'Name',
+            'Photo',
+            'Race',
+            'ScheduledReleaseDate',
+            'SubjectNumber',
+            'Weight',
+        ]
         for inmate_attributes in inmates_attributes:
             self.assertCountEqual(inmate_attributes, expected_attributes)
 
