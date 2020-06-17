@@ -21,7 +21,6 @@ class BrownSpider(scrapy.Spider):
         photo = table.css('h3 + div')
         other_stuff = table.xpath('//div[@style="float: right; width:70%;"]')
         # other stuff is being goofy, needs to be parsed sep
-        import pdb; pdb.set_trace()
         items = zip(names, photo, other_stuff)
         for item in items:
             yield {
