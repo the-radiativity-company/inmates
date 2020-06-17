@@ -11,12 +11,13 @@ class MaconRoster(scrapy.Spider):
     the other params could be used for programattic searches if needed
 
     TODO: the bond amount is on the detail tab for each inmate,
-    how do we want to handle that?
+    how do we want to handle that? See here: 
+    https://docs.scrapy.org/en/latest/topics/request-response.html#topics-request-response-ref-request-callback-arguments
     for now I think we can scrape with the anchor tag so volunteers
     can look at the info?
     might need to process this in a pipeline
 
-    TODO: tests 
+    TODO: tests
     """
     name = "macon"
 
