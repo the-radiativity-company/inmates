@@ -44,7 +44,6 @@ install: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) -m pip install -r requirements.txt
 	@make build
 	@$(VENV_PYTHON) setup.py install bdist_wheel
-	@inmates fixtures
 
 uninstall: $(VENV) $(VENV_PYTHON) clean-install
 	@$(VENV_PYTHON) -m pip uninstall $(PROJECT_NAME)
