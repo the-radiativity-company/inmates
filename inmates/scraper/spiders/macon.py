@@ -17,9 +17,6 @@ class MaconRoster(scrapy.Spider):
     might need to process this in a pipeline
     """
     name = "macon"
-    start_urls = [
-        'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&InCustody=True&BookingFromDate=&BookingToDate=&Facility=',
-    ]
 
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
@@ -39,3 +36,4 @@ class MaconRoster(scrapy.Spider):
                 'MultipleBookings': row.css('.MultipleBookings::text').get(),
                 'HousingFacility': row.css('.HousingFacility::text').get()
             }
+
