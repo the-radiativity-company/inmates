@@ -68,3 +68,5 @@ def prepare_fixtures():
             fixture_type='json'
         )
 
+prepare_fixtures()
+
