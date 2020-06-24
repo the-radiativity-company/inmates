@@ -56,7 +56,7 @@ def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: st
     spider_fixture_path.write_text(json.dumps(list(take(fixtures, 3)), indent=4, sort_keys=True))
 
 
-commissary = Path(__file__).absolute().parent.parent.joinpath('commissary')
+commissary = Path(__file__).absolute().parent.parent.parent.joinpath('commissary')
 test_fixtures_dir = Path('tests/fixtures')
 
 def prepare_fixtures():
