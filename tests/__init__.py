@@ -20,15 +20,12 @@ def produce_spider_info_for(module_name: str, commissary: Path):
     all_roster_paths = dict([Path(site).stem, Path(site).absolute()] for site in all_files_in(commissary))
     all_spider_names = set(Path(spider).stem for spider in all_files_in(module_name.replace('.', '/')))
 
-    all_spider_info = [
-        (
-            spider_name,
-            all_roster_paths.get(spider_name).absolute().as_uri(),
-            getattr(import_module(f'{module_name}.{spider_name}'), f'{spider_name.title()}Roster')
-        ) for spider_name in all_spider_names
-    ]
+    for spider_name in all_spider_names:
+        local_uri = all_roster_paths.get(spider_name).absolute().as_uri(),
+        spider_class = getattr(import_module(f'{module_name}.{spider_name}'), f'{spider_name.title()}Roster')
 
-    return all_spider_info
+        # SpiderInfo
+        yield (spider_name, local_uri, spider_class)
 
 
 def prepare_fixtures_from(all_spider_info: Tuple[str, str, type]):
