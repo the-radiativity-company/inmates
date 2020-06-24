@@ -4,6 +4,7 @@ import os
 from inmates.utils import all_files_in
 
 from importlib import import_module
+from itertools import islice as take
 from pathlib import Path
 from re import match
 from scrapy.crawler import Crawler
@@ -59,38 +60,77 @@ def prepare_fixtures_for(spider_paths: List[Path], fixtures_dir: Path, fixture_t
 
 commissary = Path(__file__).absolute().parent.parent.joinpath('commissary')
 # all_roster_paths = set(Path(site).stem for site in all_files_in(commissary))
-all_roster_paths = dict([Path(site).stem, Path(site).absolute()] for site in all_files_in(commissary))
-all_spider_names = set(Path(spider).stem for spider in all_files_in('inmates/scraper/spiders'))
-
-all_spider_info = [
-    (
-        spider_name,
-        getattr(import_module(f'inmates.scraper.spiders.{spider_name}'), f'{spider_name.title()}Roster'),
-        all_roster_paths.get(spider_name).absolute().as_uri()
-    ) for spider_name in all_spider_names
-]
 
 settings = Settings()
 settings.setmodule('inmates.scraper.settings', priority='project')
 
-
+'inmates/scraper/spiders'
 from pprint import pprint
-for spider_info in all_spider_info:
-    spider_name, spider_class, local_uri = spider_info
-    spider_instance = spider_class(start_urls=[local_uri])
-    crawler = Crawler(spider_class, settings=settings)
-    engine = crawler._create_engine()
-    request = Request(url=local_uri, callback=spider_instance.parse)
-    deferred = engine.downloader.fetch(request, spider_instance)
-    output = spider_instance.parse(deferred.result)
-    pprint(list(output))
 
-test_spiders_dir = 'tests/scraper/spiders'
+
+module_name = 'inmates.scraper.spiders'
+all_roster_paths = dict([Path(site).stem, Path(site).absolute()] for site in all_files_in(commissary))
+all_spider_names = set(Path(spider).stem for spider in all_files_in(module_name.replace('.', '/')))
+
+all_spider_info = [
+    (
+        spider_name,
+        all_roster_paths.get(spider_name).absolute().as_uri(),
+        getattr(import_module(f'{module_name}.{spider_name}'), f'{spider_name.title()}Roster')
+    ) for spider_name in all_spider_names
+]
+def produce_spider_info_for(module_name: str, commissary: Path):
+    all_roster_paths = dict([Path(site).stem, Path(site).absolute()] for site in all_files_in(commissary))
+    all_spider_names = set(Path(spider).stem for spider in all_files_in(module_name.replace('.', '/')))
+
+    all_spider_info = [
+        (
+            spider_name,
+            all_roster_paths.get(spider_name).absolute().as_uri(),
+            getattr(import_module(f'{module_name}.{spider_name}'), f'{spider_name.title()}Roster')
+        ) for spider_name in all_spider_names
+    ]
+
+    return all_spider_info
+
+
+def _prepare_fixtures(all_spider_info: Tuple[str, str, type]):
+    for spider_info in all_spider_info:
+        spider_name, local_uri, spider_class = spider_info
+        spider_instance = spider_class(start_urls=[local_uri])
+        crawler = Crawler(spider_class, settings=settings)
+        engine = crawler._create_engine()
+        request = Request(url=local_uri, callback=spider_instance.parse)
+        deferred = engine.downloader.fetch(request, spider_instance)
+        generated_output = spider_instance.parse(deferred.result)
+        yield spider_name, generated_output
+
+
+def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: str):
+    # Validation
+    if not fixture_type in ['json']:
+        raise ValueError(f'Currently, "{fixture_type}" is not supported.')
+
+    spider_fixture_path = fixtures_dir.joinpath(f'{name}.{fixture_type}')
+    spider_fixture_path.write_text('')
+
+    spider_fixture_path.write_text(json.dumps(list(take(fixtures, 3)), indent=4, sort_keys=True))
+
+
 test_fixtures_dir = Path('tests/fixtures')
+
 test_spiders = [Path(os.path.join(test_spiders_dir, file)) for file in os.listdir(test_spiders_dir)
     if file.endswith('.py')
     and not match(r'__.+__\.py', file)]
 
+
+for name, fixtures in _prepare_fixtures(produce_spider_info_for('inmates.scraper.spiders', commissary)):
+    write_prepared_fixtures(
+        name,
+        fixtures,
+        fixtures_dir=test_fixtures_dir,
+        fixture_type='json'
+    )
 
 def prepare_fixtures():
     prepare_fixtures_for(
