@@ -21,7 +21,7 @@ def produce_spider_info_for(module_name: str, commissary: Path):
     all_spider_names = set(Path(spider).stem for spider in all_files_in(module_name.replace('.', '/')))
 
     for spider_name in all_spider_names:
-        local_uri = all_roster_paths.get(spider_name).absolute().as_uri(),
+        local_uri = all_roster_paths.get(spider_name).absolute().as_uri()
         spider_class = getattr(import_module(f'{module_name}.{spider_name}'), f'{spider_name.title()}Roster')
 
         # SpiderInfo
