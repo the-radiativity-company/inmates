@@ -1,67 +1,41 @@
 [
-  {
-    "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC8Y55S?type=Search\" alt=\"1HC8Y55S\"></td>",
-    "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-232835\">AUBERT, MICHAEL TODD</a></td>",
-    "SubjectNumber": "45853",
-    "InCustody": null,
-    "ScheduledReleaseDate": null,
-    "Race": "White",
-    "Gender": "Male",
-    "Height": "5' 9\"",
-    "Weight": "270.0 lbs",
-    "MultipleBookings": null,
-    "HousingFacility": null
-  },
-  {
-    "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC8YL07?type=Search\" alt=\"1HC8YL07\"></td>",
-    "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-216220\">AUBERT, WILLIAM LESLIE Second</a></td>",
-    "SubjectNumber": "5891",
-    "InCustody": null,
-    "ScheduledReleaseDate": null,
-    "Race": "White",
-    "Gender": "Male",
-    "Height": "5' 8\"",
-    "Weight": "170.0 lbs",
-    "MultipleBookings": null,
-    "HousingFacility": null
-  },
-  {
-    "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC8YULP?type=Search\" alt=\"1HC8YULP\"></td>",
-    "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-268134\">AUSTIN, BRANT DELONNO</a></td>",
-    "SubjectNumber": "94953",
-    "InCustody": null,
-    "ScheduledReleaseDate": null,
-    "Race": "Black",
-    "Gender": "Male",
-    "Height": "5' 9\"",
-    "Weight": "230.0 lbs",
-    "MultipleBookings": null,
-    "HousingFacility": null
-  },
-  {
-    "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC007AZ?type=Search\" alt=\"1HC007AZ\"></td>",
-    "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-261007\">AUSTIN, DONDRION L</a></td>",
-    "SubjectNumber": "90847",
-    "InCustody": "Yes",
-    "ScheduledReleaseDate": null,
-    "Race": "Black",
-    "Gender": "Male",
-    "Height": "6' 0\"",
-    "Weight": "150.0 lbs",
-    "MultipleBookings": null,
-    "HousingFacility": "Macon County Jail"
-  },
-  {
-    "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC53757?type=Search\" alt=\"1HC53757\"></td>",
-    "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-250603\">AUTEN, VANCE J</a></td>",
-    "SubjectNumber": "52766",
-    "InCustody": "Yes",
-    "ScheduledReleaseDate": null,
-    "Race": "White",
-    "Gender": "Male",
-    "Height": "5' 8\"",
-    "Weight": "173.0 lbs",
-    "MultipleBookings": null,
-    "HousingFacility": "Macon County Jail"
-  }
+    {
+        "Gender": "Female",
+        "Height": "5' 11\"",
+        "HousingFacility": null,
+        "InCustody": null,
+        "MultipleBookings": null,
+        "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-247649\">ABBAA, NYWAY LOIS</a></td>",
+        "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC8Y5G1?type=Search\" alt=\"1HC8Y5G1\"></td>",
+        "Race": "Black",
+        "ScheduledReleaseDate": null,
+        "SubjectNumber": "85733",
+        "Weight": "220.0 lbs"
+    },
+    {
+        "Gender": "Female",
+        "Height": "4' 9\"",
+        "HousingFacility": null,
+        "InCustody": null,
+        "MultipleBookings": null,
+        "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-249572\">ABBED, EUNICE HERITTIA</a></td>",
+        "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC8YWPL?type=Search\" alt=\"1HC8YWPL\"></td>",
+        "Race": "Black",
+        "ScheduledReleaseDate": null,
+        "SubjectNumber": "87579",
+        "Weight": "173.0 lbs"
+    },
+    {
+        "Gender": "Female",
+        "Height": "5' 11\"",
+        "HousingFacility": null,
+        "InCustody": null,
+        "MultipleBookings": null,
+        "Name": "<td class=\"Name\"><a href=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Detail/-243163\">ABBOTT, KAYELONI R</a></td>",
+        "Photo": "<td class=\"Photo\"><img src=\"/NewWorld.InmateInquiry/IL0580000/Inmate/Photo/1HC8YIUB?type=Search\" alt=\"1HC8YIUB\"></td>",
+        "Race": "White",
+        "ScheduledReleaseDate": null,
+        "SubjectNumber": "81584",
+        "Weight": "240.0 lbs"
+    }
 ]
