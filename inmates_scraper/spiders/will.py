@@ -2,9 +2,10 @@ import pdb
 import scrapy
 
 
-class MaconRoster(scrapy.Spider):
+class WillRoster(scrapy.Spider):
     """
-    scraper for Macon Count inmates list
+    scraper for Will County inmates list
+    very similar to the Macon scraper
     list is in a simple paginated table
     the list can be filtered by some params controlled in the URL
     in this case, in InCustody is set to true so
@@ -19,26 +20,22 @@ class MaconRoster(scrapy.Spider):
 
     TODO: tests
     """
-    name = "macon"
-
-    def start_requests(self):
-        urls = [
-            'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&InCustody=True&BookingFromDate=&BookingToDate=&Facility=',
+    name = "will"
+    start_urls = [
+            'http://66.158.72.230/NewWorld.InmateInquiry/Public',
         ]
-        for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
-
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
+        next_page = response.css('.Next::attr(href)').get()
+        # TODO: a good clean way to scrape these details
+        inmate_detail_link = response.css('td.Name > a').get()
+
         # in xpath, double slash any child node that matches the locator ('tr' in this case)
         rows = table_body.xpath('tr')
         for row in rows:
             yield {
-                'Photo': row.css('.Photo').get(),
                 'Name': row.css('.Name').get(),
-                'SubjectNumber': row.css('.SubjectNumber::text').get(),
                 'InCustody': row.css('.InCustody::text').get(),
-                'ScheduledReleaseDate': row.css('.ScheduledReleaseDate::text').get(),
                 'Race': row.css('.Race::text').get(),
                 'Gender': row.css('.Gender::text').get(),
                 'Height': row.css('.Height::text').get(),
@@ -46,3 +43,7 @@ class MaconRoster(scrapy.Spider):
                 'MultipleBookings': row.css('.MultipleBookings::text').get(),
                 'HousingFacility': row.css('.HousingFacility::text').get()
             }
+
+
+        if next_page is not None:
+            yield response.follow(next_page, callback=self.parse)
