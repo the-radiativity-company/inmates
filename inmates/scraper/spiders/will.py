@@ -21,9 +21,7 @@ class WillRoster(scrapy.Spider):
     TODO: tests
     """
     name = "will"
-    start_urls = [
-            'http://66.158.72.230/NewWorld.InmateInquiry/Public',
-        ]
+
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
         next_page = response.css('.Next::attr(href)').get()
