@@ -24,8 +24,16 @@ def produce_spider_info_for(module_name: str, commissary: Path):
     all_spider_names = set(Path(spider).stem for spider in all_files_in(module_name.replace('.', '/')))
 
     for spider_name in all_spider_names:
-        local_uri = all_roster_paths.get(spider_name).absolute().as_uri()
-        spider_class = getattr(import_module(f'{module_name}.{spider_name}'), f'{spider_name.title()}Roster')
+        roster_path = all_roster_paths.get(spider_name)
+        if not roster_path:
+            print('❌', f'{spider_name} (It seems there is no commissary/ entry)'); exit(187)
+        local_uri = roster_path.absolute().as_uri()
+
+        expected_class = f'{spider_name.title()}Roster'
+        try:
+            spider_class = getattr(import_module(f'{module_name}.{spider_name}'), expected_class)
+        except:
+            print('❌', f'{spider_name} (Please ensure the spider class is called "{expected_class}")'); exit(187)
 
         # SpiderInfo
         yield (spider_name, local_uri, spider_class)
@@ -38,14 +46,19 @@ def prepare_fixtures_from(all_spider_info: Tuple[str, str, type]):
     TODO (withtwoemms) -- use concurrent.futures to better handle multiple spiders
     """
     for spider_info in all_spider_info:
-        spider_name, local_uri, spider_class = spider_info
-        spider_instance = spider_class(start_urls=[local_uri])
-        crawler = Crawler(spider_class, settings=settings)
-        engine = crawler._create_engine()
-        request = Request(url=local_uri, callback=lambda: '...making request...')
-        deferred = engine.downloader.fetch(request, spider_instance)
-        generated_output = spider_instance.parse(deferred.result)
-        yield spider_name, generated_output
+        try:
+            spider_name, local_uri, spider_class = spider_info
+            spider_instance = spider_class(start_urls=[local_uri])
+            crawler = Crawler(spider_class, settings=settings)
+            engine = crawler._create_engine()
+            request = Request(url=local_uri, callback=lambda: '...making request...')
+            deferred = engine.downloader.fetch(request, spider_instance)
+            generated_output = spider_instance.parse(deferred.result)
+            yield spider_name, generated_output
+        except NotImplementedError:
+            print('❌', f'{spider_name} (Please ensure a .parse method is defined)'); exit(187)
+        except ValueError:
+            print('❌', f'{spider_name} (Please ensure a .name attribute is defined)'); exit(187)
 
 
 def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: str):
@@ -53,7 +66,7 @@ def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: st
     if not fixture_type in ['json']:
         raise ValueError(f'Currently, "{fixture_type}" is not supported.')
     if not fixtures:
-        print('❌', f'{name} (Please yield a response from the .parse method)')
+        print('❌', f'{name} (Please yield a response from the .parse method)'); exit(187)
 
     spider_fixture_path = fixtures_dir.joinpath(f'{name}.{fixture_type}')
     spider_fixture_path.write_text('')
