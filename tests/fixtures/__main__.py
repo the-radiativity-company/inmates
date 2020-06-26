@@ -53,8 +53,7 @@ def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: st
     if not fixture_type in ['json']:
         raise ValueError(f'Currently, "{fixture_type}" is not supported.')
     if not fixtures:
-        error_msg = f'No fixtures generated for the {name}.py Spider. Please yield a response from the .parse method.'
-        print(f'\n  >>> {error_msg} <<<\n'); exit(187)
+        print('❌', f'{name} (Please yield a response from the .parse method)')
 
     spider_fixture_path = fixtures_dir.joinpath(f'{name}.{fixture_type}')
     spider_fixture_path.write_text('')
