@@ -1,12 +1,15 @@
 import json
 import os
 
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import as_completed
 from importlib import import_module
 from itertools import islice as take
 from pathlib import Path
 from scrapy.crawler import Crawler
 from scrapy.http import Request
 from scrapy.settings import Settings
+from sys import exit
 from typing import Tuple
 
 from inmates.utils import all_files_in
@@ -39,7 +42,7 @@ def prepare_fixtures_from(all_spider_info: Tuple[str, str, type]):
         spider_instance = spider_class(start_urls=[local_uri])
         crawler = Crawler(spider_class, settings=settings)
         engine = crawler._create_engine()
-        request = Request(url=local_uri, callback=spider_instance.parse)
+        request = Request(url=local_uri, callback=lambda: '...making request...')
         deferred = engine.downloader.fetch(request, spider_instance)
         generated_output = spider_instance.parse(deferred.result)
         yield spider_name, generated_output
@@ -49,24 +52,40 @@ def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: st
     # Validation
     if not fixture_type in ['json']:
         raise ValueError(f'Currently, "{fixture_type}" is not supported.')
+    if not fixtures:
+        error_msg = f'No fixtures generated for the {name}.py Spider. Please yield a response from the .parse method.'
+        print(f'\n  >>> {error_msg} <<<\n'); exit(187)
 
     spider_fixture_path = fixtures_dir.joinpath(f'{name}.{fixture_type}')
     spider_fixture_path.write_text('')
 
     spider_fixture_path.write_text(json.dumps(list(take(fixtures, 3)), indent=4, sort_keys=True))
+    print('✅', name)
 
 
 commissary = Path(__file__).absolute().parent.parent.parent.joinpath('commissary')
 test_fixtures_dir = Path('tests/fixtures')
 
 def prepare_fixtures():
-    for name, fixtures in prepare_fixtures_from(produce_spider_info_for('inmates.scraper.spiders', commissary)):
-        write_prepared_fixtures(
-            name,
-            fixtures,
-            fixtures_dir=test_fixtures_dir,
-            fixture_type='json'
-        )
+    all_spider_info = produce_spider_info_for('inmates.scraper.spiders', commissary)
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {
+            executor.submit(
+                write_prepared_fixtures,
+                name,
+                fixtures,
+                fixtures_dir=test_fixtures_dir,
+                fixture_type='json'
+            ): name for name, fixtures in prepare_fixtures_from(all_spider_info)
+        }
+        for future in as_completed(futures):
+            name = futures[future]
+            try:
+                future.result()
+            except Exception as e:
+                pass
+
 
 prepare_fixtures()
 
