@@ -5,11 +5,12 @@ from pathlib import Path
 
 
 def all_files_in(directory):
+    """returns a list of absolute file paths for all files below `directory` irrespective of nesting"""
     all_files_and_directories_below = []
     for root, dirs, files, in walk(directory, topdown=True):
-        pruned_root = '/'.join(root.split('/')[1:])
         for name in files:
-            all_files_and_directories_below.append(joinpath(pruned_root, name))
+            if not any(fragment in name for fragment in ['__init__.py', 'cpython']):
+                all_files_and_directories_below.append(joinpath(root, name))
     return all_files_and_directories_below
 
 

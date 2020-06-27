@@ -1,10 +1,11 @@
-.PHONY: build clean clean-pyc clean-venv clean-install install publish reinstall test tree uninstall
+.PHONY: build clean clean-pyc clean-venv clean-install fixtures install publish reinstall tests tree uninstall
 
 SYSTEM_PYTHON = $(shell which python3)
 PROJECT_NAME = $(shell basename $(CURDIR))
 VENV = $(PROJECT_NAME)-venv
 VENV_PYTHON = $(VENV)/bin/python
 TESTDIR = tests/
+FIXTURESDIR = $(TESTDIR)/fixtures
 
 
 all: venv install clean-install
@@ -42,6 +43,8 @@ build: $(VENV) $(VENV_PYTHON)
 
 install: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) -m pip install -r requirements.txt
+	@make build
+	@$(VENV_PYTHON) -m pip install -e .
 
 uninstall: $(VENV) $(VENV_PYTHON) clean-install
 	@$(VENV_PYTHON) -m pip uninstall $(PROJECT_NAME)
@@ -67,8 +70,12 @@ clean-pyc:
 clean-venv:
 	@rm -rf $(VENV)
 
-test: $(VENV_PYTHON) $(TESTDIR)
+tests: $(VENV_PYTHON) $(TESTDIR)
 	@$(VENV_PYTHON) -m unittest discover $(TESTDIR)
+
+fixtures: $(VENV_PYTHON) $(FIXTURESDIR)
+	@$(VENV_PYTHON) $(FIXTURESDIR)
+
 
 targets:
 	@echo

@@ -2,10 +2,9 @@ import pdb
 import scrapy
 
 
-class WillRoster(scrapy.Spider):
+class MaconRoster(scrapy.Spider):
     """
-    scraper for Will County inmates list
-    very similar to the Macon scraper
+    scraper for Macon Count inmates list
     list is in a simple paginated table
     the list can be filtered by some params controlled in the URL
     in this case, in InCustody is set to true so
@@ -17,25 +16,20 @@ class WillRoster(scrapy.Spider):
     for now I think we can scrape with the anchor tag so volunteers
     can look at the info?
     might need to process this in a pipeline
-
-    TODO: tests
     """
-    name = "will"
-    start_urls = [
-            'http://66.158.72.230/NewWorld.InmateInquiry/Public',
-        ]
+    name = "macon"
+
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
-        next_page = response.css('.Next::attr(href)').get()
-        # TODO: a good clean way to scrape these details
-        inmate_detail_link = response.css('td.Name > a').get()
-
         # in xpath, double slash any child node that matches the locator ('tr' in this case)
         rows = table_body.xpath('tr')
         for row in rows:
             yield {
+                'Photo': row.css('.Photo').get(),
                 'Name': row.css('.Name').get(),
+                'SubjectNumber': row.css('.SubjectNumber::text').get(),
                 'InCustody': row.css('.InCustody::text').get(),
+                'ScheduledReleaseDate': row.css('.ScheduledReleaseDate::text').get(),
                 'Race': row.css('.Race::text').get(),
                 'Gender': row.css('.Gender::text').get(),
                 'Height': row.css('.Height::text').get(),
@@ -44,6 +38,3 @@ class WillRoster(scrapy.Spider):
                 'HousingFacility': row.css('.HousingFacility::text').get()
             }
 
-
-        if next_page is not None:
-            yield response.follow(next_page, callback=self.parse)
