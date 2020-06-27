@@ -90,7 +90,7 @@ inmates/
     └── test_woodford.py
 ```
 
-When scraping data from a roster, here are 4 components at play:
+When scraping data from a roster, here are four components at play:
 
  * the site to be scraped
  * the spider
@@ -99,7 +99,7 @@ When scraping data from a roster, here are 4 components at play:
 
 The 'sites to be scraped' are all housed in the "commissary/" directory so there's less of a need to reach out to the world wide web.
 Spiders live in the "inmates/scraper/spiders/" directory and there's to be _one for every site in the commissary/_.
-Here's an example of the bare minimum needed to start a spider for "Adams" county:
+Here's an example of the bare minimum needed to start a spider for a given county:
 
 ```python
 class AdamsRoster(Spider):
