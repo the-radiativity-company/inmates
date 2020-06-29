@@ -13,7 +13,7 @@ BOT_NAME = 'inmates.scraper'
 
 SPIDER_MODULES = ['inmates.scraper.spiders']
 NEWSPIDER_MODULE = 'inmates.scraper.spiders'
-
+TEMPLATES_DIR = 'inmates/scraper/templates/'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'inmates.scraper (+http://www.yourdomain.com)'

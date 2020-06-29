@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+from scrapy import Spider
+
+
+class $classname(Spider):
+    name = '$name'
+
+    def __init__(self, *args, **kwargs):
+      self.domain = kwargs.get('domain')
+      self.start_urls = [self.domain] if self.domain else self.start_urls
+
+    def parse(self, response):
+        pass
