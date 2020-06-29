@@ -1,4 +1,3 @@
-import pdb
 import scrapy
 
 
@@ -20,7 +19,11 @@ class WillRoster(scrapy.Spider):
 
     TODO: tests
     """
-    name = "will"
+    name = 'will'
+
+    def __init__(self, *args, **kwargs):
+      self.domain = kwargs.get('domain')
+      self.start_urls = [self.domain] if self.domain else self.start_urls
 
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
