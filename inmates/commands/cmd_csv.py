@@ -13,5 +13,6 @@ from inmates.utils import handle_csv
 @pass_environment
 def cli(ctx, column):
     """Extracts infromation from inmates.csv"""
-    handle_csv('inmates.csv', column)
+    for record in handle_csv('inmates.csv', column):
+        print(record)
 

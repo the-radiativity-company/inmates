@@ -21,9 +21,10 @@ def handle_csv(file: str, column: str = None):
         if column:
             filtered = filter(lambda r: r[column], (row for row in reader))
             for row in filtered:
-                print({row['IL County']: row[column]})
+                yield{row['IL County']: row[column]}
         else:
-            list(print(dict(row)) for row in reader)
+            for row in reader:
+                yield dict(row)
 
 
 def hashdir(directory, hashfile=None):
