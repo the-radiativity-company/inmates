@@ -32,10 +32,10 @@ def handle_csv(
             for row in filtered:
                 formattedc1 = c1formatter(row[column1]) if c1formatter else row[column1]
                 formattedc2 = c1formatter(row[column2]) if c1formatter else row[column2]
-                yield {formattedc1: formattedc2}
+                yield (formattedc1, formattedc2)
         else:
             for row in reader:
-                yield dict(row)
+                yield row
 
 
 def hashdir(directory, hashfile=None):

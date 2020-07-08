@@ -15,6 +15,6 @@ def cli(ctx, column):
     """Extracts infromation from inmates.csv"""
     anchor_formatter = lambda anchor: anchor.rstrip('County').strip().lower().replace('. ', '-')
     for record in handle_csv('inmates.csv', ('IL County', anchor_formatter), (column, None)):
-        key, value = record.popitem()
+        key, value = record
         print(f'{key.rjust(10):<12}{value}'.format(key, value))
 
