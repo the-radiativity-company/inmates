@@ -43,8 +43,7 @@ build: $(VENV) $(VENV_PYTHON)
 
 install: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) -m pip install -r requirements.txt
-	@make build
-	@$(VENV_PYTHON) -m pip install -e .
+	@$(VENV_PYTHON) -m pip install .
 
 uninstall: $(VENV) $(VENV_PYTHON) clean-install
 	@$(VENV_PYTHON) -m pip uninstall $(PROJECT_NAME)
