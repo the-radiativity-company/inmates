@@ -1,3 +1,4 @@
+from csv import DictReader
 from hashlib import sha256
 from os import walk
 from os.path import join as joinpath
@@ -12,6 +13,17 @@ def all_files_in(directory):
             if not any(fragment in name for fragment in ['__init__.py', 'cpython']):
                 all_files_and_directories_below.append(joinpath(root, name))
     return all_files_and_directories_below
+
+
+def handle_csv(file: str, column: str = None):
+    with open('inmates.csv') as csvfile:
+        reader = DictReader(csvfile)
+        if column:
+            filtered = filter(lambda r: r[column], (row for row in reader))
+            for row in filtered:
+                print({row['IL County']: row[column]})
+        else:
+            list(print(dict(row)) for row in reader)
 
 
 def hashdir(directory, hashfile=None):
