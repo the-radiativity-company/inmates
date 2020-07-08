@@ -13,6 +13,8 @@ from inmates.utils import handle_csv
 @pass_environment
 def cli(ctx, column):
     """Extracts infromation from inmates.csv"""
-    for record in handle_csv('inmates.csv', column):
-        print(record)
+    anchor_formatter = lambda anchor: anchor.rstrip('County').strip().lower().replace('. ', '-')
+    for record in handle_csv('inmates.csv', ('IL County', anchor_formatter), (column, None)):
+        key, value = record.popitem()
+        print(f'{key.rjust(10):<12}{value}'.format(key, value))
 

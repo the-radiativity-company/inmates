@@ -3,6 +3,7 @@ from hashlib import sha256
 from os import walk
 from os.path import join as joinpath
 from pathlib import Path
+from typing import Any, Callable, Tuple
 
 
 def all_files_in(directory):
@@ -15,13 +16,23 @@ def all_files_in(directory):
     return all_files_and_directories_below
 
 
-def handle_csv(file: str, column: str = None):
-    with open('inmates.csv') as csvfile:
+def handle_csv(
+    file: str,
+    column1_name_and_formatter: Tuple[str, Callable[..., Any]],
+    column2_name_and_formatter: Tuple[str, Callable[..., Any]],
+):
+    column1, c1formatter = column1_name_and_formatter
+    column2, c2formatter = column2_name_and_formatter
+    if not column1:
+        raise ValueError('The first column must be specified.')
+    with open(file) as csvfile:
         reader = DictReader(csvfile)
-        if column:
-            filtered = filter(lambda r: r[column], (row for row in reader))
+        if column2:
+            filtered = filter(lambda r: r[column2], (row for row in reader))
             for row in filtered:
-                yield{row['IL County']: row[column]}
+                formattedc1 = c1formatter(row[column1]) if c1formatter else row[column1]
+                formattedc2 = c1formatter(row[column2]) if c1formatter else row[column2]
+                yield {formattedc1: formattedc2}
         else:
             for row in reader:
                 yield dict(row)
