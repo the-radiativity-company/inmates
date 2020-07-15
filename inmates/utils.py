@@ -21,6 +21,11 @@ def get_modules_from(package: str):
     return set(Path(spider) for spider in all_files_in(package.replace('.', '/')))
 
 
+def not_none(iterable: Iterable) -> Iterable:
+    for item in filter(lambda item: item not in ['', None, [], (), {}], iterable):
+        yield item
+
+
 def handle_csv(
     file: str,
     column1_name_and_formatter: Tuple[str, Callable[..., Any]],
