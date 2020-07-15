@@ -11,9 +11,13 @@ def all_files_in(directory):
     all_files_and_directories_below = []
     for root, dirs, files, in walk(directory, topdown=True):
         for name in files:
-            if not any(fragment in name for fragment in ['__init__.py', 'cpython']):
+            if not any(fragment in name for fragment in ['__main__.py', '__init__.py', 'cpython']):
                 all_files_and_directories_below.append(joinpath(root, name))
     return all_files_and_directories_below
+
+
+def get_modules_from(package: str):
+    return set(Path(spider) for spider in all_files_in(package.replace('.', '/')))
 
 
 def handle_csv(
