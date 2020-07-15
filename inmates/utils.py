@@ -3,8 +3,12 @@ from functools import reduce
 from hashlib import sha256
 from os import walk
 from os.path import join as joinpath
+from sys import exit
 from pathlib import Path
-from typing import Any, Callable, Tuple
+from typing import Any
+from typing import Callable
+from typing import Iterable
+from typing import Tuple
 
 
 def all_files_in(directory):
@@ -30,14 +34,18 @@ def handle_csv(
     file: str,
     column1_name_and_formatter: Tuple[str, Callable[..., Any]],
     column2_name_and_formatter: Tuple[str, Callable[..., Any]],
-):
+) -> Tuple[str, str]:
     column1, c1formatter = column1_name_and_formatter
     column2, c2formatter = column2_name_and_formatter
     if not column1:
         raise ValueError('The first column must be specified.')
     with open(file) as csvfile:
         reader = DictReader(csvfile)
+        header = reader.fieldnames
         if column2:
+            if column2 not in header:
+                predicate, init = lambda a, b: f"{a}\n\t\t* {b}", '\n\t\t'
+                print(f'\n\t❌ "{column2}" not found in: {reduce(predicate, not_none(header), init)}\n'); exit(187)
             filtered = filter(lambda r: r[column2], (row for row in reader))
             for row in filtered:
                 formattedc1 = c1formatter(row[column1]) if c1formatter else row[column1]
