@@ -1,4 +1,5 @@
 from csv import DictReader
+from functools import reduce
 from hashlib import sha256
 from os import walk
 from os.path import join as joinpath
@@ -38,8 +39,14 @@ def handle_csv(
                 formattedc2 = c1formatter(row[column2]) if c1formatter else row[column2]
                 yield (formattedc1, formattedc2)
         else:
+            delimiter = ','
+            concat = lambda a, b: f'{a}{b}'
+            take_last = lambda c: c[-1]
+            take_last_with = lambda c: take_last(c) + delimiter
+            yield reader.fieldnames[0] + delimiter, reduce(concat, (name + delimiter for name in reader.fieldnames[1:]))
             for row in reader:
-                yield row
+                head, *tail = row.items()
+                yield take_last(head) + delimiter, reduce(concat, map(take_last_with, tail))
 
 
 def hashdir(directory, hashfile=None):
