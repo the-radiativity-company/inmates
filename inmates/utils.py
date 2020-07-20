@@ -49,7 +49,7 @@ def handle_csv(
             filtered = filter(lambda r: r[column2], (row for row in reader))
             for row in filtered:
                 formattedc1 = c1formatter(row[column1]) if c1formatter else row[column1]
-                formattedc2 = c1formatter(row[column2]) if c1formatter else row[column2]
+                formattedc2 = c2formatter(row[column2]) if c2formatter else row[column2]
                 yield (formattedc1, formattedc2)
         else:
             delimiter = ','
