@@ -23,7 +23,7 @@ class WillRoster(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
       self.domain = kwargs.get('domain')
-      self.start_urls = [self.domain] if self.domain else self.start_urls
+      self.start_urls = [self.domain] if self.domain else kwargs.get('start_urls')
 
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
