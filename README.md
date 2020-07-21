@@ -105,6 +105,10 @@ Here's an example of the bare minimum needed to start a spider for a given count
 class AdamsRoster(Spider):
     name = 'adams'
 
+    def __init__(self, *args, **kwargs):
+      self.domain = kwargs.get('domain')
+      self.start_urls = [self.domain] if self.domain else kwargs.get('start_urls')
+
     def parse(self, response):
         pass
 ```
