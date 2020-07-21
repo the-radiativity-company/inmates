@@ -23,6 +23,7 @@ else:
     outdirpath = None
 
 for spider, url in spider_urls.items():
-    outopt = f'-o {outdirpath}/{spider}.json -t json' if outdirpath else ''
+    outopt = f'-o {outdirpath}/{spider}.json -s LOG_ENABLED=False' if outdirpath else ''
     run_proc(split_args(f'{python} -m scrapy crawl -a domain={url} {spider} {outopt}'))
+    print('✅', spider)
 
