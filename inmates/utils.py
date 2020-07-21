@@ -5,6 +5,7 @@ from importlib import import_module
 from os import walk
 from os.path import join as joinpath
 from sys import exit
+from sys import stdout
 from pathlib import Path
 from scrapy.crawler import Crawler
 from scrapy.http import Request
@@ -35,6 +36,10 @@ def get_modules_from(package: str):
 def not_none(iterable: Iterable) -> Iterable:
     for item in filter(lambda item: item not in ['', None, [], (), {}], iterable):
         yield item
+
+
+def exit_proc(msg, code, file=stdout):
+    print(msg, file=file); exit(code)
 
 
 def run_spiders_for(all_spider_info: Tuple[str, str, type], settings=None):
