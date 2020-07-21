@@ -11,4 +11,4 @@ all_links = dict(handle_csv('inmates.csv', ('IL County', anchor_formatter), ('Ro
 spider_urls = dict((path.stem, all_links[path.stem]) for path in get_modules_from('inmates.scraper.spiders'))
 
 for spider, url in spider_urls.items():
-    run_proc(split_args(f'{python} -m scrapy crawl -a domain={url} {spider}'))
+    run_proc(split_args(f'{python} -m scrapy crawl -a domain={url} {spider} -o {spider}.json -t json'))
