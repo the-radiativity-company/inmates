@@ -12,11 +12,8 @@ from scrapy.http import Request
 from scrapy.settings import Settings
 from typing import Any
 from typing import Callable
-from typing import Dict
 from typing import Iterable
 from typing import Tuple
-from urllib.parse import ParseResult
-from urllib.parse import urlparse
 
 
 def all_files_in(directory):
@@ -40,62 +37,6 @@ def not_none(iterable: Iterable) -> Iterable:
 
 def exit_proc(msg, code, file=stdout):
     print(msg, file=file); exit(code)
-
-
-def run_spiders_for(all_spider_info: Tuple[str, str, type], settings=None):
-    """
-    Leverages scrapy tooling to produce dictionary output.
-
-    TODO (withtwoemms) -- use concurrent.futures to better handle multiple spiders
-    """
-    for spider_info in all_spider_info:
-        print('SPIDER_INFRO: ', spider_info)
-        try:
-            spider_name, uri, spider_class = spider_info
-            spider_instance = spider_class(start_urls=[uri])
-            crawler = Crawler(spider_class, settings=settings)
-            engine = crawler._create_engine()
-            request = Request(url=uri, callback=lambda: '...making request...')
-            deferred = engine.downloader.fetch(request, spider_instance)
-            generated_output = spider_instance.parse(deferred.result)
-            yield spider_name, generated_output
-        except NotImplementedError:
-            print('❌', f'{spider_name} (Please ensure a .parse method is defined)'); exit(187)
-        except ValueError:
-            print('❌', f'{spider_name} (Please ensure a .name attribute is defined)'); exit(187)
-
-
-def is_uri(parse_result: ParseResult):
-    return is_web_uri(parse_result) or is_file_uri(parse_result)
-
-
-def is_web_uri(parse_result: ParseResult):
-    return bool(parse_result.scheme in ('http', 'https')
-                                    and parse_result.netloc)
-
-
-def is_file_uri(parse_result: ParseResult):
-    return bool(parse_result.scheme in ('file',)
-                                    and not parse_result.netloc
-                                    and parse_result.path)
-
-
-def produce_spider_info_for(package: str, uris: Dict[str, str]):
-    all_spider_names = set(Path(spider).stem for spider in all_files_in(package.replace('.', '/')))
-
-    for spider_name in all_spider_names:
-        uri = uris.get(spider_name)
-        if not is_uri(urlparse(uri)):
-            print('❌', f'InvalidURI for "{spider_name}": {uri}'); exit(187)
-
-        expected_class = f'{spider_name.title()}Roster'
-        try:
-            spider_class = getattr(import_module(f'{package}.{spider_name}'), expected_class)
-        except:
-            print('❌', f'{spider_name} (Please ensure the spider class is called "{expected_class}")'); exit(187)
-
-        # SpiderInfo
-        yield (spider_name, uri, spider_class)
 
 
 def handle_csv(
