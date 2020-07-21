@@ -129,7 +129,7 @@ As of [issue #11](https://github.com/the-radiativity-company/inmates/issues/11),
 The following command can be used at runtime to invoke live crawling for all spiders:
 
 ```bash
-make spiders-crawl
+make scraper-run
 ```
 
 Default behavior for this command is to only output to stdout.

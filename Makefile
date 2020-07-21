@@ -6,7 +6,7 @@ VENV = $(PROJECT_NAME)-venv
 VENV_PYTHON = $(VENV)/bin/python
 TESTDIR = tests
 FIXTURESDIR = $(TESTDIR)/fixtures
-SPIDERSDIR = inmates/scraper
+SCRAPERDIR = inmates/scraper
 
 
 all: venv install clean-install
@@ -76,8 +76,8 @@ tests: $(VENV_PYTHON) $(TESTDIR)
 fixtures: $(VENV_PYTHON) $(FIXTURESDIR)
 	@$(VENV_PYTHON) $(FIXTURESDIR)
 
-spiders-crawl:
-	@$(VENV_PYTHON) $(SPIDERSDIR) $$LIVESITE_PARSED_OUTPUT_DIR
+scraper-run:
+	@$(VENV_PYTHON) $(SCRAPERDIR) $$LIVESITE_PARSED_OUTPUT_DIR
 
 
 targets:
