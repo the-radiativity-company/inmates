@@ -16,5 +16,5 @@ def cli(ctx, column):
     anchor_formatter = lambda anchor: anchor.rstrip('County').strip().lower().replace('. ', '-')
     for record in handle_csv('inmates.csv', ('IL County', anchor_formatter), (column, None)):
         key, value = record
-        print(f'{key.rjust(10):<12}{value}'.format(key, value))
+        print(f'{key.rjust(10)},{value}'.format(key, value))
 
