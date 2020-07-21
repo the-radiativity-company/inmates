@@ -54,7 +54,7 @@ def handle_csv(
         if column2:
             if column2 not in header:
                 predicate, init = lambda a, b: f"{a}\n\t\t* {b}", '\n\t\t'
-                print(f'\n\t❌ "{column2}" not found in: {reduce(predicate, not_none(header), init)}\n'); exit(187)
+                exit_proc(f'\n\t❌ "{column2}" not a valid column name in "{csvfile.name}": {reduce(predicate, not_none(header), init)}\n', 187)
             filtered = filter(lambda r: r[column2], (row for row in reader))
             for row in filtered:
                 formattedc1 = c1formatter(row[column1]) if c1formatter else row[column1]
