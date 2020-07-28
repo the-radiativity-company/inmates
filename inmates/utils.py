@@ -12,6 +12,7 @@ from scrapy.http import Request
 from scrapy.settings import Settings
 from typing import Any
 from typing import Callable
+from typing import Generator
 from typing import Iterable
 from typing import Tuple
 
@@ -43,7 +44,22 @@ def handle_csv(
     file: str,
     column1_name_and_formatter: Tuple[str, Callable[..., Any]],
     column2_name_and_formatter: Tuple[str, Callable[..., Any]],
-) -> Tuple[str, str]:
+) -> Generator[Tuple[str, str], None, None]:
+    """
+    For a given .csv file, a projection of row values under the two given columns are formatted and selected.
+    For each column chosed, this function produces a tuple of all row values under said column.
+
+    e.g. example.csv
+
+    Names,Email,Lucky Number
+    Chidinma,chidinma@chidinma.com,1
+    Rosa,rosa@rosa.com,8
+    Maxwell,maxwell@maxwell.com,7
+
+    handled = handle_csv('example.csv', ('Names', lambda name: name.lower()), ('Number', lambda num: int(num) + 10))
+    list(handled)
+        => [('Names', 'Number'), ('chidinma', '11'), ('rosa', '18'), ('maxwell', '17')]
+    """
     column1, c1formatter = column1_name_and_formatter
     column2, c2formatter = column2_name_and_formatter
     if not column1:
