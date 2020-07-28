@@ -11,21 +11,13 @@ class MaconRoster(scrapy.Spider):
     the other params could be used for programattic searches if needed
 
     TODO: the bond amount is on the detail tab for each inmate,
-    how do we want to handle that?
+    how do we want to handle that? See here:
+    https://docs.scrapy.org/en/latest/topics/request-response.html#topics-request-response-ref-request-callback-arguments
     for now I think we can scrape with the anchor tag so volunteers
     can look at the info?
     might need to process this in a pipeline
-
-    TODO: tests 
     """
     name = "macon"
-
-    def start_requests(self):
-        urls = [
-            'http://50.77.170.147/NewWorld.InmateInquiry/IL0580000?Name=&SubjectNumber=&BookingNumber=&InCustody=True&BookingFromDate=&BookingToDate=&Facility=',
-        ]
-        for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
@@ -45,3 +37,4 @@ class MaconRoster(scrapy.Spider):
                 'MultipleBookings': row.css('.MultipleBookings::text').get(),
                 'HousingFacility': row.css('.HousingFacility::text').get()
             }
+

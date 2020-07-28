@@ -1,6 +1,7 @@
 click==7.0
 flask==1.1.1
 httpx==0.11.1
+pdfminer-six==20181108
 python-magic==0.4.15
 scrapy==2.1.0
-pdfminer-six==20181108
+scrapy-sentry==0.9.0
