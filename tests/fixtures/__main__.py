@@ -26,7 +26,6 @@ def produce_spider_info_for(module_name: str, commissary: Path):
     for spider_name in all_spider_names:
         roster_path = all_roster_paths.get(spider_name)
         if not roster_path:
-            if debug_mode: raise e
             print('❌', f'{spider_name} (It seems there is no commissary/ entry)'); exit(187)
         local_uri = roster_path.absolute().as_uri()
 
