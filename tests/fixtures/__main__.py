@@ -26,7 +26,7 @@ def produce_spider_info_for(module_name: str, commissary: Path):
     for spider_name in all_spider_names:
         roster_path = all_roster_paths.get(spider_name)
         if not roster_path:
-            if os.environ.get(debug_mode): raise e
+            if debug_mode: raise e
             print('❌', f'{spider_name} (It seems there is no commissary/ entry)'); exit(187)
         local_uri = roster_path.absolute().as_uri()
 
@@ -34,7 +34,7 @@ def produce_spider_info_for(module_name: str, commissary: Path):
         try:
             spider_class = getattr(import_module(f'{module_name}.{spider_name}'), expected_class)
         except Exception as e:
-            if os.environ.get(debug_mode): raise e
+            if debug_mode: raise e
             print('❌', f'{spider_name} (Please ensure the spider class is called "{expected_class}")'); exit(187)
 
         # SpiderInfo
@@ -58,10 +58,10 @@ def prepare_fixtures_from(all_spider_info: Tuple[str, str, type]):
             generated_output = spider_instance.parse(deferred.result)
             yield spider_name, generated_output
         except NotImplementedError as e:
-            if os.environ.get(debug_mode): raise e
+            if debug_mode: raise e
             print('❌', f'{spider_name} (Please ensure a .parse method is defined)'); exit(187)
         except ValueError as e:
-            if os.environ.get(debug_mode): raise e
+            if debug_mode: raise e
             print('❌', f'{spider_name} (Please ensure a .name attribute is defined)'); exit(187)
 
 
@@ -70,7 +70,7 @@ def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: st
     if not fixture_type in ['json']:
         raise ValueError(f'Currently, "{fixture_type}" is not supported.')
     if not fixtures:
-        if os.environ.get(debug_mode): raise RuntimeError
+        if debug_mode: raise RuntimeError
         print('❌', f'{name} (Please yield data from the .parse method)'); exit(187)
 
     spider_fixture_path = fixtures_dir.joinpath(f'{name}.{fixture_type}')
@@ -101,7 +101,7 @@ def prepare_fixtures():
             try:
                 future.result()
             except Exception as e:
-                if os.environ.get(debug_mode): raise e
+                if debug_mode: raise e
 
 
 prepare_fixtures()
