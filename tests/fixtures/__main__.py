@@ -29,7 +29,7 @@ def produce_spider_info_for(module_name: str, commissary: Path):
             print('❌', f'{spider_name} (It seems there is no commissary/ entry)'); exit(187)
         local_uri = roster_path.absolute().as_uri()
 
-        expected_class = f'{spider_name.title()}Roster'
+        expected_class = f'{spider_name.title()}Spider'
         try:
             spider_class = getattr(import_module(f'{module_name}.{spider_name}'), expected_class)
         except:

@@ -1,8 +1,9 @@
-import pdb
-import scrapy
+import ipdb
+
+from scrapy import Spider
 
 
-class WillRoster(scrapy.Spider):
+class WillSpider(Spider):
     """
     scraper for Will County inmates list
     very similar to the Macon scraper
@@ -21,6 +22,10 @@ class WillRoster(scrapy.Spider):
     TODO: tests
     """
     name = "will"
+
+    def __init__(self, *args, **kwargs):
+      self.domain = kwargs.get('domain')
+      self.start_urls = [self.domain] if self.domain else kwargs.get('start_urls')
 
     def parse(self, response):
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
