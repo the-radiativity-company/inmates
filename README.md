@@ -1,5 +1,9 @@
 # inmates
 
+[![CI build status](https://github.com/the-radiativity-company/inmates/workflows/CI/badge.svg)](https://github.com/the-radiativity-company/inmates/actions)
+
+[![Cron build status](https://github.com/the-radiativity-company/inmates/workflows/Cron/badge.svg)](https://github.com/the-radiativity-company/inmates/actions)
+
 This project is being conducted on behalf of Chicago Community Bond Fund.
 
 # Problem Space
