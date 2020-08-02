@@ -6,13 +6,16 @@ from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
 from scrapy import Spider
-from subprocess import run as run_proc
 
 
 class AdamsRoster(Spider):
     name = 'adams'
 
     def parse(self, response):
+        """
+        TODO (withtwoemms) -- handle cases where inmate row of pdf doesn't begin with a digit
+        TODO (withtwoemms) -- devise means of extracting HousingFacility
+        """
         pdf_text = handle_pdf(BytesIO(response.body))
         pdf_lines = pdf_text.split('\n')
 
