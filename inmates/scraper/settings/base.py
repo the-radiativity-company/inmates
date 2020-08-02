@@ -14,6 +14,8 @@ BOT_NAME = 'inmates.scraper'
 SPIDER_MODULES = ['inmates.scraper.spiders']
 NEWSPIDER_MODULE = 'inmates.scraper.spiders'
 
+# Custom settings
+INMATES_DEBUG_MODE = False
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'inmates.scraper (+http://www.yourdomain.com)'
