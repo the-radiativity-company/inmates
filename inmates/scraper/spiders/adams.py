@@ -13,7 +13,28 @@ class AdamsRoster(Spider):
     name = 'adams'
 
     def parse(self, response):
-        pass
+        pdf_text = handle_pdf(BytesIO(response.body))
+        pdf_lines = pdf_text.split('\n')
+
+        #-- predicates ---
+        starts_with_digit = lambda s: s[0].isdigit() if len(s) else False
+        has_more_than_digit = lambda s: len(s.split()) > 1
+        text_is_uppercased = lambda s: s.split()[1:][0].isupper() if s.split()[1:] else False
+        #-----------------
+
+        for line in pdf_lines:
+            if starts_with_digit(line) and has_more_than_digit(line) and text_is_uppercased(line):
+                tokens = line.split()
+                yield {
+                    'Name': f'{tokens[1].title()} {tokens[2].title()}',
+                    'Gender': None,
+                    'Height': None,
+                    'HousingFacility': None,
+                    'Race': None,
+                    'MultipleBookings': None,
+                    'InCustody': None,
+                    'Weight': None
+                }
 
 
 def handle_pdf(buffer: BytesIO, codec: str = 'utf-8'):
