@@ -4,7 +4,8 @@ import inmates
 from csv import DictReader
 from os.path import dirname
 
-from ..cli import pass_environment
+from inmates.cli import pass_environment
+from inmates.utils import handle_csv
 
 
 @click.command('csv', short_help='Performs operations on the csv')
@@ -12,11 +13,11 @@ from ..cli import pass_environment
 @pass_environment
 def cli(ctx, column):
     """Extracts infromation from inmates.csv"""
-    with open('inmates.csv') as csvfile:
-        reader = DictReader(csvfile)
-        if column:
-            filtered = filter(lambda r: r[column], (row for row in reader))
-            for row in filtered:
-                print({row['IL County']: row[column]})
-        else:
-            list(print(dict(row)) for row in reader)
+
+    # NOTE: this formatter turns a cell like "St. Claire County" -> "st-claire"
+    anchor_formatter = lambda anchor: anchor.rstrip('County').strip().lower().replace('. ', '-')
+
+    for record in handle_csv('inmates.csv', ('IL County', anchor_formatter), (column, None)):
+        key, value = record
+        print(f'{key.rjust(10)},{value}'.format(key, value))
+
