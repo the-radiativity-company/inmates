@@ -18,7 +18,7 @@ class MaconSpider(Spider):
     can look at the info?
     might need to process this in a pipeline
     """
-    name = "macon"
+    name = 'macon'
 
     def __init__(self, *args, **kwargs):
       self.domain = kwargs.get('domain')

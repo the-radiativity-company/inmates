@@ -21,7 +21,7 @@ class WillSpider(Spider):
 
     TODO: tests
     """
-    name = "will"
+    name = 'will'
 
     def __init__(self, *args, **kwargs):
       self.domain = kwargs.get('domain')

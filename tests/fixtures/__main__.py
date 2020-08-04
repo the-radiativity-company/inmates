@@ -13,6 +13,7 @@ from sys import exit
 from typing import Tuple
 
 from inmates.utils import all_files_in
+from inmates.utils import exit_proc
 
 
 settings = Settings()
@@ -26,14 +27,14 @@ def produce_spider_info_for(module_name: str, commissary: Path):
     for spider_name in all_spider_names:
         roster_path = all_roster_paths.get(spider_name)
         if not roster_path:
-            print('❌', f'{spider_name} (It seems there is no commissary/ entry)'); exit(187)
+            exit_proc(f'❌ {spider_name} (It seems there is no commissary/ entry)', 187)
         local_uri = roster_path.absolute().as_uri()
 
         expected_class = f'{spider_name.title()}Spider'
         try:
             spider_class = getattr(import_module(f'{module_name}.{spider_name}'), expected_class)
         except:
-            print('❌', f'{spider_name} (Please ensure the spider class is called "{expected_class}")'); exit(187)
+            exit_proc(f'❌ {spider_name} (Please ensure the spider class is called "{expected_class}")', 187)
 
         # SpiderInfo
         yield (spider_name, local_uri, spider_class)
@@ -56,9 +57,9 @@ def prepare_fixtures_from(all_spider_info: Tuple[str, str, type]):
             generated_output = spider_instance.parse(deferred.result)
             yield spider_name, generated_output
         except NotImplementedError:
-            print('❌', f'{spider_name} (Please ensure a .parse method is defined)'); exit(187)
+            exit_proc(f'❌ {spider_name} (Please ensure a .parse method is defined)', 187)
         except ValueError:
-            print('❌', f'{spider_name} (Please ensure a .name attribute is defined)'); exit(187)
+            exit_proc(f'❌ {spider_name} (Please ensure a .name attribute is defined)', 187)
 
 
 def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: str):
@@ -66,7 +67,7 @@ def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: st
     if not fixture_type in ['json']:
         raise ValueError(f'Currently, "{fixture_type}" is not supported.')
     if not fixtures:
-        print('❌', f'{name} (Please yield data from the .parse method)'); exit(187)
+        exit_proc(f'❌ {name} (Please yield data from the .parse method)', 187)
 
     spider_fixture_path = fixtures_dir.joinpath(f'{name}.{fixture_type}')
     spider_fixture_path.write_text('')

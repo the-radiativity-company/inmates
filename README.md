@@ -124,4 +124,13 @@ For the `WoodfordRoster`, those assertions would be found in "tests/test_woodfor
 
 # Deployment
 
-(forthcoming)
+As of [issue #11](https://github.com/the-radiativity-company/inmates/issues/11), spiders are set vi CI to crawl at cron's cadence and deposit results in an [AWS S3 bucket](https://github.com/marketplace/actions/upload-s3).
+The following command can be used at runtime to invoke live crawling for all spiders:
+
+```bash
+make scraper-run
+```
+
+Default behavior for this command is to only output to stdout.
+If output is to be collected, the `$LIVESITE_PARSED_OUTPUT_DIR` environment variable can be set wherein results will be deposited.
+
