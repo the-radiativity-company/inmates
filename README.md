@@ -106,9 +106,10 @@ Spiders live in the "inmates/scraper/spiders/" directory and there's to be _one 
 To get started on a new spider, simply run the following:
 
 ```bash
-scrapy genspider -t init new -
+make new-spider NAME=new
 ```
 where "new" is the name of your `NewSpider` at "inmates/scraper/spiders/new.py".
+Used the `FORCE=true` flage if you'd like to overwrite an existing spider.
 To scrape the local site associated with each scraper, run `make fixtures` and see this sort of output:
 
 ```bash
