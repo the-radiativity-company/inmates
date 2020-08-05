@@ -1,7 +1,9 @@
-import scrapy
+import ipdb
+
+from scrapy import Spider
 
 
-class WillRoster(scrapy.Spider):
+class WillSpider(Spider):
     """
     scraper for Will County inmates list
     very similar to the Macon scraper
