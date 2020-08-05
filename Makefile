@@ -80,7 +80,7 @@ scraper-run:
 	@$(VENV_PYTHON) $(SCRAPERDIR) $$LIVESITE_PARSED_OUTPUT_DIR
 
 new-spider:
-	@$(VENV_PYTHON) -m scrapy genspider -t init $(NAME) - $(shell if [ $(FORCE) = true ]; then echo "--force"; fi )
+	@$(VENV_PYTHON) -m scrapy genspider -t init $(NAME) - $(if $(FORCE), --force)
 
 
 targets:
