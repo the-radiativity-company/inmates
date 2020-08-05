@@ -13,6 +13,7 @@ from sys import exit
 from typing import Tuple
 
 from inmates.utils import all_files_in
+from inmates.utils import exit_proc
 
 
 settings = Settings()
@@ -26,7 +27,7 @@ def produce_spider_info_for(module_name: str, commissary: Path):
     for spider_name in all_spider_names:
         roster_path = all_roster_paths.get(spider_name)
         if not roster_path:
-            print('❌', f'{spider_name} (It seems there is no commissary/ entry)'); exit(187)
+            exit_proc(f'❌ {spider_name} (It seems there is no commissary/ entry)', 187)
         local_uri = roster_path.absolute().as_uri()
 
         expected_class = f'{spider_name.title()}Roster'
