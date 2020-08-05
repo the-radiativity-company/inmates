@@ -1,5 +1,5 @@
 #!/bin/bash
-scrapy list | xargs -I {} scrapy crawl {} -s LOG_ENABLED=False &
+make scraper-run &
 
 # Output to the screen every 9 minutes to prevent a timeout
 # https://stackoverflow.com/a/40800348
