@@ -1,0 +1,32 @@
+[
+    {
+        "Gender": null,
+        "Height": null,
+        "HousingFacility": null,
+        "InCustody": null,
+        "MultipleBookings": null,
+        "Name": "Lamar Brew",
+        "Race": null,
+        "Weight": null
+    },
+    {
+        "Gender": null,
+        "Height": null,
+        "HousingFacility": null,
+        "InCustody": null,
+        "MultipleBookings": null,
+        "Name": "Kristophon Davis",
+        "Race": null,
+        "Weight": null
+    },
+    {
+        "Gender": null,
+        "Height": null,
+        "HousingFacility": null,
+        "InCustody": null,
+        "MultipleBookings": null,
+        "Name": "Bruce Dyer",
+        "Race": null,
+        "Weight": null
+    }
+]

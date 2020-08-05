@@ -17,8 +17,8 @@ from inmates.utils import exit_proc
 
 
 settings = Settings()
-settings.setmodule('inmates.scraper.settings', priority='project')
-
+settings.setmodule('inmates.scraper.settings.base', priority='project')
+debug_mode = settings['INMATES_DEBUG_MODE']
 
 def produce_spider_info_for(module_name: str, commissary: Path):
     all_roster_paths = dict([Path(site).stem, Path(site).absolute()] for site in all_files_in(commissary))
@@ -33,8 +33,9 @@ def produce_spider_info_for(module_name: str, commissary: Path):
         expected_class = f'{spider_name.title()}Spider'
         try:
             spider_class = getattr(import_module(f'{module_name}.{spider_name}'), expected_class)
-        except:
-            exit_proc(f'❌ {spider_name} (Please ensure the spider class is called "{expected_class}")', 187)
+        except Exception as e:
+            if debug_mode: raise e
+            print('❌', f'{spider_name} (Please ensure the spider class is called "{expected_class}")'); exit(187)
 
         # SpiderInfo
         yield (spider_name, local_uri, spider_class)
@@ -56,10 +57,12 @@ def prepare_fixtures_from(all_spider_info: Tuple[str, str, type]):
             deferred = engine.downloader.fetch(request, spider_instance)
             generated_output = spider_instance.parse(deferred.result)
             yield spider_name, generated_output
-        except NotImplementedError:
-            exit_proc(f'❌ {spider_name} (Please ensure a .parse method is defined)', 187)
-        except ValueError:
-            exit_proc(f'❌ {spider_name} (Please ensure a .name attribute is defined)', 187)
+        except NotImplementedError as e:
+            if debug_mode: raise e
+            print('❌', f'{spider_name} (Please ensure a .parse method is defined)'); exit(187)
+        except ValueError as e:
+            if debug_mode: raise e
+            print('❌', f'{spider_name} (Please ensure a .name attribute is defined)'); exit(187)
 
 
 def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: str):
@@ -67,7 +70,8 @@ def write_prepared_fixtures(name, fixtures, fixtures_dir: Path, fixture_type: st
     if not fixture_type in ['json']:
         raise ValueError(f'Currently, "{fixture_type}" is not supported.')
     if not fixtures:
-        exit_proc(f'❌ {name} (Please yield data from the .parse method)', 187)
+        if debug_mode: raise RuntimeError
+        print('❌', f'{name} (Please yield data from the .parse method)'); exit(187)
 
     spider_fixture_path = fixtures_dir.joinpath(f'{name}.{fixture_type}')
     spider_fixture_path.write_text('')
@@ -97,7 +101,7 @@ def prepare_fixtures():
             try:
                 future.result()
             except Exception as e:
-                pass
+                if debug_mode: raise e
 
 
 prepare_fixtures()

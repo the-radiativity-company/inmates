@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+from os import environ as envvars
+
 
 # Scrapy settings for inmates.scraper project
 #
@@ -14,6 +15,9 @@ BOT_NAME = 'inmates.scraper'
 SPIDER_MODULES = ['inmates.scraper.spiders']
 NEWSPIDER_MODULE = 'inmates.scraper.spiders'
 TEMPLATES_DIR = 'inmates/scraper/templates/'
+
+# Custom settings
+INMATES_DEBUG_MODE = bool(envvars.get('INMATES_DEBUG_MODE'))
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'inmates.scraper (+http://www.yourdomain.com)'

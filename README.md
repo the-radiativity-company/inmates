@@ -118,6 +118,9 @@ To scrape the local site associated with each scraper, run `make fixtures` and s
 ✅ woodford
 ```
 
+Be aware that some stacktraces are suppressed when making fixutres.
+If you'd like to see all of them, make sure you set the INMATES_DEBUG_MODE environment variable.
+
 Generated fixtures, can be found in the "tests/fixtures/" directory.
 To ensure that the parsed data has the structure and content expected, assertions are written in an associated test module.
 For the `WoodfordRoster`, those assertions would be found in "tests/test_woodford.py".
