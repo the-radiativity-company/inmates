@@ -14,6 +14,7 @@ BOT_NAME = 'inmates.scraper'
 
 SPIDER_MODULES = ['inmates.scraper.spiders']
 NEWSPIDER_MODULE = 'inmates.scraper.spiders'
+TEMPLATES_DIR = 'inmates/scraper/templates/'
 
 # Custom settings
 INMATES_DEBUG_MODE = bool(envvars.get('INMATES_DEBUG_MODE'))

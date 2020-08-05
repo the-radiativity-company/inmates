@@ -1,7 +1,9 @@
-import scrapy
+import ipdb
+
+from scrapy import Spider
 
 
-class MaconRoster(scrapy.Spider):
+class MaconSpider(Spider):
     """
     scraper for Macon Count inmates list
     list is in a simple paginated table
