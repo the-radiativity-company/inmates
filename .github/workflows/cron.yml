@@ -4,12 +4,12 @@ on: [push]
   #schedule:
   #  - cron: "12 6 * * *"
 
-env:
-  SCRAPY_SETTINGS_MODULE: inmates.scraper.settings.prod
-  S3_BUCKET: chicago-community-bond-fund-inmates-scraper-output
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+#env:
+#  SCRAPY_SETTINGS_MODULE: inmates.scraper.settings.prod
+#  S3_BUCKET: chicago-community-bond-fund-inmates-scraper
+#  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
   crawl:
