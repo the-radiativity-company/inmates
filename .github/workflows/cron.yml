@@ -1,15 +1,15 @@
 name: Cron
 
-on:
-  schedule:
-    - cron: "12 6 * * *"
+on: [push]
+  #schedule:
+  #  - cron: "12 6 * * *"
 
 env:
   SCRAPY_SETTINGS_MODULE: inmates.scraper.settings.prod
-  S3_BUCKET: chicago-community-bond-fund-inmates-scraper
+  S3_BUCKET: chicago-community-bond-fund-inmates-scraper-output
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  #SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
   crawl:
@@ -22,12 +22,23 @@ jobs:
         with:
           python-version: 3.7
 
-      - name: Install dependencies
-        run: |
-          make
-          source inmates-venv/bin/activate && pip install botocore
+      - name: Make virtual environment
+        run: make
+        #run: |
+        #  make
+        #  source inmates-venv/bin/activate && pip install botocore
 
       - name: Run scrapers
         run: |
           export PYTHONPATH=$(pwd):$PYTHONPATH
           ./.deploy.sh
+
+      - uses: shallwefootball/s3-upload-action@master
+        name: Upload to S3
+        id: S3
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'outdir'
+          destination_dir: 'inmates'
