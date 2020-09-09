@@ -45,6 +45,10 @@ commands:
 fixtures: $(VENV_PYTHON) $(FIXTURESDIR)
 	@$(VENV_PYTHON) $(FIXTURESDIR)
 
+.PHONY: git-tag
+git-tag:
+	@echo $(shell git describe --tags)
+
 .PHONY: image # builds a docker image
 image:
 	@docker build -t $(shell make image-tag) .
