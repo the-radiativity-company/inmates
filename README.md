@@ -62,7 +62,7 @@ Execute the `inmates` command to see available subcommands.
 
 In service of the aforestated goals, a `scrapy.Spider` for each county will be created.
 Most everything needed to develop a such a scraper is provided within the project.
-Please see an overview of the project layout, below (generated via `make tree`):
+Please see an overview of the project layout, below (generated via `make tree`--use `make commands` to see all available commands):
 
 ```
 inmates/
