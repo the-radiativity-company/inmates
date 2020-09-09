@@ -84,7 +84,7 @@ release:
 
 .PHONY: scraper-run # runs scrapers and can store them locally envvar set
 scraper-run:
-	@$(VENV_PYTHON) $(SCRAPERDIR) $$LIVESITE_PARSED_OUTPUT_DIR
+	@$(VENV_PYTHON) $(SCRAPERDIR) $(if $(OUTDIR),$(OUTDIR),)
 
 .PHONY: tests # runs all tests
 tests: $(VENV_PYTHON) $(TESTDIR)
