@@ -8,7 +8,7 @@ from pdfminer.pdfpage import PDFPage
 from scrapy import Spider
 
 
-class AdamsRoster(Spider):
+class AdamsSpider(Spider):
     name = 'adams'
 
     def parse(self, response):
