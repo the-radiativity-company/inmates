@@ -101,6 +101,6 @@ uninstall: $(VENV) $(VENV_PYTHON) clean-install
 .PHONY: venv # builds the virtual environment
 venv:
 	@if [ ! -d $(VENV) ]; then \
-		$(SYSTEM_PYTHON) -m pip install virtualenv; \
+		$(SYSTEM_PYTHON) -m pip install virtualenv --user; \
 		$(SYSTEM_PYTHON) -m virtualenv $(VENV) >/dev/null; \
 	fi
