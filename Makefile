@@ -7,18 +7,17 @@ FIXTURESDIR = $(TESTDIR)/fixtures
 SCRAPERDIR = inmates/scraper
 
 
-all: venv install clean-install
+all: venv build install clean-build
 
 .PHONY: build # builds a distributable artifact
 build: $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) setup.py bdist_wheel
 
 .PHONY: clean # deletes build residues, virtual environment, and python metafiles
-clean: clean-install clean-venv clean-pyc
+clean: clean-build clean-venv clean-pyc
 
-.PHONY: clean-install # deletes all build residues
-clean-install:
-	@rm -rf *.egg-info
+.PHONY: clean-build # deletes all build residues
+clean-build:
 	@rm -rf build
 	@rm -rf dist
 
@@ -62,9 +61,9 @@ image-tag:
 	@echo $(PROJECT_NAME):$(shell git tag | tail -1)
 
 .PHONY: install # installs project and dep to virtual environment
-install: $(VENV) $(VENV_PYTHON)
+install: build $(VENV) $(VENV_PYTHON)
 	@$(VENV_PYTHON) -m pip install -r requirements.txt
-	@$(VENV_PYTHON) -m pip install .
+	@$(VENV_PYTHON) -m pip install -e .
 
 .PHONY: new-spider # creates a new spider
 new-spider:
@@ -97,6 +96,7 @@ tree:
 .PHONY: uninstall # uninstalls project and dep from virtual environment
 uninstall: $(VENV) $(VENV_PYTHON) clean-install
 	@$(VENV_PYTHON) -m pip uninstall $(PROJECT_NAME)
+	@rm -rf *.egg-info
 
 .PHONY: venv # builds the virtual environment
 venv:
