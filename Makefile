@@ -67,6 +67,9 @@ install: build $(VENV) $(VENV_PYTHON)
 
 .PHONY: new-spider # creates a new spider
 new-spider:
+ifeq ($(NAME),)
+	$(error NAME not specified)
+endif
 	@$(VENV_PYTHON) -m scrapy genspider -t init $(NAME) - $(if $(FORCE), --force)
 
 .PHONY: publish # publishes docker image
