@@ -15,11 +15,11 @@ class StclairSpider(Spider):
     def parse(self, response):
         response.xpath('//input[@id="txtLastName"]')
         formid = 'txtLastName'
-        data = {formid: 'a'}  # TODO (withtwoemms) -- traverse alphabet and union results
-        return FormRequest.from_response(response,
-                                         formid=formid,
-                                         formdata=data,
-                                         callback=self.handle_form)
+        for formdata in [{formid: chr(x)} for x in range(97, 123)]:  # a-z
+            yield FormRequest.from_response(response,
+                                            formid=formid,
+                                            formdata=formdata,
+                                            callback=self.handle_form)
 
     def handle_form(self, form_response):
         table_rows = form_response.xpath('//table[@id="nameResultsTable"]').xpath('tr')
