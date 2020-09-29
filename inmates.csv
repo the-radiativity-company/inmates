@@ -1,5 +1,5 @@
 IL County,Website,Roster Link,PDF,Notes,
-Adams County,http://www.co.adams.il.us/jail/index.htm,http://www.co.adams.il.us/jail/inmates/dailypop.pdf,TRUE,PDF- No Bail info- Updates at 5AM,
+Adams County,http://www.co.adams.il.us/jail/index.htm,https://www.co.adams.il.us/government/departments/sheriff-jail/county-jail/jail-inmate-list,TRUE,PDF- No Bail info- Updates at 5AM,
 Alexander County,,,,,
 Bond County,,,,,
 Boone County,,,,,
@@ -101,3 +101,4 @@ Will County,https://www.willcosheriff.org/,http://66.158.72.230/NewWorld.InmateI
 Williamson County,,,,uses VINElink,
 Winnebago County,http://winnebagosheriff.com/,http://inmates.winnebagosheriff.com/,FALSE,Select One letter at a time to search alphabetically. Each person opens to show all their booking info including bond,
 Woodford County,https://www.woodford-county.org/215/Corrections,http://inmates.bluhorse.com/default.aspx?ID=WCCF#,FALSE,Each person has to be clicked into- there is a 2nd tab with bond info,
+
