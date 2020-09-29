@@ -1,8 +1,8 @@
 name: Cron
 
-on:
-  schedule:
-    - cron: "12 6 * * *"
+on: [push]
+    #   schedule:
+    #     - cron: "12 6 * * *"
 
 jobs:
   crawl:
