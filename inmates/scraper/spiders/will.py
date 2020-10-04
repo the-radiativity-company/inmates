@@ -61,13 +61,12 @@ class WillSpider(Spider):
         return demographic_info
 
     def parse_booking_data(self, booking):
-        """
-        TODO (withtwoemms) -- parse charges
-        """
         booking_data = booking.xpath('./div[@class="BookingData"]')
         booking_info = self.parse_booking_info(booking_data)
         bond_info = self.parse_bond_info(booking_data)
         booking_info['bonds'] = bond_info
+        charge_info = self.parse_charge_info(booking_data)
+        booking_info['Charges'] = charge_info
         return booking_info
 
     def parse_bond_info(self, booking_data):
@@ -86,6 +85,14 @@ class WillSpider(Spider):
             value = element.xpath('span/text()').get()
             booking_info.update({key: value})
         return booking_info
+
+    def parse_charge_info(self, booking_data):
+        charge_info = []
+        keys = booking_data[0].xpath('./div[@class="BookingCharges"]//table/thead//th/text()').getall()
+        for row in booking_data.xpath('./div[@class="BookingCharges"]//table/tbody/tr'):
+            vals = row.xpath('./td/text()').getall()
+            charge_info.append(dict(zip(keys, vals)))
+        return charge_info
 
     def extract_profile_url(self, row):
         path = row.xpath('./td[@class="Name"]/a/@href').get()
