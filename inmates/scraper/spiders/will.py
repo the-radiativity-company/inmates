@@ -7,23 +7,6 @@ from urllib.parse import urlparse
 
 
 class WillSpider(Spider):
-    """
-    scraper for Will County inmates list
-    very similar to the Macon scraper
-    list is in a simple paginated table
-    the list can be filtered by some params controlled in the URL
-    in this case, in InCustody is set to true so
-    the other params could be used for programattic searches if needed
-
-    TODO: the bond amount is on the detail tab for each inmate,
-    how do we want to handle that? See here:
-    https://docs.scrapy.org/en/latest/topics/request-response.html#topics-request-response-ref-request-callback-arguments
-    for now I think we can scrape with the anchor tag so volunteers
-    can look at the info?
-    might need to process this in a pipeline
-
-    TODO: tests
-    """
     name = 'will'
 
     def __init__(self, *args, **kwargs):
@@ -64,7 +47,7 @@ class WillSpider(Spider):
         booking_data = booking.xpath('./div[@class="BookingData"]')
         booking_info = self.parse_booking_info(booking_data)
         bond_info = self.parse_bond_info(booking_data)
-        booking_info['bonds'] = bond_info
+        booking_info['Bonds'] = bond_info
         charge_info = self.parse_charge_info(booking_data)
         booking_info['Charges'] = charge_info
         return booking_info
