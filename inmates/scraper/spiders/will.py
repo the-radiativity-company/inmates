@@ -32,15 +32,17 @@ class WillSpider(Spider):
       self.parsed_urls = [urlparse(url) for url in self.start_urls]
 
     def parse(self, response):
-        """
-        TODO (withtwoemms) -- handle pagination
-        """
         table_body = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[2]/table/tbody')[0]
         rows = table_body.xpath('tr')
         parsed_url = self.parsed_urls[0]
         for row in rows:
             profile_url = self.extract_profile_url(row)
             yield Request(url=profile_url, callback=self.parse_profile)
+
+        next_page_path = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[3]/a[3]/@href').get()
+        next_page_url = self.gen_url(next_page_path)
+        if next_page_url is not None:
+            yield response.follow(next_page_url, callback=self.parse)
 
     def parse_profile(self, response):
         demography = response.xpath('//div[@id="DemographicInformation"]/ul/li')
@@ -86,9 +88,11 @@ class WillSpider(Spider):
         return booking_info
 
     def extract_profile_url(self, row):
-        parsed_url = self.parsed_urls[0]
-        url = f'{parsed_url.scheme}://{parsed_url.netloc}'
         path = row.xpath('./td[@class="Name"]/a/@href').get()
-        profile_url = f'{url}{path}'
-        return profile_url
+        return self.gen_url(path)
+
+    def gen_url(self, path):
+        parsed_url = self.parsed_urls[0]
+        url_root = f'{parsed_url.scheme}://{parsed_url.netloc}'
+        return f'{url_root}{path}'
 
