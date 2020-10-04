@@ -7,6 +7,9 @@ from urllib.parse import urlparse
 
 
 class WillSpider(Spider):
+    """
+    NOTE: court information is available though not being scraped
+    """
     name = 'will'
 
     def __init__(self, *args, **kwargs):
@@ -23,9 +26,8 @@ class WillSpider(Spider):
             yield Request(url=profile_url, callback=self.parse_profile)
 
         next_page_path = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[3]/a[3]/@href').get()
-        next_page_url = self.gen_url(next_page_path)
         if next_page_url is not None:
-            yield response.follow(next_page_url, callback=self.parse)
+            yield response.follow(response.urljoin(next_page_path), callback=self.parse)
 
     def parse_profile(self, response):
         demography = response.xpath('//div[@id="DemographicInformation"]/ul/li')
