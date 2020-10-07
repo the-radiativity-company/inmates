@@ -7,7 +7,7 @@ FIXTURESDIR = $(TESTDIR)/fixtures
 SCRAPERDIR = inmates/scraper
 
 
-all: venv build install clean-build
+all: venv install
 
 .PHONY: build # builds a distributable artifact
 build: $(VENV) $(VENV_PYTHON)
@@ -65,7 +65,7 @@ image-tag:
 	@echo $(PROJECT_NAME):$(shell git tag | tail -1)
 
 .PHONY: install # installs project and dep to virtual environment
-install: build $(VENV) $(VENV_PYTHON)
+install: build $(VENV) $(VENV_PYTHON) clean-build
 	@$(VENV_PYTHON) -m pip install -r requirements.txt
 	@$(VENV_PYTHON) -m pip install -e .
 
@@ -108,6 +108,6 @@ uninstall: $(VENV) $(VENV_PYTHON) clean-install
 .PHONY: venv # builds the virtual environment
 venv:
 	@if [ ! -d $(VENV) ]; then \
-		$(SYSTEM_PYTHON) -m pip install virtualenv; \
+		$(SYSTEM_PYTHON) -m pip install virtualenv --user; \
 		$(SYSTEM_PYTHON) -m virtualenv $(VENV) >/dev/null; \
 	fi
