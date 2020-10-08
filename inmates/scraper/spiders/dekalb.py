@@ -2,7 +2,6 @@ import ipdb
 
 from scrapy import Request
 from scrapy import Spider
-from pprint import pprint
 
 
 class DekalbSpider(Spider):
