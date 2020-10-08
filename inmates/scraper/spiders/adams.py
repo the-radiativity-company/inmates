@@ -11,6 +11,10 @@ from scrapy import Spider
 class AdamsSpider(Spider):
     name = 'adams'
 
+    def __init__(self, *args, **kwargs):
+        self.domain = kwargs.get('domain')
+        self.start_urls = [self.domain] if self.domain else kwargs.get('start_urls')
+
     def parse(self, response):
         """
         TODO (withtwoemms) -- handle cases where inmate row of pdf doesn't begin with a digit
