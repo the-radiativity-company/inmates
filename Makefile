@@ -40,10 +40,6 @@ commands:
 	@tput sgr0
 	@echo
 
-.PHONY: fixtures # generates test fixtures
-fixtures: $(VENV_PYTHON) $(FIXTURESDIR)
-	@$(VENV_PYTHON) $(FIXTURESDIR)
-
 .PHONY: git-tag
 git-tag:
 	@echo $(shell git describe --tags)
