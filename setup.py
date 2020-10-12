@@ -15,6 +15,10 @@ setup(
     maintainer_email='withtwoemms@gmail.com',
     url='',
     include_package_data=True,
+    install_requires=[
+        'OSlash==0.5.1',
+        'toolz==0.10.0'
+    ],
     entry_points="""
         [console_scripts]
         inmates=inmates.cli:cli
