@@ -78,10 +78,34 @@ def build_csv(
     return reduce(lambda a, b: a + ',\n' + b, mapped_records, mapped_headers.rjust(32))
 
 
+def build_dict(
+    formatted_records: Iterable[Dict[str, str]],
+) -> dict:
+    keys = next(formatted_records).keys()
+    if len(keys) > 2:
+        raise ValueError('More than two keys given.')
+
+    result = {}
+    for record in formatted_records:
+        k1, k2 = keys
+        result[record[k1]] = record[k2]
+    return result
+
+
 split = partial(methodcaller, 'split')
 split_newlines, split_commas = split('\n'), split(',')
 build_records = compose(dict, zip)
 build_rows = compose(map(split_commas), split_newlines, IOService.handle_outcome, IOService.read_file)
+
+
+def produce_records(
+    csvfile: str
+) -> Iterable[Dict[str, str]]:
+    rows = build_rows(csvfile)
+    headers = next(rows)
+    for record in map(partial(build_records, headers), rows):
+        yield record
+
 
 
 def handle_csv(
