@@ -41,7 +41,7 @@ The biggest current need is for code contributions to begin scrapping the data f
 
 This work is in early stages, so expect more detailed process documentation.
 
-Each website will require it's own scraper(called spiders in Scrapy, the Python webscrapping framework we're using) of varying complexity.
+Each website will require it's own scraper(called "spiders" in Scrapy--the Python webscrapping framework we're using) of varying complexity.
 
 # Setup
 
@@ -54,7 +54,7 @@ Run the following to build your venv and 'source' it's context:
 - `source inmates-venv/bin/-activate`
 
 Now you can run `pip list` to see that the `inmates` CLI tool was installed.
-Execute the `inmates` command to see available subcommands.
+Execute the `inmates` command to see available subcommands (`inmates csv -c 'Roster Link'` can be helpful).
 
 # Development
 
@@ -107,21 +107,14 @@ To get started on a new spider, simply run the following:
 make new-spider NAME=new
 ```
 where "new" is the name of your `NewSpider` at "inmates/scraper/spiders/new.py".
-Used the `FORCE=true` flage if you'd like to overwrite an existing spider.
-To scrape the local site associated with each scraper, run `make fixtures` and see this sort of output:
+Use the `FORCE=true` flag if you'd like to overwrite an existing spider.
 
-```bash
-❌ adams (Please yield data from the .parse method)
-...
-✅ woodford
-```
-
-Be aware that some stacktraces are suppressed when making fixutres.
-If you'd like to see all of them, make sure you set the INMATES_DEBUG_MODE environment variable.
-
-Generated fixtures, can be found in the "tests/fixtures/" directory.
-To ensure that the parsed data has the structure and content expected, assertions are written in an associated test module.
-For the `WoodfordRoster`, those assertions would be found in "tests/test_woodford.py".
+To run spiders, use the `inmates collate` subcommand.
+Results can be saved using the `-o/--outdir` option that accepts a path to a directory where collected records are to be stored.
+An _individual_ spider can be run using the `-r/--roster` option.
+A helpful approach during development of a spider's `.parse` method is to leverage setting "breakpoints".
+Placing `ipdb.set_trace(context=15)` in the path of code to be executed, will pause execution once the "breakpoint" is hit (where the `context` keyword governs the scope of code visible when execution is paused).
+With execution paused, defined variables can be probed and response parsing can be explored in opened shell.
 
 # Deployment
 
