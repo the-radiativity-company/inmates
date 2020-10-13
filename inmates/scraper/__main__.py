@@ -1,6 +1,9 @@
+from inmates.utils import build_dict
 from inmates.utils import exit_proc
+from inmates.utils import format_records
 from inmates.utils import get_modules_from
 from inmates.utils import handle_csv
+from inmates.utils import produce_records
 from pathlib import Path
 from scrapy.settings import Settings
 from shlex import split as split_args
@@ -10,8 +13,13 @@ from sys import executable as python
 from sys import exit
 
 
-anchor_formatter = lambda anchor: anchor.rstrip('County').strip().lower().replace('. ', '')
-all_links = dict(handle_csv('inmates.csv', ('IL County', anchor_formatter), ('Roster Link', None)))
+all_links = build_dict(
+    format_records(
+        produce_records('inmates.csv'),
+        ('IL County', lambda cell: cell.replace(' County', '').replace('. ', '').lower()),
+        ('Roster Link', lambda cell: cell)
+    )
+)
 spider_urls = dict((path.stem, all_links[path.stem]) for path in get_modules_from('inmates.scraper.spiders'))
 
 outdir = argv[1:]
