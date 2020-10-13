@@ -3,8 +3,6 @@ PROJECT_NAME = $(shell basename $(CURDIR))
 VENV = $(PROJECT_NAME)-venv
 VENV_PYTHON = $(VENV)/bin/python
 TESTDIR = tests
-FIXTURESDIR = $(TESTDIR)/fixtures
-SCRAPERDIR = inmates/scraper
 
 
 all: venv install
@@ -86,7 +84,7 @@ release:
 
 .PHONY: scraper-run # runs scrapers and can store them locally envvar set
 scraper-run:
-	@$(VENV_PYTHON) $(SCRAPERDIR) $(if $(OUTDIR),$(OUTDIR),)
+	@$(VENV)/bin/inmates collate $(if $(OUTDIR),-o $(OUTDIR),)
 
 .PHONY: tests # runs all tests
 tests: $(VENV_PYTHON) $(TESTDIR)
