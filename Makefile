@@ -3,8 +3,6 @@ PROJECT_NAME = $(shell basename $(CURDIR))
 VENV = $(PROJECT_NAME)-venv
 VENV_PYTHON = $(VENV)/bin/python
 TESTDIR = tests
-FIXTURESDIR = $(TESTDIR)/fixtures
-SCRAPERDIR = inmates/scraper
 
 
 all: venv install
@@ -39,10 +37,6 @@ commands:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | sed 's/^/  ->  /'
 	@tput sgr0
 	@echo
-
-.PHONY: fixtures # generates test fixtures
-fixtures: $(VENV_PYTHON) $(FIXTURESDIR)
-	@$(VENV_PYTHON) $(FIXTURESDIR)
 
 .PHONY: git-tag
 git-tag:
@@ -90,7 +84,7 @@ release:
 
 .PHONY: scraper-run # runs scrapers and can store them locally envvar set
 scraper-run:
-	@$(VENV_PYTHON) $(SCRAPERDIR) $(if $(OUTDIR),$(OUTDIR),)
+	@$(VENV)/bin/inmates collate $(if $(OUTDIR),-o $(OUTDIR),)
 
 .PHONY: tests # runs all tests
 tests: $(VENV_PYTHON) $(TESTDIR)
