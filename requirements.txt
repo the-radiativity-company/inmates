@@ -4,4 +4,4 @@ httpx==0.11.1
 ipdb==0.13.3
 pdfminer-six==20181108
 python-magic==0.4.15
-scrapy==2.1.0
+scrapy==2.6.2
