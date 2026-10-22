@@ -53,7 +53,7 @@ Lawrence County,https://www.lawrencecsd.com/,https://www.lawrencecsd.com/LCIMTS.
 Lee County,https://www.leecountyil.com/index.php?option=com_content&view=article&id=37&Itemid=159,https://www.leecountyil.com/DocumentCenter/View/2814,TRUE,,ok,2026-10-22,"Scanned image PDF (2 pages) of the jail list, needs OCR; View/2815 is the last 7 days of arrests"
 Livingston County,https://www.livcoso.org/,https://www.livcoso.org/inmate-roster/filters/current/booking_time=desc/1,FALSE,brooksjeffrey,ok,2026-10-22,"Brooks Jeffrey roster, paginated, with per-person profile pages; also a 48-hour release list"
 Logan County,,,,,none,,VINELink only (name search); no roster as of 2026-10
-Macon County,,http://50.77.170.147/NewWorld.InmateInquiry/IL0580000,FALSE,newworld,ok,2026-10-22,Can be search w/o name and sorted by booking date. Each person must be selected - bond  is shown
+Macon County,,http://50.77.170.147/NewWorld.InmateInquiry/IL0580000,FALSE,newworld,ok,2026-10-22,NewWorld inquiry; InCustody=True lists everyone, 100 per page, with a detail page per person
 Macoupin County,,,,,none,,
 Madison County,,,,,none,,
 Marion County,,,,,none,,No roster; sheriff site gone (410) as of 2026-10

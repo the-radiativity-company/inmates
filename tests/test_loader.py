@@ -56,12 +56,6 @@ STCLAIR = [
      'Charges': ['720 ILCS 5/9-1 FIRST DEGREE MURDER', '720 ILCS 5/32-10(a) IN STATE WARRANT']},
 ]
 
-DEKALB = [
-    {'Inmate Id:': '50267', 'Age:': '25', 'Gender:': 'M', 'Race:': 'WHITE', 'Address:': ' SOMEWHERE ,  IL ',
-     'Arresting Agency:': 'OTHER', 'Booking Date:': '11-24-2020 - 12:02 am',
-     'Charges': ['RECKLESS ENDANGERMENT', 'ATTEMPT TO ELUDE'], 'Bond:': '$3000'},
-]
-
 ADAMS = [{'name': 'Pat Example', 'gender': None, 'age': None, 'race': None, 'bookings': {}}]
 
 T1, T2, T3 = '2026-10-21 06:12:00', '2026-10-22 06:12:00', '2026-10-23 06:12:00'
@@ -122,16 +116,6 @@ def test_stclair_normalizer_parses_statutes_and_court_date():
     assert b.charges[0].statute == '720 ILCS 5/9-1'
     assert b.charges[0].description == 'FIRST DEGREE MURDER'
     assert b.hold_type == 'warrant'
-
-
-def test_dekalb_normalizer():
-    p = normalize('dekalb', DEKALB[0])
-    assert p.county_person_key == '50267'
-    [b] = p.bookings
-    assert b.booking_date == '2020-11-24 00:02:00'
-    assert b.financial_hold == 3000.0
-    assert b.detention_status == 'detained'
-    assert [c.statute for c in b.charges] == [None, None]
 
 
 def test_platform_wins_over_county_and_unknown_platform_falls_through():

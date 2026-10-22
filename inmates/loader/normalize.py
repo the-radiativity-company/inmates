@@ -136,28 +136,6 @@ def normalize_newworld(record: dict) -> Person:
     )
 
 
-def normalize_dekalb(record: dict) -> Person:
-    fields = colonless(record)
-    name = clean_text(fields.get('Name'))
-    inmate_id = clean_text(fields.get('Inmate Id'))
-    booking = Booking(
-        booking_date=iso_datetime(fields.get('Booking Date')),
-        arresting_agency=clean_text(fields.get('Arresting Agency')),
-        financial_hold=parse_money(fields.get('Bond')),
-        charges=[charge_from_text(c) for c in fields.get('Charges') or []],
-        raw=record,
-    ).finish()
-    return Person(
-        county_person_key=inmate_id or person_key(name, fields.get('Age')),
-        name=name,
-        age=parse_int(fields.get('Age')),
-        sex=normalize_sex(fields.get('Gender')),
-        race=normalize_race(fields.get('Race')),
-        bookings=[booking],
-        raw=record,
-    )
-
-
 def normalize_stclair(record: dict) -> Person:
     fields = colonless(record)
     name = clean_text(fields.get('Name'))
@@ -193,7 +171,6 @@ def normalize_generic(record: dict) -> Person:
 
 NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
-    'dekalb': normalize_dekalb,
     'newworld': normalize_newworld,
     'stclair': normalize_stclair,
 }
