@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head><title>Inmate Inquiry</title></head>
+<body>
+<div id="SiteContainer">
+<div class="Article" id="Inmate_Index">
+<div class="CustomContent"></div>
+<div class="Search">
+<form action="/NewWorld.InmateInquiry/example" method="get">
+<input id="uxName" type="text" name="Name" />
+<input id="uxInCustody" type="checkbox" name="InCustody" value="True" checked="checked" />
+<input type="submit" value="Search" />
+</form>
+</div>
+<div class="Results">
+<div class="Grid">
+<table border="1">
+<thead>
+<tr>
+<th class="Photo">Photo</th>
+<th class="Name">Name</th>
+<th class="SubjectNumber">Subject Number</th>
+<th class="InCustody">In Custody</th>
+<th class="ScheduledReleaseDate">Scheduled Release Date</th>
+<th class="Race">Race</th>
+<th class="Gender">Gender</th>
+<th class="Height">Height</th>
+<th class="Weight">Weight</th>
+<th class="HousingFacility">Housing Facility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="Photo"><img src="/NewWorld.InmateInquiry/example/Inmate/Photo/AAAA0001?type=Search" alt="AAAA0001" /></td>
+<td class="Name"><a href="/NewWorld.InmateInquiry/example/Inmate/Detail/-1001">DOE, JANE</a></td>
+<td class="SubjectNumber">10001</td>
+<td class="InCustody">Yes</td>
+<td class="ScheduledReleaseDate"></td>
+<td class="Race">WHITE</td>
+<td class="Gender">FEMALE</td>
+<td class="Height">5&#39; 4&quot;</td>
+<td class="Weight">130.0 lbs</td>
+<td class="HousingFacility">EXAMPLE COUNTY PUBLIC SAFETY CENTER</td>
+</tr>
+<tr>
+<td class="Photo"></td>
+<td class="Name"><a href="/NewWorld.InmateInquiry/example/Inmate/Detail/-1002">ROE, RICHARD</a></td>
+<td class="SubjectNumber">10002</td>
+<td class="InCustody">Yes</td>
+<td class="ScheduledReleaseDate"></td>
+<td class="Race">BLACK</td>
+<td class="Gender">MALE</td>
+<td class="Height">6&#39; 0&quot;</td>
+<td class="Weight">180.0 lbs</td>
+<td class="HousingFacility">EXAMPLE COUNTY PUBLIC SAFETY CENTER</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="Pager">
+<a class="First">First</a>
+<a class="Previous">Previous</a>
+<form action="/NewWorld.InmateInquiry/example" method="get">
+<div>
+<input type="hidden" name="InCustody" value="True" />
+<select name="Page"><option selected="selected">1</option><option>2</option></select>
+<input type="submit" value="Go" />
+</div>
+</form>
+<a class="Next" href="/NewWorld.InmateInquiry/example?InCustody=True&amp;Page=2">Next</a>
+<a class="Last" href="/NewWorld.InmateInquiry/example?InCustody=True&amp;Page=2">Last</a>
+</div>
+</div>
+<div class="ContentEnd"></div>
+</div>
+<div class="Footer">Copyright &#169; Tyler Technologies</div>
+</div>
+</body>
+</html>

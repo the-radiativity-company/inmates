@@ -1,8 +1,9 @@
-"""Per-county normalizers: county JSON record -> Person with Bookings and Charges.
+"""Normalizers: roster JSON record -> Person with Bookings and Charges.
 
-Each county prints something different. A normalizer fills whatever normalized
-fields the county supports and leaves the rest None; the raw record always
-travels along so it can be re-read later.
+Each roster prints something different. A normalizer fills whatever normalized
+fields the roster supports and leaves the rest None; the raw record always
+travels along so it can be re-read later. Normalizers are keyed by platform
+(one vendor's software, shared by many counties) or, failing that, by county.
 """
 import json
 
@@ -92,43 +93,39 @@ def normalize_adams(record: dict) -> Person:
     return Person(county_person_key=person_key(name), name=name, raw=record)
 
 
-def normalize_macon(record: dict) -> Person:
+def normalize_newworld(record: dict) -> Person:
+    """a detail-page record from the NewWorld InmateInquiry spider"""
     name = clean_text(record.get('Name'))
-    subject = clean_text(record.get('SubjectNumber'))
-    return Person(
-        county_person_key=subject or person_key(name),
-        name=name,
-        sex=normalize_sex(record.get('Gender')),
-        race=normalize_race(record.get('Race')),
-        facility=clean_text(record.get('HousingFacility')),
-        raw=record,
-    )
-
-
-def normalize_will(record: dict) -> Person:
-    name = clean_text(record.get('Name'))
+    key = clean_text(record.get('Subject Number')) or clean_text(record.get('Detail Id')) or person_key(name)
     bookings = []
     for raw_booking in record.get('Bookings') or []:
         charges = [
             Charge(
                 description=clean_text(c.get('Charge Description')),
+                offense_class=clean_text(c.get('Crime Class')),
                 docket_number=clean_text(c.get('Docket Number')),
                 offense_date=iso_datetime(c.get('Offense Date')),
             )
             for c in raw_booking.get('Charges') or []
         ]
+        court_dates = [iso_datetime(c.get('Court Date')) for c in raw_booking.get('Court Dates') or []]
+        prisoner_type = (clean_text(raw_booking.get('Prisoner Type')) or '').upper()
         bookings.append(Booking(
+            booking_number=clean_text(raw_booking.get('Booking Number')),
             booking_date=iso_datetime(raw_booking.get('Booking Date')),
             release_date=iso_datetime(raw_booking.get('Release Date')),
+            next_court_date=max(filter(None, court_dates), default=None),
+            detention_status='sentenced' if 'SENTENCED' in prisoner_type and not raw_booking.get('Release Date') else None,
             arresting_agency=clean_text(raw_booking.get('Booking Origin')),
             financial_hold=parse_money(raw_booking.get('Total Bond Amount')),
+            hold_type=hold_type_for(prisoner_type, *(c.description for c in charges), *(c.docket_number for c in charges)),
             charges=charges,
             raw=raw_booking,
         ).finish())
     open_bookings = [b for b in bookings if b.release_date is None]
     facility = clean_text(open_bookings[0].raw.get('Housing Facility')) if open_bookings else None
     return Person(
-        county_person_key=person_key(name),
+        county_person_key=key,
         name=name,
         age=parse_int(record.get('Age')),
         sex=normalize_sex(record.get('Gender')),
@@ -197,11 +194,12 @@ def normalize_generic(record: dict) -> Person:
 NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
     'dekalb': normalize_dekalb,
-    'macon': normalize_macon,
+    'newworld': normalize_newworld,
     'stclair': normalize_stclair,
-    'will': normalize_will,
 }
 
 
-def normalize(county: str, record: dict) -> Person:
-    return NORMALIZERS.get(county, normalize_generic)(record)
+def normalize(county: str, record: dict, platform: Optional[str] = None) -> Person:
+    """the platform's normalizer when there is one, else the county's, else a name-only fallback"""
+    normalizer = NORMALIZERS.get(platform or '') or NORMALIZERS.get(county, normalize_generic)
+    return normalizer(record)
