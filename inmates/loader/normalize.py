@@ -252,6 +252,41 @@ def normalize_zuercher(record: dict) -> Person:
     )
 
 
+def normalize_recordssearch(record: dict) -> Person:
+    """a person from the Tyler Corrections Records Search API: arrests each carry charges, bonds carry amounts"""
+    name = clean_text((record.get('name') or {}).get('fullName'))
+    arrests = sorted(record.get('arrests') or [], key=lambda a: a.get('arrestDate') or '')
+    charges = [
+        Charge(
+            description=clean_text((c.get('statute') or {}).get('description')),
+            offense_class=clean_text((c.get('statute') or {}).get('degree')),
+            docket_number=clean_text(c.get('caseNumber')),
+            offense_date=iso_datetime(arrest.get('arrestDate')),
+        )
+        for arrest in arrests for c in arrest.get('charges') or []
+    ]
+    bonds = record.get('bonds') or []
+    amounts = [b.get('amount') for b in bonds if isinstance(b.get('amount'), (int, float))]
+    latest = arrests[-1] if arrests else {}
+    booking = Booking(
+        booking_date=iso_datetime(latest.get('arrestDate')),
+        detention_status='released' if record.get('IsReleased') else None,
+        arresting_agency=clean_text(latest.get('arrestingAgency')),
+        financial_hold=max(amounts, default=0.0 if bonds else None),
+        charges=charges,
+        raw=record,
+    ).finish()
+    return Person(
+        county_person_key=clean_text(record.get('soNumber')) or clean_text(record.get('id')) or person_key(name),
+        name=name,
+        age=parse_int(record.get('age')),
+        sex=normalize_sex(record.get('gender')),
+        race=normalize_race(record.get('race')),
+        bookings=[booking],
+        raw=record,
+    )
+
+
 def normalize_stclair(record: dict) -> Person:
     fields = colonless(record)
     name = clean_text(fields.get('Name'))
@@ -341,6 +376,7 @@ NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
     'lawrence': normalize_lawrence,
     'newworld': normalize_newworld,
+    'recordssearch': normalize_recordssearch,
     'stclair': normalize_stclair,
     'tazewell': normalize_tazewell,
     'zuercher': normalize_zuercher,

@@ -23,6 +23,7 @@ PLATFORM_HINTS = (
     ('bluhorse', 'bluhorse'),
     ('jailtracker', 'jailtracker'),
     ('zuercherportal', 'zuercher'),
+    ('correctionsrecordssearch', 'recordssearch'),
     ('/p2c/', 'zuercher'),
     ('inmateinquiry', 'newworld'),
     ('smartcop', 'smartcop'),

@@ -70,7 +70,7 @@ Montgomery County,,,,,none,,
 Morgan County,,,,,none,,
 Moultrie County,https://www.moultriesheriff.com/Moultrie_County_Detention_Center/Moultrie_County_Detention_Center_and_Sheriffs_Office.html,http://newsprogress.com/jail-report/,FALSE,,ok,2026-10-22,"Newspaper jail report, updated weekly; name, convicted or not, date in. Returns 406 without a browser user agent"
 Ogle County,https://oglecountyil.gov/,,FALSE,ocv,none,,VINELink or the Ogle County Safe app; the 2020 link was the sheriff Twitter account
-Peoria County,https://www.peoriacounty.gov/580/Jail-Inmate-Information,https://correctionsrecordssearch.com/peoriacountyil,FALSE,,ok,2026-10-22,"Tyler Corrections Records Search, a JS app; unverified whether it lists everyone without a name. Daily commitment report discontinued 2018"
+Peoria County,https://www.peoriacounty.gov/580/Jail-Inmate-Information,https://correctionsrecordssearch.com/peoriacountyil,FALSE,recordssearch,ok,2026-10-22,"Tyler Corrections Records Search, an Angular app over a public JSON API that lists everyone in custody with arrests, charges, and bonds. Daily commitment report discontinued 2018"
 Perry County,,,,,none,,
 Piatt County,,,,,none,,
 Pike County,,https://www.pikecountysd.org/news/arrests/,FALSE,,ok,2026-10-22,"LAWMAN incarceration query: a weekly confined/released report, not a current roster"
