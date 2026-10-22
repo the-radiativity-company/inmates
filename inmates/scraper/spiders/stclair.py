@@ -1,5 +1,3 @@
-import ipdb
-
 from scrapy import Spider
 from scrapy import FormRequest
 from scrapy import Request
