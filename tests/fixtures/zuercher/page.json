@@ -1,0 +1,8 @@
+{"total_record_count": 2, "records": [
+ {"name": "DOE, JANE", "dob": 37, "sex": "Female", "race": "White", "arrest_date": "2026-10-13", "release_date": null,
+  "cell_block": "B", "held_for_agency": "", "is_juvenile": false, "mugshot": "/9j/AAAA",
+  "hold_reasons": "Charge (ON VIEW): 720 ILCS 5/12-3.2 - DOMESTIC BATTERY (Pending); Arrest Date 10/13/2026; Bond - No Bond, $0.00; Set By Judge;"},
+ {"name": "ROE, RICHARD", "dob": 51, "sex": "Male", "race": "Black or African American", "arrest_date": "2026-09-09", "release_date": null,
+  "cell_block": "", "held_for_agency": "", "is_juvenile": false, "mugshot": "",
+  "hold_reasons": "Warrant: Original Charge warrant 25CF463 issued by Rock Island CO. IL, IL; Arrest Date 09/09/2026; Bond - 10%, $40000.00; Set By Judge;<br />Warrant: Contempt warrant FECR449520 issued by Scott CO. IA, IA; Arrest Date 09/09/2026; Bond - No Bond, $0.00; Set By Judge;"}
+]}
