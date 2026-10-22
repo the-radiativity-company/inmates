@@ -65,7 +65,7 @@ Execute the `inmates` command to see available subcommands (`inmates csv -c 'Ros
 | `Roster Link` | the page that lists people in custody; blank when the county publishes none |
 | `PDF` | whether the roster is a PDF rather than HTML |
 | `Platform` | the vendor behind the roster (`newworld`, `archonix`, `bluhorse`, ...) so one spider can serve many counties |
-| `Status` | what the link did when last probed: `ok`, `moved`, `blocked`, `http 404`, `unreachable`, or `none` |
+| `Status` | what the link did when last probed: `ok`, `moved`, `elsewhere` (the page names a state other than Illinois), `blocked`, `http 404`, `unreachable`, or `none` |
 | `Checked` | the date of that probe |
 | `Notes` | what a human saw there |
 
