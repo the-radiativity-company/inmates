@@ -63,6 +63,10 @@ reinstall: clean-venv install
 scraper-run: $(VENV)
 	@$(INMATES) collate $(if $(OUTDIR),-o $(OUTDIR),) $(if $(ROSTER),-r $(ROSTER),)
 
+.PHONY: scraper-load # loads scraped JSON into the database: make scraper-load [INDIR=outdir] [DB=inmates.db]
+scraper-load: $(VENV)
+	@$(INMATES) load -i $(or $(INDIR),outdir) -d $(or $(DB),inmates.db)
+
 .PHONY: tests # runs all tests
 tests: $(VENV)
 	@$(PYTHON) -m pytest -q $(TESTDIR)
