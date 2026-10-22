@@ -137,9 +137,14 @@ def normalize_newworld(record: dict) -> Person:
     )
 
 
-ZUERCHER_WARRANT = re.compile(r'^Warrant:\s*(?P<kind>.*?)\s*(?P<docket>\S*)\s*issued by\s*(?P<agency>.*)$', re.I)
-ZUERCHER_CHARGE = re.compile(r'^Charge(?:\s*\((?P<how>[^)]*)\))?:\s*(?P<text>.*)$', re.I)
-ZUERCHER_STATUS = re.compile(r'\s*\((?P<status>[^()]*)\)\s*$')
+# every sheriff labels hold_reasons entries their own way ("Charge (ON VIEW):", "New Offense:",
+# "Charge/Arrest:", "Warrant-McDonough:", "Sentencing Order:", "Additional Hold for Parole", ...),
+# so the parser keys on what the text contains rather than on the label
+ZUERCHER_STATUTE = re.compile(r'(\d{3}[\s-]+(?:ILCS[\s-]+)?[\d.]+/[\w.\-()]+)')
+ZUERCHER_STATUS = re.compile(r'\s*\((?P<status>Pending|Dismissed|Disposed|Guilty|Sentenced)\)\s*$', re.I)
+ZUERCHER_DOCKET = re.compile(r'warrant\s+(?P<docket>[A-Z0-9]*\d[A-Z0-9-]*)\b', re.I)
+ZUERCHER_ISSUER = re.compile(r'issued by\s*(?P<agency>[^;(]*)', re.I)
+ZUERCHER_STATE = re.compile(r',\s*([A-Z]{2})\b\s*\)?\s*$')
 DOLLARS = re.compile(r'\$\s*([\d,]+(?:\.\d+)?)')
 
 
@@ -150,27 +155,47 @@ def dollars(text) -> Optional[float]:
 
 
 def zuercher_hold_reasons(text) -> List[dict]:
-    """splits the portal's hold_reasons string into one dict per charge or warrant
+    """splits the portal's hold_reasons string into one dict per charge, warrant, sentence, or hold
 
     'Charge (ON VIEW): 720 ILCS 5/12-3.2 - DOMESTIC BATTERY (Pending); Arrest Date 10/13/2026; Bond - No Bond, $0.00; Set By Judge;'
-    -> {'kind': 'charge', 'text': '720 ILCS 5/12-3.2 - DOMESTIC BATTERY', 'status': 'Pending', 'arrest_date': '10/13/2026', 'bond': 'No Bond, $0.00', 'how': 'ON VIEW'}
+    -> {'kind': 'charge', 'label': 'Charge (ON VIEW)', 'statute': '720 ILCS 5/12-3.2', 'text': 'DOMESTIC BATTERY',
+        'status': 'Pending', 'arrest_date': '10/13/2026', 'bond': 'No Bond, $0.00'}
     """
     reasons = []
     for entry in re.split(r'<br\s*/?>', text or ''):
         parts = [p.strip() for p in entry.split(';') if p.strip()]
         if not parts:
             continue
-        head, reason = parts[0], {}
-        if match := ZUERCHER_CHARGE.match(head):
-            body = match.group('text')
-            status = ZUERCHER_STATUS.search(body)
-            reason = {'kind': 'charge', 'how': match.group('how'),
-                      'text': ZUERCHER_STATUS.sub('', body).strip(), 'status': status.group('status') if status else None}
-        elif match := ZUERCHER_WARRANT.match(head):
-            reason = {'kind': 'warrant', 'text': match.group('kind').strip(), 'docket': match.group('docket') or None,
-                      'agency': match.group('agency').strip()}
+        head = parts[0]
+        label, _, body = head.partition(':') if ':' in head else ('', '', head)
+        label, body = label.strip(), body.strip()
+        reason = {'label': label or None}
+        status = ZUERCHER_STATUS.search(body)
+        if status:
+            reason['status'] = status.group('status')
+            body = ZUERCHER_STATUS.sub('', body)
+        statute = ZUERCHER_STATUTE.search(body)
+        haystack = f'{label} {body}'.upper()
+        if 'SENTENC' in haystack or 'SERVING' in haystack:
+            reason['kind'] = 'sentence'
+        elif 'WARRANT' in haystack:
+            reason['kind'] = 'warrant'
+        elif statute or 'CHARGE' in haystack or 'OFFENSE' in haystack:
+            reason['kind'] = 'charge'
         else:
-            reason = {'kind': 'other', 'text': head}
+            reason['kind'] = 'hold'
+        if statute:
+            reason['statute'] = re.sub(r'^(\d{3})[\s-]+(?!ILCS)', r'\1 ILCS ', statute.group(1).replace('-', ' ', 1) if ' ILCS' not in statute.group(1) else statute.group(1))
+            after = body[statute.end():]
+            description = re.split(r'\s*[-~]\s*', after, maxsplit=1)[-1] if after.strip() else ''
+            reason['text'] = clean_text(description.strip(' -~()')) or None
+        else:
+            reason['text'] = clean_text(re.sub(r'\(Converted Statute[^)]*\)', '', body).strip(' -~()')) or clean_text(label)
+        if reason['kind'] == 'warrant':
+            docket = ZUERCHER_DOCKET.search(head)
+            issuer = ZUERCHER_ISSUER.search(head)
+            reason['docket'] = docket.group('docket') if docket else None
+            reason['agency'] = clean_text(issuer.group('agency')) if issuer else None
         for part in parts[1:]:
             if part.lower().startswith('arrest date'):
                 reason['arrest_date'] = part[len('arrest date'):].strip()
@@ -180,39 +205,45 @@ def zuercher_hold_reasons(text) -> List[dict]:
     return reasons
 
 
+def zuercher_out_of_state(agency: Optional[str]) -> bool:
+    """'Scott CO. IA, IA' -> True; 'Rock Island CO. IL, IL' and 'KNOX COUNTY' -> False"""
+    match = ZUERCHER_STATE.search(agency or '')
+    return bool(match) and match.group(1) != 'IL'
+
+
 def normalize_zuercher(record: dict) -> Person:
-    """a record from the CentralSquare/Zuercher portal API; 'dob' is really an age"""
+    """a record from the CentralSquare/Zuercher portal API; 'dob' is an age on most installs, a date on some"""
     name = clean_text(record.get('name'))
     arrest_date = iso_date(record.get('arrest_date'))
     reasons = zuercher_hold_reasons(record.get('hold_reasons'))
-    charges = []
-    for reason in reasons:
-        if reason['kind'] == 'charge':
-            statute, description = split_statute(reason['text'])
-            description = re.sub(r'^-\s*', '', description or '') or None
-            charges.append(Charge(description=description, statute=statute, offense_date=iso_date(reason.get('arrest_date'))))
-        else:
-            charges.append(Charge(description=reason['text'], docket_number=reason.get('docket'),
-                                  offense_date=iso_date(reason.get('arrest_date'))))
+    charges = [
+        Charge(description=r.get('text'), statute=r.get('statute'), docket_number=r.get('docket'),
+               offense_date=iso_date(r.get('arrest_date')))
+        for r in reasons if r['kind'] in ('charge', 'warrant')
+    ]
     bonds = [dollars(r.get('bond')) for r in reasons]
     held_for = clean_text(record.get('held_for_agency'))
-    warrant_agencies = [r.get('agency') or '' for r in reasons if r['kind'] == 'warrant']
-    out_of_state = any(not a.rstrip().endswith(', IL') for a in warrant_agencies if a)
+    out_of_state = any(zuercher_out_of_state(r.get('agency')) for r in reasons if r['kind'] == 'warrant')
+    sentenced = reasons and all(r['kind'] == 'sentence' for r in reasons)
     # an arrest on a local warrant is ordinary pretrial detention, not a hold for someone else,
-    # so only the held-for agency, out-of-state warrants, and the charge text itself make a hold
+    # so only the held-for agency, out-of-state warrants, and the entry text itself make a hold
+    hold_texts = [r.get('text') or '' for r in reasons if r['kind'] in ('charge', 'hold')] + [r.get('label') or '' for r in reasons if r['kind'] == 'hold']
     booking = Booking(
         booking_date=arrest_date,
         release_date=iso_date(record.get('release_date')),
+        detention_status='sentenced' if sentenced and not record.get('release_date') else None,
         arresting_agency=held_for,
         financial_hold=max((b for b in bonds if b), default=0.0 if bonds else None),
-        hold_type='out_of_state' if out_of_state else hold_type_for(held_for, *(r['text'] for r in reasons if r['kind'] == 'charge')),
+        hold_type='out_of_state' if out_of_state else hold_type_for(held_for, *hold_texts),
         charges=charges,
         raw=record,
     ).finish(derive_hold=False)
+    dob = record.get('dob')
     return Person(
         county_person_key=person_key(name, arrest_date),
         name=name,
-        age=parse_int(record.get('dob')),
+        dob=iso_date(dob) if isinstance(dob, str) and '-' in dob else None,
+        age=parse_int(dob) if not (isinstance(dob, str) and '-' in dob) else None,
         sex=normalize_sex(record.get('sex')),
         race=normalize_race(record.get('race')),
         facility=clean_text(record.get('cell_block')),
