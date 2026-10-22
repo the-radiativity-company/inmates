@@ -1,6 +1,7 @@
-"""Probes every roster link in the index and records what answered."""
+"""Probes every roster link in the index and records what answered, and whether it answered from Illinois."""
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+import re
 from datetime import date
 from typing import Dict
 from typing import List
@@ -12,6 +13,20 @@ from urllib.request import Request
 from urllib.request import urlopen
 
 
+
+HOME_STATE = 'Illinois'
+STATES = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California', 'CO': 'Colorado',
+    'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho',
+    'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana',
+    'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi',
+    'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+    'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma',
+    'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota',
+    'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington',
+    'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming',
+}
+TAGS = re.compile(r'<(script|style)[^>]*>.*?</\1>|<[^>]+>', re.S | re.I)
 
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
 MAX_BODY = 256 * 1024
@@ -37,6 +52,7 @@ class Probe:
     code: Optional[int] = None
     final_url: Optional[str] = None
     platform: Optional[str] = None
+    state: Optional[str] = None
 
 
 def detect_platform(*texts: Optional[str]) -> Optional[str]:
@@ -45,6 +61,21 @@ def detect_platform(*texts: Optional[str]) -> Optional[str]:
         if hint in haystack:
             return platform
     return None
+
+
+def detect_state(body: Optional[str]) -> Optional[str]:
+    """
+    the state a page says it is in, when it says so plainly: the state named
+    most often in its text, either in full or as a postal abbreviation
+    followed by a ZIP code. None when no state is named.
+    """
+    text = TAGS.sub(' ', body or '')
+    counts = {}
+    for abbreviation, name in STATES.items():
+        mentions = re.findall(rf'\b{name}\b|\b{abbreviation}\.? +\d{{5}}\b', text)
+        if mentions:
+            counts[name] = len(mentions)
+    return max(counts, key=counts.get) if counts else None
 
 
 def host(url: str) -> str:
@@ -60,9 +91,14 @@ def probe(url: Optional[str], timeout: float = 20) -> Probe:
         with urlopen(request, timeout=timeout) as response:
             body = response.read(MAX_BODY).decode('utf-8', errors='replace')
             final_url = response.geturl()
-            moved = host(final_url) != host(url)
-            status = 'moved' if moved else 'ok'
-            return Probe(status, response.status, final_url, detect_platform(url, final_url, body))
+            state = detect_state(body)
+            if host(final_url) != host(url):
+                status = 'moved'
+            elif state and state != HOME_STATE:
+                status = 'elsewhere'
+            else:
+                status = 'ok'
+            return Probe(status, response.status, final_url, detect_platform(url, final_url, body), state)
     except HTTPError as error:
         status = 'blocked' if error.code in (401, 403) else f'http {error.code}'
         return Probe(status, error.code, platform=detect_platform(url))

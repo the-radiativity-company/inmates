@@ -3,7 +3,7 @@ Adams County,https://www.adamscountyil.gov/,https://www.adamscountyil.gov/govern
 Alexander County,,,,,none,,No roster; detainees held at Pulaski County Detention Center
 Bond County,,,,,none,,
 Boone County,,,,,none,,VINELink only (name search); no roster as of 2026-10
-Brown County,,https://www.brownso.org/agency-data/jail-roster/,FALSE,,ok,2026-10-22,text based listing w bond
+Brown County,,,FALSE,,none,,"No jail (Illinois Sheriffs' Association lists none). The 2020 link (brownso.org) was Brown County, Kansas"
 Bureau County,,,,,none,,
 Calhoun County,,,,,none,,
 Carroll County,,,FALSE,,none,,No roster found; 2020 link was Facebook posts. carroll-county.net refuses bots
@@ -51,7 +51,7 @@ Lake County,https://www.lakecountyil.gov/,https://www.lakecountyil.gov/2032/Loca
 LaSalle County,https://lasallecounty.org/lasalle-county-jail-2/,https://isoms.lasallecounty.org/portal/Jail,FALSE,isoms,ok,2026-10-22,iSOMS portal lists everyone after a reCAPTCHA; also 24 and 72 hour intake/release lists
 Lawrence County,https://www.lawrencecsd.com/,https://www.lawrencecsd.com/LCIMTS.htm,FALSE,,ok,2026-10-22,"Single static HTML page of everyone in custody: name, age, race/sex, intake date, arresting agency, charges"
 Lee County,https://www.leecountyil.com/index.php?option=com_content&view=article&id=37&Itemid=159,https://www.leecountyil.com/DocumentCenter/View/2814,TRUE,,ok,2026-10-22,"Scanned image PDF (2 pages) of the jail list, needs OCR; View/2815 is the last 7 days of arrests"
-Livingston County,https://www.livcoso.org/,https://www.livcoso.org/inmate-roster/filters/current/booking_time=desc/1,FALSE,brooksjeffrey,ok,2026-10-22,"Brooks Jeffrey roster, paginated, with per-person profile pages; also a 48-hour release list"
+Livingston County,https://www.livingstoncountyil.gov/department/jail/index.php,,FALSE,,none,,"No roster; jail page links only to IDOC search and visitation. The 2026-10 link (livcoso.org) was Livingston County, Missouri"
 Logan County,,,,,none,,VINELink only (name search); no roster as of 2026-10
 Macon County,,http://50.77.170.147/NewWorld.InmateInquiry/IL0580000,FALSE,newworld,ok,2026-10-22,"NewWorld inquiry; InCustody=True lists everyone; [' 100 per page', ' with a detail page per person']"
 Macoupin County,,,,,none,,

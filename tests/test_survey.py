@@ -10,6 +10,7 @@ from inmates.rosters import COLUMNS
 from inmates.rosters import read_index
 from inmates.rosters import write_index
 from inmates.survey import detect_platform
+from inmates.survey import detect_state
 from inmates.survey import probe
 from inmates.survey import survey
 
@@ -46,6 +47,8 @@ def test_probe_classifies_responses(monkeypatch):
         'http://b/NewWorld.InmateInquiry/x': Response(b'<html>', 'http://b/NewWorld.InmateInquiry/x'),
         'http://c/old': Response(b'<html>', 'https://new.c/jail'),
         'http://g/': Response(b'<html>', 'https://www.g/'),
+        'http://h/': Response(b'<p>Sheriff, Chillicothe, Missouri 64601</p><p>Missouri Sheriffs</p>', 'http://h/'),
+        'http://i/': Response(b'<p>Pontiac, IL 61764</p><p>Jasper, Illinois</p>', 'http://i/'),
         'http://d/': HTTPError('http://d/', 403, 'Forbidden', {}, None),
         'http://e/': HTTPError('http://e/', 404, 'Not Found', {}, None),
         'http://f/': URLError('timed out'),
@@ -57,6 +60,10 @@ def test_probe_classifies_responses(monkeypatch):
     moved = probe('http://c/old')
     assert (moved.status, moved.final_url) == ('moved', 'https://new.c/jail')
     assert probe('http://g/').status == 'ok'
+    elsewhere = probe('http://h/')
+    assert (elsewhere.status, elsewhere.state) == ('elsewhere', 'Missouri')
+    home = probe('http://i/')
+    assert (home.status, home.state) == ('ok', 'Illinois')
     assert probe('http://d/').status == 'blocked'
     assert probe('http://e/').status == 'http 404'
     assert probe('http://f/').status == 'unreachable'
@@ -67,6 +74,14 @@ def test_detect_platform_from_body_as_well_as_url():
     assert detect_platform('http://x/jail', '<a href="/ArchonixXJailPublic/">') == 'archonix'
     assert detect_platform('http://inmates.bluhorse.com/default.aspx?ID=W') == 'bluhorse'
     assert detect_platform('http://x/plain') is None
+
+
+def test_detect_state_counts_names_and_zip_codes_outside_markup():
+    assert detect_state('<title>Brown County, KS Sheriff</title> Hiawatha, KS 66434 ... Kansas Driver License') == 'Kansas'
+    assert detect_state('<script>var s = "Missouri";</script><p>Pontiac, Illinois</p>') == 'Illinois'
+    assert detect_state('<p>Lincoln, IL 62656 and Hannibal, MO 63401 and Illinois</p>') == 'Illinois'
+    assert detect_state('<p>IL</p>') is None
+    assert detect_state(None) is None
 
 
 def test_read_index_folds_unnamed_columns_into_notes(tmp_path):
