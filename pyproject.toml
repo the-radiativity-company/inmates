@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "inmates"
+version = "0.1.0"
+description = "Scrapes Illinois county jail rosters into a current-custody dataset"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Emmanuel I. Obi", email = "withtwoemms@gmail.com" }]
+dependencies = [
+    "click>=8.1",
+    "scrapy>=2.13",
+    "pdfminer.six>=20240706",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ipdb>=0.13",
+]
+
+[project.scripts]
+inmates = "inmates.cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["inmates"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]
