@@ -18,6 +18,7 @@ DATETIME_FORMATS = (
     '%m/%d/%Y %H:%M',
     '%m/%d/%Y',
     '%m-%d-%Y - %I:%M %p',
+    '%m-%d-%Y %H:%M',
     '%m-%d-%Y',
     '%A %B %d, %Y at %I:%M %p',
     '%A %B %d, %Y @ %I:%M %p',
@@ -30,7 +31,7 @@ DATETIME_FORMATS = (
 
 HOLD_TYPES = (
     ('federal', ('FEDERAL', 'U.S. MARSHAL', 'US MARSHAL', 'USM ')),
-    ('doc', ('DEPARTMENT OF CORRECTIONS', 'IDOC', 'PAROLE')),
+    ('doc', ('DEPARTMENT OF CORRECTIONS', 'DEPT OF CORRECTIONS', 'DEPT. OF CORRECTIONS', 'IDOC', 'PAROLE')),
     ('out_of_state', ('FUGITIVE', 'OUT OF STATE', 'EXTRADITION', 'OUT-OF-STATE')),
     ('warrant', ('WARRANT',)),
     ('hold', ('HOLD',)),

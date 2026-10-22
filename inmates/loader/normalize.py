@@ -277,6 +277,58 @@ def normalize_stclair(record: dict) -> Person:
     )
 
 
+def normalize_tazewell(record: dict) -> Person:
+    """one row of the sheriff's in-custody table: a person with one charge and no bond"""
+    last = clean_text(record.get('LastName'))
+    first = ' '.join(filter(None, (clean_text(record.get('FirstName')), clean_text(record.get('MiddleInit')))))
+    name = ', '.join(filter(None, (last, first))) or None
+    booked = ' '.join(filter(None, (clean_text(record.get('BookDate')), clean_text(record.get('BookTime')))))
+    booking = Booking(
+        booking_date=iso_datetime(booked),
+        arresting_agency=clean_text(record.get('Agency')),
+        charges=[charge_from_text(record['Charge'])] if clean_text(record.get('Charge')) else [],
+        raw=record,
+    ).finish()
+    return Person(
+        county_person_key=clean_text(record.get('DetaineeID')) or person_key(name),
+        name=name,
+        age=parse_int(record.get('Age')),
+        sex=normalize_sex(record.get('Sex')),
+        race=normalize_race(record.get('Race')),
+        bookings=[booking],
+        raw=record,
+    )
+
+
+def normalize_lawrence(record: dict) -> Person:
+    """an article from the sheriff's in-custody page; 'TIME SERVER' as the only charge means a sentence being served"""
+    name = clean_text(record.get('Name'))
+    race, _, sex = (clean_text(record.get('Race/Sex')) or '').partition('/')
+    intake = record.get('Intake Date')
+    entries = record.get('Charges') or []
+    charges = [charge_from_text(c.get('Charge')) for c in entries if clean_text(c.get('Charge'))]
+    bonds = [parse_money(c.get('Bond')) for c in entries]
+    serving = bool(charges) and all('TIME SERVE' in (c.description or '').upper() for c in charges)
+    booking = Booking(
+        booking_date=iso_datetime(intake),
+        release_date=iso_datetime(record.get('Release Date')),
+        detention_status='sentenced' if serving and not record.get('Release Date') else None,
+        arresting_agency=clean_text(record.get('Arrested By Department')),
+        financial_hold=max((b for b in bonds if b), default=0.0 if bonds else None),
+        charges=charges,
+        raw=record,
+    ).finish()
+    return Person(
+        county_person_key=person_key(name, iso_date(intake)),
+        name=name,
+        age=parse_int(record.get('Age')),
+        sex=normalize_sex(sex),
+        race=normalize_race(race),
+        bookings=[booking],
+        raw=record,
+    )
+
+
 def normalize_generic(record: dict) -> Person:
     """for a county with no normalizer yet: find a name, keep everything raw"""
     fields = colonless(record)
@@ -287,8 +339,10 @@ def normalize_generic(record: dict) -> Person:
 
 NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
+    'lawrence': normalize_lawrence,
     'newworld': normalize_newworld,
     'stclair': normalize_stclair,
+    'tazewell': normalize_tazewell,
     'zuercher': normalize_zuercher,
 }
 
