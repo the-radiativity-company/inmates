@@ -1,10 +1,7 @@
 import click
-import inmates
-
-from csv import DictReader
-from os.path import dirname
 
 from inmates.cli import pass_environment
+from inmates.commands.cmd_collate import ROSTER_INDEX
 from inmates.utils import handle_csv
 
 
@@ -14,7 +11,7 @@ from inmates.utils import handle_csv
 def cli(ctx, column):
     """Extracts infromation from inmates.csv"""
 
-    csv = handle_csv('inmates.csv',
+    csv = handle_csv(ROSTER_INDEX,
         ('IL County', lambda cell: cell.rstrip('County').rjust(20)),
         (column, lambda cell: cell)
     )
