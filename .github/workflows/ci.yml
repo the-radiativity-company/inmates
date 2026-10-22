@@ -1,25 +1,36 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 jobs:
-  check:
+  test:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 3
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: ["3.12", "3.13"]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+      - uses: astral-sh/setup-uv@v6
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Make virtual environment
-        run: make
+      - name: Install
+        run: make install
 
       - name: Run tests
         run: make tests
+
+      - name: CLI smoke test
+        run: .venv/bin/inmates collate --help
+
+  # Single required status check for branch protection; green only when every matrix leg is.
+  CI:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "all checks passed"
