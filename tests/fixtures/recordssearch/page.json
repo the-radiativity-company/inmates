@@ -1,0 +1,20 @@
+{"inmates":[
+ {"id":"2606650","instanceId":"01EXAMPLEINSTANCE0000000000","address":{"city":"ANYTOWN","state":"IL"},
+  "arrests":[
+   {"charges":[{"statute":{"degree":"Class 3 Felony","description":"AGGRAVATED BATTERY"},"caseNumber":"26CF100"},
+               {"statute":{"degree":"Local Petty Offense (not from State)","description":"FAILURE TO APPEAR"}}],
+    "arrestingAgency":"City of Anytown Police Department","arrestDate":"2026-10-22T14:30:00","ageAtArrest":37},
+   {"charges":[{"statute":{"degree":"Class A Misdemeanor","description":"RETAIL THEFT"},"disposition":"Pending"}],
+    "arrestingAgency":"Example County Sheriff's Office","arrestDate":"2026-09-01T08:00:00","ageAtArrest":37}],
+  "bonds":[{"charges":[{"statute":{"degree":"Class 3 Felony","description":"AGGRAVATED BATTERY"}}],"type":"Not Bondable"},
+           {"amount":5000,"charges":[{"statute":{"degree":"Class A Misdemeanor","description":"RETAIL THEFT"}}],"type":"10% Non-Traffic"}],
+  "bondSettings":[],"ageAtBooking":37,"eyeColor":"Brown","gender":"Female","hairColor":"Black","height":"64",
+  "imageServiceClientId":4063834,"name":{"firstName":"JANE","lastName":"DOE","middleName":"Q","fullName":"DOE, JANE Q"},
+  "race":"White","soNumber":"00173446","weight":"140","lastUpdatedTimestamp":1792701964118,"IsReleased":false,"age":37},
+ {"id":"2606649","instanceId":"01EXAMPLEINSTANCE0000000000","address":{"city":"ANYTOWN","state":"IL"},
+  "arrests":[{"charges":[{"statute":{"degree":"Other offense","description":"HOLD DEPT CORRECTIONS"}}],
+    "arrestingAgency":"Example County Sheriff's Office","arrestDate":"2026-10-01T09:15:00","ageAtArrest":51}],
+  "bonds":[],"bondSettings":[],"ageAtBooking":51,"eyeColor":"Brown","gender":"Male","hairColor":"Gray","height":"70",
+  "imageServiceClientId":4007191,"name":{"firstName":"RICHARD","lastName":"ROE","middleName":"","fullName":"ROE, RICHARD"},
+  "race":"Black","soNumber":"00170816","weight":"190","lastUpdatedTimestamp":1792701964118,"IsReleased":false,"age":51}
+],"pagination":{"total":2,"pageSize":500,"pageNumber":1}}
