@@ -1,18 +1,11 @@
 import re
 
-from parsel import SelectorList
 from scrapy import Spider
+
+from inmates.scraper.text import text_of
 
 
 DETAIL_ID = re.compile(r'/Inmate/Detail/(-?\d+)')
-
-
-def text_of(selector) -> str | None:
-    """all descendant text of the first matched element, whitespace collapsed, None when empty"""
-    nodes = selector if isinstance(selector, SelectorList) else SelectorList([selector])
-    if not nodes:
-        return None
-    return ' '.join(' '.join(nodes[0].css('::text').getall()).split()) or None
 
 
 def field_list(items) -> dict:
