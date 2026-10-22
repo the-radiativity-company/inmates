@@ -19,6 +19,13 @@ TEMPLATES_DIR = 'inmates/scraper/templates/'
 # Custom settings
 INMATES_DEBUG_MODE = bool(envvars.get('INMATES_DEBUG_MODE'))
 
+# Fail fast on dead or unreachable roster sites. Scrapy's defaults (180s download
+# timeout, 2 retries) let one dead county hold a scheduled run for most of an hour.
+DOWNLOAD_TIMEOUT = 30
+DNS_TIMEOUT = 15
+RETRY_TIMES = 1
+CLOSESPIDER_TIMEOUT = 900  # hard cap per spider, seconds
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'inmates.scraper (+http://www.yourdomain.com)'
 

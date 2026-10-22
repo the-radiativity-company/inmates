@@ -1,7 +1,7 @@
 import click
 
 from inmates.cli import pass_environment
-from inmates.commands.cmd_collate import ROSTER_INDEX
+from inmates.rosters import ROSTER_INDEX
 from inmates.utils import handle_csv
 
 
@@ -16,4 +16,3 @@ def cli(ctx, column):
         (column, lambda cell: cell)
     )
     print(csv)  # TODO (withtwoemms) -- log to STDOUT via ctx object
-

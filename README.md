@@ -118,13 +118,22 @@ With execution paused, defined variables can be probed and response parsing can 
 
 # Deployment
 
-As of [issue #11](https://github.com/the-radiativity-company/inmates/issues/11), spiders are set vi CI to crawl at cron's cadence and deposit results in an [AWS S3 bucket](https://github.com/marketplace/actions/upload-s3).
-The following command can be used at runtime to invoke live crawling for all spiders:
+The `Scrape` workflow (`.github/workflows/scrape.yml`) runs daily and on manual dispatch. Each run:
+
+1. downloads the current `inmates.db` from the S3 bucket, if one exists
+2. runs `inmates collate -o outdir` to scrape every county to `<county>.json`
+3. runs `inmates load -i outdir -d inmates.db` to upsert those records into the database
+4. syncs the JSON to `s3://<bucket>/snapshots/<date>/` and uploads the database to `s3://<bucket>/current/inmates.db`
+
+The same flow runs locally:
 
 ```bash
-make scraper-run
+make scraper-run OUTDIR=outdir          # or ROSTER=macon for one county
+make scraper-load INDIR=outdir DB=inmates.db
+sqlite3 inmates.db 'SELECT * FROM current_custody'
 ```
 
-Default behavior for this command is to only output to stdout.
-If output is to be collected, the `$LIVESITE_PARSED_OUTPUT_DIR` environment variable can be set wherein results will be deposited.
-
+`inmates.db` is the **current-custody** model: one `person` row per person a county lists, upserted on every scrape with `first_seen`, `last_seen`, and `in_custody`; `booking` and `charge` rows replaced on every scrape; and a `scrape_run` row per county per run recording whether the scrape was `ok`, `empty`, or `missing`.
+Only a successful, non-empty scrape marks absent people as released, so a dead site never looks like a mass release.
+Every row keeps the county's raw record as JSON.
+The dated snapshots in S3 preserve full history for a longitudinal model later.
