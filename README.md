@@ -56,6 +56,22 @@ Run the following to build it and activate it:
 Now you can run `pip list` to see that the `inmates` CLI tool was installed.
 Execute the `inmates` command to see available subcommands (`inmates csv -c 'Roster Link'` can be helpful).
 
+# Roster Index
+
+`inmates.csv` has a row for each of Illinois' 102 counties and is the source of truth for where rosters live.
+
+| Column | Meaning |
+|---|---|
+| `Roster Link` | the page that lists people in custody; blank when the county publishes none |
+| `PDF` | whether the roster is a PDF rather than HTML |
+| `Platform` | the vendor behind the roster (`newworld`, `archonix`, `bluhorse`, ...) so one spider can serve many counties |
+| `Status` | what the link did when last probed: `ok`, `moved`, `blocked`, `http 404`, `unreachable`, or `none` |
+| `Checked` | the date of that probe |
+| `Notes` | what a human saw there |
+
+`make survey` (or `inmates survey`) refetches every link, stamps `Status` and `Checked`, and fills in `Platform` when it can recognize the vendor.
+Run it before working on a spider; a county whose status is not `ok` needs a new link before it needs code.
+
 # Development
 
 In service of the aforestated goals, a `scrapy.Spider` for each county will be created.

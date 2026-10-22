@@ -67,6 +67,10 @@ scraper-run: $(VENV)
 scraper-load: $(VENV)
 	@$(INMATES) load -i $(or $(INDIR),outdir) -d $(or $(DB),inmates.db)
 
+.PHONY: survey # probes every roster link and records Status/Checked in inmates.csv: make survey [DRY=true]
+survey: $(VENV)
+	@$(INMATES) survey $(if $(DRY),--dry-run,)
+
 .PHONY: tests # runs all tests
 tests: $(VENV)
 	@$(PYTHON) -m pytest -q $(TESTDIR)
