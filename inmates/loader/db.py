@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS booking (
     booking_number   TEXT,
     booking_date     TEXT,
     release_date     TEXT,
-    detention_status TEXT,                  -- detained | hold | released
+    detention_status TEXT,                  -- detained | hold | sentenced | released
     hold_type        TEXT,                  -- federal | doc | out_of_state | warrant | hold
     next_court_date  TEXT,
     arresting_agency TEXT,
@@ -155,6 +155,7 @@ def load_county(
     records: Optional[List[dict]],
     scraped_at: str,
     source_url: Optional[str] = None,
+    platform: Optional[str] = None,
 ) -> RunResult:
     """Loads one county's scrape. `records` None means the scrape produced no file.
 
@@ -178,7 +179,7 @@ def load_county(
             return RunResult(county, status, 0)
 
         for record in records:
-            person = normalize(county, record)
+            person = normalize(county, record, platform)
             person_id = upsert_person(conn, county, person, scraped_at, source_url)
             replace_bookings(conn, person_id, person)
 
@@ -203,9 +204,11 @@ def load_directory(
     scraped_at: str,
     counties: Iterable[str],
     source_urls: Optional[Dict[str, str]] = None,
+    platforms: Optional[Dict[str, str]] = None,
 ) -> List[RunResult]:
-    source_urls = source_urls or {}
+    source_urls, platforms = source_urls or {}, platforms or {}
     return [
-        load_county(conn, county, read_records(indir / f'{county}.json'), scraped_at, source_urls.get(county))
+        load_county(conn, county, read_records(indir / f'{county}.json'), scraped_at,
+                    source_urls.get(county), platforms.get(county))
         for county in counties
     ]

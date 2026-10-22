@@ -7,8 +7,9 @@ from pathlib import Path
 from inmates.cli import pass_environment
 from inmates.loader import connect
 from inmates.loader import load_directory
+from inmates.rosters import roster_names
+from inmates.rosters import roster_platforms
 from inmates.rosters import roster_urls
-from inmates.rosters import spider_names
 
 
 def utcnow_iso() -> str:
@@ -20,18 +21,18 @@ def utcnow_iso() -> str:
               help='Directory holding <roster>.json files from `inmates collate -o`.')
 @click.option('-d', '--database', type=click.Path(dir_okay=False, path_type=Path), default=Path('inmates.db'),
               show_default=True, help='SQLite database to create or update.')
-@click.option('-r', '--roster', type=click.Choice(spider_names()), multiple=True,
-              help='Load only these rosters (default: all).')
+@click.option('-r', '--roster', type=click.Choice(roster_names()), multiple=True,
+              help='Load only these counties (default: all).')
 @click.option('--scraped-at', default=None, help='ISO timestamp of the scrape, UTC (default: now).')
 @pass_environment
 def cli(ctx, indir, database, roster, scraped_at):
     """Upserts each roster's JSON into the current-custody database."""
 
-    counties = list(roster) or spider_names()
+    counties = list(roster) or roster_names()
     stamp = scraped_at or utcnow_iso()
     conn = connect(database)
     try:
-        results = load_directory(conn, indir, stamp, counties, roster_urls())
+        results = load_directory(conn, indir, stamp, counties, roster_urls(), roster_platforms())
     finally:
         conn.close()
 

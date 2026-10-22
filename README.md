@@ -74,7 +74,9 @@ Run it before working on a spider; a county whose status is not `ok` needs a new
 
 # Development
 
-In service of the aforestated goals, a `scrapy.Spider` for each county will be created.
+In service of the aforestated goals, a `scrapy.Spider` is written for each roster *platform*: the software a vendor sells to many sheriffs (NewWorld InmateInquiry, Archonix XJail, Bluhorse, ...).
+A county whose roster is home-grown gets a spider of its own.
+The `Platform` column of `inmates.csv` decides which spider reads a county; `inmates collate` passes the county's `Roster Link` as `domain` and its slug as `county`.
 Most everything needed to develop a such a scraper is provided within the project.
 Please see an overview of the project layout, below (generated via `make tree`--use `make commands` to see all available commands):
 
@@ -116,7 +118,7 @@ When scraping data from a roster, here are four components at play:
  * expectations on scraped data
 
 The 'sites to be scraped' are all housed in the "commissary/" directory so there's less of a need to reach out to the world wide web.
-Spiders live in the "inmates/scraper/spiders/" directory and there's to be _one for every site in the commissary/_.
+Spiders live in the "inmates/scraper/spiders/" directory, named for the platform they read (`newworld.py`) or, failing that, the county (`adams.py`).
 To get started on a new spider, simply run the following:
 
 ```bash
@@ -127,7 +129,7 @@ Use the `FORCE=true` flag if you'd like to overwrite an existing spider.
 
 To run spiders, use the `inmates collate` subcommand.
 Results can be saved using the `-o/--outdir` option that accepts a path to a directory where collected records are to be stored.
-An _individual_ spider can be run using the `-r/--roster` option.
+An _individual_ county can be scraped using the `-r/--roster` option.
 A helpful approach during development of a spider's `.parse` method is to leverage setting "breakpoints".
 Placing `ipdb.set_trace(context=15)` in the path of code to be executed, will pause execution once the "breakpoint" is hit (where the `context` keyword governs the scope of code visible when execution is paused).
 With execution paused, defined variables can be probed and response parsing can be explored in opened shell.
