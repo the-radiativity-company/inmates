@@ -1,5 +1,3 @@
-import ipdb
-
 from pprint import pprint
 from scrapy import Request
 from scrapy import Spider
@@ -26,7 +24,7 @@ class WillSpider(Spider):
             yield Request(url=profile_url, callback=self.parse_profile)
 
         next_page_path = response.xpath('//*[@id="Inmate_Index"]/div[2]/div[3]/a[3]/@href').get()
-        if next_page_url is not None:
+        if next_page_path is not None:
             yield response.follow(response.urljoin(next_page_path), callback=self.parse)
 
     def parse_profile(self, response):

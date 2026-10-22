@@ -2,21 +2,19 @@ import click
 
 from inmates.cli import pass_environment
 from inmates.utils import build_dict
-from inmates.utils import exit_proc
 from inmates.utils import format_records
 from inmates.utils import get_modules_from
-from inmates.utils import handle_csv
 from inmates.utils import produce_records
 from pathlib import Path
-from scrapy.settings import Settings
 from shlex import split as split_args
 from subprocess import run as run_proc
-from sys import argv
 from sys import executable as python
-from sys import exit
 
 
-spider_paths = get_modules_from('inmates.scraper.spiders')
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+ROSTER_INDEX = PROJECT_ROOT / 'inmates.csv'
+
+spider_paths = sorted(get_modules_from('inmates.scraper.spiders'), key=lambda p: p.stem)
 
 
 @click.command('collate', short_help='Scrape inmate rosters.')
@@ -28,7 +26,7 @@ def cli(ctx, outdir, roster):
 
     all_links = build_dict(
         format_records(
-            produce_records('inmates.csv'),
+            produce_records(ROSTER_INDEX),
             ('IL County', lambda cell: cell.replace(' County', '').replace('. ', '').lower()),
             ('Roster Link', lambda cell: cell)
         )
@@ -44,10 +42,10 @@ def cli(ctx, outdir, roster):
 
     if roster:
         outopt = f'-o {outdirpath}/{roster}.json -s LOG_ENABLED=False' if outdirpath else ''
-        run_proc(split_args(f'{python} -m scrapy crawl -a domain={roster_urls[roster]} {roster} {outopt}'))
+        run_proc(split_args(f'{python} -m scrapy crawl -a domain={roster_urls[roster]} {roster} {outopt}'), cwd=PROJECT_ROOT)
         print('✅', roster)
     else:
         for roster, url in roster_urls.items():
             outopt = f'-o {outdirpath}/{roster}.json -s LOG_ENABLED=False' if outdirpath else ''
-            run_proc(split_args(f'{python} -m scrapy crawl -a domain={url} {roster} {outopt}'))
+            run_proc(split_args(f'{python} -m scrapy crawl -a domain={url} {roster} {outopt}'), cwd=PROJECT_ROOT)
             print('✅', roster)

@@ -1,5 +1,3 @@
-import ipdb
-
 from scrapy import Spider
 
 
