@@ -6,6 +6,7 @@ travels along so it can be re-read later. Normalizers are keyed by platform
 (one vendor's software, shared by many counties) or, failing that, by county.
 """
 import json
+import re
 
 from dataclasses import asdict
 from dataclasses import dataclass
@@ -51,9 +52,9 @@ class Booking:
     charges: List[Charge] = field(default_factory=list)
     raw: dict = field(default_factory=dict)
 
-    def finish(self) -> 'Booking':
-        """derives what the county did not say outright"""
-        if self.hold_type is None:
+    def finish(self, derive_hold: bool = True) -> 'Booking':
+        """derives what the county did not say outright; derive_hold=False keeps a None hold_type as meaning no hold"""
+        if self.hold_type is None and derive_hold:
             self.hold_type = hold_type_for(*(c.description for c in self.charges), *(c.docket_number for c in self.charges))
         if self.detention_status is None:
             if self.release_date:
@@ -136,6 +137,90 @@ def normalize_newworld(record: dict) -> Person:
     )
 
 
+ZUERCHER_WARRANT = re.compile(r'^Warrant:\s*(?P<kind>.*?)\s*(?P<docket>\S*)\s*issued by\s*(?P<agency>.*)$', re.I)
+ZUERCHER_CHARGE = re.compile(r'^Charge(?:\s*\((?P<how>[^)]*)\))?:\s*(?P<text>.*)$', re.I)
+ZUERCHER_STATUS = re.compile(r'\s*\((?P<status>[^()]*)\)\s*$')
+DOLLARS = re.compile(r'\$\s*([\d,]+(?:\.\d+)?)')
+
+
+def dollars(text) -> Optional[float]:
+    """the $ figure in '10%, $40000.00' (parse_money would take the 10)"""
+    match = DOLLARS.search(text or '')
+    return float(match.group(1).replace(',', '')) if match else None
+
+
+def zuercher_hold_reasons(text) -> List[dict]:
+    """splits the portal's hold_reasons string into one dict per charge or warrant
+
+    'Charge (ON VIEW): 720 ILCS 5/12-3.2 - DOMESTIC BATTERY (Pending); Arrest Date 10/13/2026; Bond - No Bond, $0.00; Set By Judge;'
+    -> {'kind': 'charge', 'text': '720 ILCS 5/12-3.2 - DOMESTIC BATTERY', 'status': 'Pending', 'arrest_date': '10/13/2026', 'bond': 'No Bond, $0.00', 'how': 'ON VIEW'}
+    """
+    reasons = []
+    for entry in re.split(r'<br\s*/?>', text or ''):
+        parts = [p.strip() for p in entry.split(';') if p.strip()]
+        if not parts:
+            continue
+        head, reason = parts[0], {}
+        if match := ZUERCHER_CHARGE.match(head):
+            body = match.group('text')
+            status = ZUERCHER_STATUS.search(body)
+            reason = {'kind': 'charge', 'how': match.group('how'),
+                      'text': ZUERCHER_STATUS.sub('', body).strip(), 'status': status.group('status') if status else None}
+        elif match := ZUERCHER_WARRANT.match(head):
+            reason = {'kind': 'warrant', 'text': match.group('kind').strip(), 'docket': match.group('docket') or None,
+                      'agency': match.group('agency').strip()}
+        else:
+            reason = {'kind': 'other', 'text': head}
+        for part in parts[1:]:
+            if part.lower().startswith('arrest date'):
+                reason['arrest_date'] = part[len('arrest date'):].strip()
+            elif part.lower().startswith('bond -'):
+                reason['bond'] = part[len('bond -'):].strip()
+        reasons.append(reason)
+    return reasons
+
+
+def normalize_zuercher(record: dict) -> Person:
+    """a record from the CentralSquare/Zuercher portal API; 'dob' is really an age"""
+    name = clean_text(record.get('name'))
+    arrest_date = iso_date(record.get('arrest_date'))
+    reasons = zuercher_hold_reasons(record.get('hold_reasons'))
+    charges = []
+    for reason in reasons:
+        if reason['kind'] == 'charge':
+            statute, description = split_statute(reason['text'])
+            description = re.sub(r'^-\s*', '', description or '') or None
+            charges.append(Charge(description=description, statute=statute, offense_date=iso_date(reason.get('arrest_date'))))
+        else:
+            charges.append(Charge(description=reason['text'], docket_number=reason.get('docket'),
+                                  offense_date=iso_date(reason.get('arrest_date'))))
+    bonds = [dollars(r.get('bond')) for r in reasons]
+    held_for = clean_text(record.get('held_for_agency'))
+    warrant_agencies = [r.get('agency') or '' for r in reasons if r['kind'] == 'warrant']
+    out_of_state = any(not a.rstrip().endswith(', IL') for a in warrant_agencies if a)
+    # an arrest on a local warrant is ordinary pretrial detention, not a hold for someone else,
+    # so only the held-for agency, out-of-state warrants, and the charge text itself make a hold
+    booking = Booking(
+        booking_date=arrest_date,
+        release_date=iso_date(record.get('release_date')),
+        arresting_agency=held_for,
+        financial_hold=max((b for b in bonds if b), default=0.0 if bonds else None),
+        hold_type='out_of_state' if out_of_state else hold_type_for(held_for, *(r['text'] for r in reasons if r['kind'] == 'charge')),
+        charges=charges,
+        raw=record,
+    ).finish(derive_hold=False)
+    return Person(
+        county_person_key=person_key(name, arrest_date),
+        name=name,
+        age=parse_int(record.get('dob')),
+        sex=normalize_sex(record.get('sex')),
+        race=normalize_race(record.get('race')),
+        facility=clean_text(record.get('cell_block')),
+        bookings=[booking],
+        raw=record,
+    )
+
+
 def normalize_stclair(record: dict) -> Person:
     fields = colonless(record)
     name = clean_text(fields.get('Name'))
@@ -173,6 +258,7 @@ NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
     'newworld': normalize_newworld,
     'stclair': normalize_stclair,
+    'zuercher': normalize_zuercher,
 }
 
 
