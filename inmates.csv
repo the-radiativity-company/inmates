@@ -20,7 +20,7 @@ Cumberland County,https://cumberlandcoil.gov/sheriff/,,FALSE,,none,,"No roster. 
 DeKalb County,https://dekalbcountyilsheriff.org/corrections/,,FALSE,,none,,"VINELink only. The 2020 link (dekalbcountysheriff.org) was DeKalb County, Alabama"
 DeWitt County,https://dewittsheriff.com/jail,,,,none,,Custody confirmed by phone only
 Douglas County,https://douglascountyil.gov/sheriff-office/corrections,,FALSE,ocv,none,,Population moved to the sheriff mobile app; VINELink on the web
-DuPage County,https://www.dupagesheriff.org/inmateSearch,https://omsweb.public-safety-cloud.com/jtclientweb/jailtracker/index/Dupage_County_IL,FALSE,jailtracker,unreachable,2026-10-22,"JailTracker roster, a JavaScript app with a captcha; curl sees only the shell"
+DuPage County,https://www.dupagesheriff.org/inmateSearch,https://omsweb.public-safety-cloud.com/jtclientweb/jailtracker/index/Dupage_County_IL,FALSE,jailtracker,ok,2026-10-22,"JailTracker roster, a JavaScript app with a captcha; curl sees only the shell"
 Edgar County,,,,,none,,No roster; jail reportedly reduced to daytime operation in 2019
 Edwards County,http://www.ecsheriff.org/,,FALSE,,none,,"Used the White County roster, which is gone"
 Effingham County,,,,,none,,VINELink only (name search); no roster as of 2026-10
@@ -53,17 +53,17 @@ Lawrence County,https://www.lawrencecsd.com/,https://www.lawrencecsd.com/LCIMTS.
 Lee County,https://www.leecountyil.com/index.php?option=com_content&view=article&id=37&Itemid=159,https://www.leecountyil.com/DocumentCenter/View/2814,TRUE,,ok,2026-10-22,"Scanned image PDF (2 pages) of the jail list, needs OCR; View/2815 is the last 7 days of arrests"
 Livingston County,https://www.livcoso.org/,https://www.livcoso.org/inmate-roster/filters/current/booking_time=desc/1,FALSE,brooksjeffrey,ok,2026-10-22,"Brooks Jeffrey roster, paginated, with per-person profile pages; also a 48-hour release list"
 Logan County,,,,,none,,VINELink only (name search); no roster as of 2026-10
-Macon County,,http://50.77.170.147/NewWorld.InmateInquiry/IL0580000,FALSE,newworld,ok,2026-10-22,NewWorld inquiry; InCustody=True lists everyone, 100 per page, with a detail page per person
+Macon County,,http://50.77.170.147/NewWorld.InmateInquiry/IL0580000,FALSE,newworld,ok,2026-10-22,"NewWorld inquiry; InCustody=True lists everyone; [' 100 per page', ' with a detail page per person']"
 Macoupin County,,,,,none,,
 Madison County,,,,,none,,
 Marion County,,,,,none,,No roster; sheriff site gone (410) as of 2026-10
 Marshall County,,,,,none,,
 Mason County,,,,,none,,
 Massac County,http://massacsheriffsdept.com/,https://massacsheriffsdept.com/inmate-listing.html,FALSE,,http 500,2026-10-22,Listing page returns HTTP 500; homepage advertises a mobile app with current inmate information
-McDonough County,,,,,none,,
+McDonough County,https://www.mcdonoughcountysheriff.com/,https://mcdonough-911-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,"Zuercher portal found by probing <county>-911-il.zuercherportal.com; no arrest dates, statutes in ""Converted Statute"" form"
 McHenry County,https://www.mchenrysheriff.org/,https://www.mchenrysheriff.org/wp-content/uploads/pdf-uploads/InmateSearch_ByName.pdf,TRUE,,ok,2026-10-22,"PDF updated every hour, excludes federal detainees; sibling InmateSearch_ByDate.pdf"
 McLean County,,,,,none,,
-Menard County,,,,,none,,
+Menard County,https://menardcountyil.com/elected-officials/sh/,https://menard-911-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,Zuercher portal launched 2026 (sheriff site announces it); hold reasons carry held-for agency and bond notes
 Mercer County,http://mercercosheriff.org/index.html,,,,none,,its just a really bad website and I wanted someone to see it
 Monroe County,https://monroecoilsheriff.org/,,FALSE,ocv,none,,Roster moved to the sheriff mobile app
 Montgomery County,,,,,none,,
@@ -87,7 +87,7 @@ Scott County,,,,,none,,No jail (Illinois Sheriffs Association directory)
 Shelby County,,,,,none,,
 St. Clair County,https://www.co.st-clair.il.us/departments/sheriff,https://stclairil.goejail.com/inmates-list,FALSE,goejail,ok,2026-10-22,goejail current inmates list behind a Cloudflare Turnstile; the county page redirects here
 Stark County,,,,,none,,
-Stephenson County,http://www.co.stephenson.il.us/sheriff/jailmail.asp,http://xjail.stephensoncountyjail.org/ArchonixXJailPublic/,FALSE,archonix,unreachable,2026-10-22,Archonix XJail host is down; county page still links it and says housing info is under construction
+Stephenson County,http://www.co.stephenson.il.us/sheriff/jailmail.asp,https://stephenson-so-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,Zuercher portal found by probing <county>-so-il.zuercherportal.com; replaces the dead Archonix XJail host
 Tazewell County,https://sheriff.tazewell-il.gov/,https://sheriff.tazewell-il.gov/inmate-lookup-c/,FALSE,,ok,2026-10-22,"Plain HTML table of everyone in custody: book date, detainee ID, name, age, race, sex, charge, agency; no bond. Blocks curl; needs browser headers"
 Union County,,,,,none,,
 Vermilion County,https://vercounty.org/sheriff,,FALSE,,none,,"No roster; only visitation, mail, and commissary pages"
@@ -96,7 +96,7 @@ Warren County,,,,,none,,No roster; new jail under construction as of 2026-10
 Washington County,,,,,none,,
 Wayne County,,https://www.wfiwradio.com/mugshots/,FALSE,,ok,2026-10-22,"Radio station mugshot posts; newest is March 2025, looks abandoned"
 White County,,,FALSE,,none,,whitecountyjail.com and the sheriff domains are unreachable
-Whiteside County,,,,,none,,
+Whiteside County,https://www.whitesidecountyil.gov/294/Sheriff,https://whiteside-so-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,Zuercher portal found by probing <county>-so-il.zuercherportal.com; dob is a real date here
 Will County,https://www.willcosheriff.org/,https://inquiry.willcosheriff.org/NewWorld.InmateInquiry/Public,FALSE,newworld,ok,2026-10-22,"NewWorld inquiry moved from a bare IP; blank search with In Custody checked lists everyone, 100 per page"
 Williamson County,,,,,none,,VINELink only (name search); no roster as of 2026-10
 Winnebago County,http://winnebagosheriff.com/,http://inmates.winnebagosheriff.com/,FALSE,,ok,2026-10-22,Select One letter at a time to search alphabetically. Each person opens to show all their booking info including bond

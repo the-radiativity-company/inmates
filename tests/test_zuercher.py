@@ -42,9 +42,41 @@ def test_spider_pages_until_the_total_is_reached():
 def test_hold_reasons_split_into_charges_and_warrants():
     reasons = zuercher_hold_reasons(json.loads(PAGE.read_text())['records'][1]['hold_reasons'])
     assert [r['kind'] for r in reasons] == ['warrant', 'warrant']
-    assert reasons[0] == {'kind': 'warrant', 'text': 'Original Charge warrant', 'docket': '25CF463',
-                          'agency': 'Rock Island CO. IL, IL', 'arrest_date': '09/09/2026', 'bond': '10%, $40000.00'}
+    assert reasons[0] == {'label': 'Warrant', 'kind': 'warrant', 'text': 'Original Charge warrant 25CF463 issued by Rock Island CO. IL, IL',
+                          'docket': '25CF463', 'agency': 'Rock Island CO. IL, IL', 'arrest_date': '09/09/2026', 'bond': '10%, $40000.00'}
     assert zuercher_hold_reasons('') == []
+
+
+def test_hold_reasons_across_sheriffs_label_styles():
+    """each sheriff configures its own entry labels; the parser keys on content"""
+    def one(text):
+        reason, = zuercher_hold_reasons(text)
+        return {k: reason.get(k) for k in ('kind', 'statute', 'text', 'docket', 'agency')}
+
+    assert one('New Offense: Converted Statute - 625 ILCS 5/11-204.1(A)(3) ~ AGGRAVATED FLEEING OR ELUDING;') == \
+        {'kind': 'charge', 'statute': '625 ILCS 5/11-204.1(A)(3)', 'text': 'AGGRAVATED FLEEING OR ELUDING', 'docket': None, 'agency': None}
+    assert one('Charge/Arrest: 720-5/12-3.4 - Violation of Order of Protection (Attempt) - 2 Counts; Bond - Pre-Trial Hold;') == \
+        {'kind': 'charge', 'statute': '720 ILCS 5/12-3.4', 'text': 'Violation of Order of Protection (Attempt) - 2 Counts', 'docket': None, 'agency': None}
+    assert one('Warrant-McDonough: Unspecified warrant 25CF8 issued by KNOX COUNTY (Converted Statute - WARRANT ~ WARRANT - FOREIGN);')['docket'] == '25CF8'
+    assert one('Out of County Warrant (IL): Failure to Appear warrant 25MT175B issued by Sangamon, IL; Arrest Date 10/20/2026;')['agency'] == 'Sangamon, IL'
+    assert one('Warrant New Charge: New Charge warrant  (720 ILCS 5/8-4(a) - Attempt Murder - 2 Counts); Bond - No Bond;') == \
+        {'kind': 'warrant', 'statute': '720 ILCS 5/8-4(a)', 'text': 'Attempt Murder - 2 Counts', 'docket': None, 'agency': None}
+    assert one('Sentencing Order: Serving 14 days - Concurrent; Arrest Date 10/16/2026;')['kind'] == 'sentence'
+    assert one('Additional Hold for Parole; Arrest Date 08/24/2026; Bond - No Bond;') == \
+        {'kind': 'hold', 'statute': None, 'text': 'Additional Hold for Parole', 'docket': None, 'agency': None}
+
+
+def test_normalizer_handles_sentences_parole_holds_and_date_dobs():
+    base = {'name': 'DOE, JANE', 'sex': 'Female', 'race': 'White', 'arrest_date': '2026-10-16', 'release_date': '', 'cell_block': '', 'held_for_agency': 'Example County Sheriff'}
+    sentenced = normalize('x', dict(base, dob=33, hold_reasons='Sentencing Order: Serving 14 days - Concurrent; Arrest Date 10/16/2026; Bond - No Bond;'), 'zuercher')
+    assert (sentenced.age, sentenced.dob, sentenced.bookings[0].detention_status, sentenced.bookings[0].charges) == (33, None, 'sentenced', [])
+
+    parole = normalize('x', dict(base, dob='1997-06-10', hold_reasons='Original Warrant: Unspecified warrant ; Arrest Date 08/24/2026;<br />Additional Hold for Parole; Arrest Date 08/24/2026; Bond - No Bond;'), 'zuercher')
+    assert (parole.age, parole.dob) == (None, '1997-06-10')
+    assert (parole.bookings[0].detention_status, parole.bookings[0].hold_type) == ('hold', 'doc')
+
+    local = normalize('x', dict(base, dob=20, hold_reasons='Out of County Warrant (IL): Failure to Appear warrant 25MT175B issued by Sangamon, IL; Arrest Date 10/20/2026;'), 'zuercher')
+    assert (local.bookings[0].detention_status, local.bookings[0].hold_type, local.bookings[0].charges[0].docket_number) == ('detained', None, '25MT175B')
 
 
 def test_zuercher_normalizer():
