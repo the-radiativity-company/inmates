@@ -1,0 +1,56 @@
+name: Scrape
+
+on:
+  schedule:
+    - cron: "12 6 * * *"   # daily, 06:12 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    env:
+      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: make install
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Fetch the current database
+        run: aws s3 cp "s3://$AWS_BUCKET/current/inmates.db" inmates.db || echo "no database in the bucket yet; starting fresh"
+
+      - name: Scrape
+        # A failing spider must not stop the others or the load; the loader records it as missing/empty.
+        run: .venv/bin/inmates collate -o outdir || echo "::warning::one or more spiders failed"
+
+      - name: Load
+        run: .venv/bin/inmates load -i outdir -d inmates.db
+
+      - name: Publish
+        run: |
+          STAMP=$(date -u +%F)
+          aws s3 sync outdir "s3://$AWS_BUCKET/snapshots/$STAMP/"
+          aws s3 cp inmates.db "s3://$AWS_BUCKET/current/inmates.db"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scrape-${{ github.run_id }}
+          path: |
+            outdir
+            inmates.db
+          retention-days: 14
