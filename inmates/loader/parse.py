@@ -28,6 +28,8 @@ DATETIME_FORMATS = (
     '%B %d, %Y',
     '%Y-%m-%d %H:%M:%S',
     '%Y-%m-%dT%H:%M:%S',
+    '%Y-%m-%dT%H:%M:%SZ',
+    '%m/%d/%Y %I:%M:%S %p',
     '%Y-%m-%d',
 )
 

@@ -382,6 +382,54 @@ def normalize_recordssearch(record: dict) -> Person:
     )
 
 
+SANGAMON_CLASS = re.compile(r'-?\s*Class\s+([A-Z0-9]+)\s*$', re.I)
+
+
+def normalize_sangamon(record: dict) -> Person:
+    """
+    a grid record from the county's DNN roster with the details form parsed
+    into 'Details'. The statute line ends in the charge's class. A bond block
+    gives a bail (deposit) and a bond amount; the bond amount is the hold.
+    Prisoner type is Felony or Misdemeanor for most, else the reason held:
+    'Sent IDOC' and 'Sent SCSO' are sentences being served, 'USM Hold BOP' a
+    federal hold, 'Parole Violation' a DOC hold, 'Temp Hold' a plain hold.
+    """
+    details = record.get('Details') or {}
+    last = clean_text(record.get('LastName'))
+    first = ' '.join(filter(None, (clean_text(record.get('FirstName')), clean_text(record.get('MIddleName')))))
+    name = ', '.join(filter(None, (last, first))) or clean_text(details.get('Name'))
+    prisoner_type = (clean_text(record.get('PrisonerType')) or '').upper()
+    charges = []
+    for c in details.get('Charges') or []:
+        statute = clean_text(c.get('Statute')) or ''
+        offense_class = SANGAMON_CLASS.search(statute)
+        charges.append(Charge(
+            description=clean_text(c.get('Charge')) or SANGAMON_CLASS.sub('', statute).strip() or None,
+            offense_class=offense_class.group(1).upper() if offense_class else None,
+            docket_number=(clean_text(c.get('Case Number')) or '').split(',')[0].strip() or None,
+        ))
+    court_dates = [iso_datetime(c.get('Court Date & Time')) for c in details.get('Charges') or []]
+    bonds = [parse_money(b.get('Bond Set Amount')) for b in details.get('Bonds') or []]
+    booking = Booking(
+        booking_number=clean_text(record.get('BookingNumber')),
+        booking_date=iso_datetime(record.get('BookingDateTime')),
+        release_date=iso_datetime(record.get('ReleaseDateTime')),
+        next_court_date=max(filter(None, court_dates), default=None),
+        detention_status='sentenced' if prisoner_type.startswith('SENT') else None,
+        financial_hold=max((b for b in bonds if b), default=0.0 if details else None),
+        hold_type=hold_type_for(prisoner_type),
+        charges=charges,
+        raw=record,
+    ).finish()
+    return Person(
+        county_person_key=clean_text(record.get('Id')) or clean_text(record.get('BookingNumber')) or person_key(name),
+        name=name,
+        dob=iso_date(details.get('DOB')),
+        bookings=[booking],
+        raw=record,
+    )
+
+
 def normalize_stclair(record: dict) -> Person:
     fields = colonless(record)
     name = clean_text(fields.get('Name'))
@@ -513,6 +561,7 @@ NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'newworld': normalize_newworld,
     'randolph': normalize_randolph,
     'recordssearch': normalize_recordssearch,
+    'sangamon': normalize_sangamon,
     'stclair': normalize_stclair,
     'tazewell': normalize_tazewell,
     'zuercher': normalize_zuercher,

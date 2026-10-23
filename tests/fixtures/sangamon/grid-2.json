@@ -1,0 +1,88 @@
+{
+ "query": {
+  "PageIndex": 2,
+  "PageSize": 2
+ },
+ "totalResults": 3,
+ "totalPages": 2,
+ "firstResult": 2,
+ "results": [
+  {
+   "id": "265940",
+   "fields": [
+    {
+     "Name": "FirstName",
+     "Value": "PAT",
+     "FormattedValue": "PAT",
+     "Title": "FirstName"
+    },
+    {
+     "Name": "MIddleName",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "MIddleName"
+    },
+    {
+     "Name": "LastName",
+     "Value": "POE",
+     "FormattedValue": "<p><a href=\"/details?SCinmateId=265940\">POE</a></p>",
+     "Title": "LastName"
+    },
+    {
+     "Name": "BookingNumber",
+     "Value": "2026-00005990",
+     "FormattedValue": "2026-00005990",
+     "Title": "BookingNumber"
+    },
+    {
+     "Name": "City",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "City"
+    },
+    {
+     "Name": "State",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "State"
+    },
+    {
+     "Name": "PrisonerType",
+     "Value": "Sentenced",
+     "FormattedValue": "Sentenced",
+     "Title": "PrisonerType"
+    },
+    {
+     "Name": "BookingDateTime",
+     "Value": "2026-09-01T08:00:00Z",
+     "FormattedValue": "2026-09-01T08:00:00Z",
+     "Title": "BookingDateTime"
+    },
+    {
+     "Name": "ReleaseDateTime",
+     "Value": "2026-10-21T09:00:00Z",
+     "FormattedValue": "2026-10-21T09:00:00Z",
+     "Title": "ReleaseDateTime"
+    },
+    {
+     "Name": "ScheduledReleaseDateTime",
+     "Value": "Not Given",
+     "FormattedValue": "Not Given",
+     "Title": "ScheduledReleaseDateTime"
+    },
+    {
+     "Name": "PhotoURL",
+     "Value": null,
+     "FormattedValue": "/portals/0/x.jpg",
+     "Title": "PhotoURL"
+    },
+    {
+     "Name": "FirstMiddleName",
+     "Value": null,
+     "FormattedValue": "PAT",
+     "Title": "FirstMiddleName"
+    }
+   ]
+  }
+ ]
+}
