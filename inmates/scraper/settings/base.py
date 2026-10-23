@@ -24,7 +24,9 @@ INMATES_DEBUG_MODE = bool(envvars.get('INMATES_DEBUG_MODE'))
 DOWNLOAD_TIMEOUT = 30
 DNS_TIMEOUT = 15
 RETRY_TIMES = 4           # five attempts in all
-RETRY_BACKOFF_BASE = 2    # seconds before the first retry, doubled each time: 2, 4, 8, 16
+RETRY_WAIT_INITIAL = 2    # seconds before the first retry, doubled each time: 2, 4, 8, 16...
+RETRY_WAIT_JITTER = 1     # plus a random 0 to this many seconds
+RETRY_WAIT_MAX = 30       # but never longer than this
 CLOSESPIDER_TIMEOUT = 900  # hard cap per spider, seconds
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
