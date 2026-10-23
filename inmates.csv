@@ -99,5 +99,5 @@ White County,,,FALSE,,none,,whitecountyjail.com and the sheriff domains are unre
 Whiteside County,https://www.whitesidecountyil.gov/294/Sheriff,https://whiteside-so-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,Zuercher portal found by probing <county>-so-il.zuercherportal.com; dob is a real date here
 Will County,https://www.willcosheriff.org/,https://inquiry.willcosheriff.org/NewWorld.InmateInquiry/Public,FALSE,newworld,ok,2026-10-22,"NewWorld inquiry moved from a bare IP; blank search with In Custody checked lists everyone, 100 per page"
 Williamson County,,,,,none,,VINELink only (name search); no roster as of 2026-10
-Winnebago County,http://winnebagosheriff.com/,http://inmates.winnebagosheriff.com/,FALSE,,ok,2026-10-22,Select One letter at a time to search alphabetically. Each person opens to show all their booking info including bond
+Winnebago County,http://winnebagosheriff.com/,http://inmates.winnebagosheriff.com/,FALSE,,ok,2026-10-22,"ASP.NET search by last-name letter, each person opening to booking details with bond, but every search is gated by a reCAPTCHA"
 Woodford County,https://www.woodford-county.org/215/Corrections,http://inmates.bluhorse.com/default.aspx?ID=WCCF#,FALSE,bluhorse,ok,2026-10-22,Each person has to be clicked into- there is a 2nd tab with bond info

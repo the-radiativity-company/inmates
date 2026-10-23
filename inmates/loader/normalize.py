@@ -364,6 +364,20 @@ def normalize_lawrence(record: dict) -> Person:
     )
 
 
+def normalize_randolph(record: dict) -> Person:
+    """one table of the sheriff's listing: a name and its charges, each with bond text or an amount; no dates or demographics"""
+    name = re.sub(r',\s*', ', ', clean_text(record.get('Name')) or '') or None
+    entries = record.get('Charges') or []
+    charges = [charge_from_text(c.get('Charge')) for c in entries if clean_text(c.get('Charge'))]
+    bonds = [parse_money(c.get('Bond')) for c in entries]
+    booking = Booking(
+        financial_hold=max((b for b in bonds if b), default=0.0 if bonds else None),
+        charges=charges,
+        raw=record,
+    ).finish()
+    return Person(county_person_key=person_key(name), name=name, bookings=[booking], raw=record)
+
+
 def normalize_generic(record: dict) -> Person:
     """for a county with no normalizer yet: find a name, keep everything raw"""
     fields = colonless(record)
@@ -376,6 +390,7 @@ NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
     'lawrence': normalize_lawrence,
     'newworld': normalize_newworld,
+    'randolph': normalize_randolph,
     'recordssearch': normalize_recordssearch,
     'stclair': normalize_stclair,
     'tazewell': normalize_tazewell,
