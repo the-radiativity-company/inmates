@@ -370,6 +370,28 @@ def normalize_tazewell(record: dict) -> Person:
     )
 
 
+def normalize_jasper(record: dict) -> Person:
+    """
+    a block from the sheriff's hand-typed jail report: 'Charge' is a free-text
+    list of offenses separated by commas and 'Bond' is an amount or 'No Bond'.
+    'Mittimus' as the charge means a sentence is being served.
+    """
+    name = clean_text(record.get('Name'))
+    text = (clean_text(record.get('Charge')) or '').rstrip('.')
+    charges = [charge_from_text(part) for part in text.split(',') if clean_text(part)]
+    bond_text = clean_text(record.get('Bond'))
+    serving = bool(charges) and all('MITTIMUS' in (c.description or '').upper() for c in charges)
+    booking = Booking(
+        detention_status='sentenced' if serving else None,
+        financial_hold=parse_money(bond_text) if bond_text else None,
+        charges=charges,
+        raw=record,
+    ).finish()
+    if booking.financial_hold is None and bond_text:
+        booking.financial_hold = 0.0
+    return Person(county_person_key=person_key(name), name=name, bookings=[booking], raw=record)
+
+
 def normalize_lawrence(record: dict) -> Person:
     """an article from the sheriff's in-custody page; 'TIME SERVER' as the only charge means a sentence being served"""
     name = clean_text(record.get('Name'))
@@ -423,6 +445,7 @@ def normalize_generic(record: dict) -> Person:
 
 NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
+    'jasper': normalize_jasper,
     'lawrence': normalize_lawrence,
     'mmmicro': normalize_mmmicro,
     'newworld': normalize_newworld,
