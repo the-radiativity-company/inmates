@@ -56,7 +56,7 @@ STCLAIR = [
      'Charges': ['720 ILCS 5/9-1 FIRST DEGREE MURDER', '720 ILCS 5/32-10(a) IN STATE WARRANT']},
 ]
 
-ADAMS = [{'name': 'Pat Example', 'gender': None, 'age': None, 'race': None, 'bookings': {}}]
+ADAMS = [{'Name': 'EXAMPLE, PAT', 'AC #': '10101', 'Charges': '720-5/16-25 - Retail Theft', 'Bond': None, 'Court Date': '11/10/26', 'Time': '09:30', 'Courtroom': 'Court Room 1A', 'Arrest Type': 'New Arrest', 'Printed': 'October 22, 2026'}]
 
 T1, T2, T3 = '2026-10-21 06:12:00', '2026-10-22 06:12:00', '2026-10-23 06:12:00'
 
@@ -185,7 +185,7 @@ def test_current_custody_view(conn):
     load_county(conn, 'adams', ADAMS, T1)
     rows = conn.execute('SELECT county, name, detention_status, hold_type, charges FROM current_custody ORDER BY county').fetchall()
     assert rows == [
-        ('adams', 'Pat Example', None, None, None),
+        ('adams', 'EXAMPLE, PAT', 'detained', None, '720-5/16-25 Retail Theft'),
         ('stclair', 'DOE JANE Q.', 'hold', 'warrant', '720 ILCS 5/9-1 FIRST DEGREE MURDER; 720 ILCS 5/32-10(A) IN STATE WARRANT'),
         ('will', 'DOE, JOHN', 'hold', 'out_of_state', 'FUGITIVE WARRANT; RETAIL THEFT'),
     ]

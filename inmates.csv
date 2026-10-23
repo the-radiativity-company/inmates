@@ -1,5 +1,5 @@
 IL County,Website,Roster Link,PDF,Platform,Status,Checked,Notes
-Adams County,https://www.adamscountyil.gov/,https://www.adamscountyil.gov/government/departments/sheriff-jail/county-jail/jail-inmate-list,TRUE,,blocked,2026-10-22,"Domain moved from co.adams.il.us; whole site refuses bots (403), so the list is unverified. Was a PDF updated at 5AM"
+Adams County,https://www.adamscountyil.gov/,https://www.adamscountyil.gov/government/departments/sheriff-jail/county-jail/jail-inmate-list,TRUE,,blocked,2026-10-22,"Page links a daily population PDF (ShowDocument?id=…) with name, AC #, statute charges, bond, court date, courtroom, arrest type. The Akamai edge answers HTTP/1.1 and bare requests with 403, so the spider speaks HTTP/2 with browser headers"
 Alexander County,,,,,none,,No roster; detainees held at Pulaski County Detention Center
 Bond County,,,,,none,,
 Boone County,,,,,none,,VINELink only (name search); no roster as of 2026-10
@@ -14,7 +14,7 @@ Clark County,,,,,none,,VINELink only (name search); no roster as of 2026-10
 Clay County,https://claycountyillinois.org/sheriff/,,,,none,,"County site behind Cloudflare; unverified, no roster surfaced"
 Clinton County,,,,,none,,
 Coles County,https://colesco.illinois.gov/sheriff/,https://odyprdportal.co.coles.il.us/JailPublicAccess/default.aspx,FALSE,odyssey,unreachable,2026-10-22,"Tyler Odyssey Jail Public Access; redirects to a login, account required. The 2020 PDF is gone"
-Cook County,https://www.cookcountysheriffil.gov/,https://iic.ccsheriff.org/IndividualInCustodyLocator/Search,FALSE,,ok,2026-10-22,Individual in Custody Locator: terms acceptance then full first and last name required; not listable
+Cook County,https://www.cookcountysheriffil.gov/,https://iic.ccsheriff.org/IndividualInCustodyLocator/Search,FALSE,,ok,2026-10-22,"Individual in Custody Locator: a full first and last name or a booking number plus a reCAPTCHA per search; nothing lists everyone, so no spider"
 Crawford County,http://www.crawfordcountyil.org/,http://jail.crawfordcountyil.org/,FALSE,mmmicro,ok,2026-10-22,"M&M Micro Systems Online Inmate System: A-Z letter index listing name, age, class, race/sex, intake date. Replaces the Wix page"
 Cumberland County,https://cumberlandcoil.gov/sheriff/,,FALSE,,none,,"No roster. The 2020 link (cumberlandso.org) was Cumberland County, North Carolina"
 DeKalb County,https://dekalbcountyilsheriff.org/corrections/,,FALSE,,none,,"VINELink only. The 2020 link (dekalbcountysheriff.org) was DeKalb County, Alabama"
@@ -47,8 +47,8 @@ Kane County,,http://kanesheriff.com/Pages/Detainee-Search.aspx,FALSE,,ok,2026-10
 Kankakee County,https://kankakeecountysheriff.com/inmate-search,https://inmateinfo.com/?SiteName=KankakeeIL,FALSE,securus,http 500,2026-10-22,"Securus InmateInfo search; last name required, not listable. The NewWorld inquiry is gone"
 Kendall County,,http://inmate.co.kendall.il.us/NewWorld.InmateInquiry/kendall/,FALSE,newworld,ok,2026-10-22,
 Knox County,https://www.knoxcountysheriffil.com/,https://www.knoxcountysheriffil.com/inmate-roster,FALSE,,ok,2026-10-22,Roster only in the sheriff mobile app; web page has no data
-Lake County,https://www.lakecountyil.gov/,https://www.lakecountyil.gov/2032/Locate-an-Inmate,FALSE,,ok,2026-10-22,County site behind Cloudflare; the lookup tool behind this page is unverified. The 2020 search app is gone
-LaSalle County,https://lasallecounty.org/lasalle-county-jail-2/,https://isoms.lasallecounty.org/portal/Jail,FALSE,isoms,ok,2026-10-22,iSOMS portal lists everyone after a reCAPTCHA; also 24 and 72 hour intake/release lists
+Lake County,https://www.lakecountyil.gov/,https://www.lakecountyil.gov/2032/Locate-an-Inmate,FALSE,,ok,2026-10-22,"County site answers every non-browser request with a Cloudflare challenge (cf-mitigated: challenge), a human check we do not pass; the lookup tool behind the page is unverified. The 2020 search app is gone"
+LaSalle County,https://lasallecounty.org/lasalle-county-jail-2/,https://isoms.lasallecounty.org/portal/Jail,FALSE,isoms,ok,2026-10-22,"iSOMS portal lists everyone, but every visit is redirected to /portal/imahuman, a reCAPTCHA we do not pass; also 24 and 72 hour intake/release lists"
 Lawrence County,https://www.lawrencecsd.com/,https://www.lawrencecsd.com/LCIMTS.htm,FALSE,,ok,2026-10-22,"Single static HTML page of everyone in custody: name, age, race/sex, intake date, arresting agency, charges"
 Lee County,https://www.leecountyil.com/index.php?option=com_content&view=article&id=37&Itemid=159,https://www.leecountyil.com/DocumentCenter/View/2814,TRUE,,ok,2026-10-22,"Text PDF of the current inmate list: name and booking number only, dated; View/2815 is the last 7 days of arrests"
 Livingston County,https://www.livingstoncountyil.gov/department/jail/index.php,,FALSE,,none,,"No roster; jail page links only to IDOC search and visitation. The 2026-10 link (livcoso.org) was Livingston County, Missouri"
@@ -85,7 +85,7 @@ Sangamon County,https://sangamonil.gov/departments/s-z/sheriff/,https://sangamon
 Schuyler County,https://schuylersheriffredshaw.godaddysites.com/,,FALSE,ocv,none,,Moving to the sheriff mobile app; the 2020 domain is squatted
 Scott County,,,,,none,,No jail (Illinois Sheriffs Association directory)
 Shelby County,,,,,none,,
-St. Clair County,https://www.co.st-clair.il.us/departments/sheriff,https://stclairil.goejail.com/inmates-list,FALSE,goejail,ok,2026-10-22,goejail current inmates list behind a Cloudflare Turnstile; the county page redirects here
+St. Clair County,https://www.co.st-clair.il.us/departments/sheriff,https://stclairil.goejail.com/inmates-list,FALSE,goejail,ok,2026-10-22,"goejail current inmates list; every visit is redirected to /verify, a Cloudflare Turnstile human check we do not pass, so the spider stays empty. The county page redirects here"
 Stark County,,,,,none,,
 Stephenson County,http://www.co.stephenson.il.us/sheriff/jailmail.asp,https://stephenson-so-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,Zuercher portal found by probing <county>-so-il.zuercherportal.com; replaces the dead Archonix XJail host
 Tazewell County,https://sheriff.tazewell-il.gov/,https://sheriff.tazewell-il.gov/inmate-lookup-c/,FALSE,,ok,2026-10-22,"Plain HTML table of everyone in custody: book date, detainee ID, name, age, race, sex, charge, agency; no bond. Blocks curl; needs browser headers"
