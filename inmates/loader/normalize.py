@@ -89,9 +89,45 @@ def charge_from_text(text) -> Charge:
 
 # --- counties -----------------------------------------------------------------
 
+ADAMS_STATUTE = re.compile(r'^(\d{3}-[\dA-Za-z.]+/[\w.()\-]+)\s*-\s*(.*)$')
+
+
 def normalize_adams(record: dict) -> Person:
-    name = clean_text(record.get('name') or record.get('Name'))
-    return Person(county_person_key=person_key(name), name=name, raw=record)
+    """
+    a row of the sheriff's population PDF. Charges are 'statute - description'
+    entries separated by semicolons; the arrest type under the courtroom says
+    why the person is held (New Arrest, Warrant Arrest, Sentence, Court Order,
+    IDOC Writ, Weekender, Out of County, Circuit Court): a sentence or a
+    weekender is serving time, an IDOC writ is a DOC hold, out of county a
+    hold for another county; a warrant arrest is an arrest, and any hold
+    behind it shows in the charges. A bond is printed only when one was set,
+    $0.00 included.
+    """
+    name = (clean_text(record.get('Name')) or '').rstrip(',') or None  # a long last name is printed alone, with its comma
+    charges = []
+    for entry in (clean_text(record.get('Charges')) or '').split(';'):
+        entry = entry.strip()
+        if not entry:
+            continue
+        match = ADAMS_STATUTE.match(entry)
+        charges.append(Charge(description=match.group(2).strip() or None, statute=match.group(1)) if match else Charge(description=entry))
+    arrest_type = (clean_text(record.get('Arrest Type')) or '').upper()
+    court = ' '.join(filter(None, (clean_text(record.get('Court Date')), clean_text(record.get('Time')))))
+    bond = clean_text(record.get('Bond'))
+    booking = Booking(
+        next_court_date=iso_datetime(court),
+        detention_status='sentenced' if arrest_type in ('SENTENCE', 'WEEKENDER') else None,
+        financial_hold=parse_money(bond) if bond else None,
+        hold_type='doc' if 'IDOC' in arrest_type else 'hold' if arrest_type == 'OUT OF COUNTY' else None,
+        charges=charges,
+        raw=record,
+    ).finish()
+    return Person(
+        county_person_key=clean_text(record.get('AC #')) or person_key(name),
+        name=name,
+        bookings=[booking],
+        raw=record,
+    )
 
 
 def normalize_lee(record: dict) -> Person:
