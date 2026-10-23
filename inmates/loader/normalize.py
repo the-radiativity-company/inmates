@@ -94,6 +94,41 @@ def normalize_adams(record: dict) -> Person:
     return Person(county_person_key=person_key(name), name=name, raw=record)
 
 
+def normalize_mmmicro(record: dict) -> Person:
+    """
+    a details-page record from the M&M Micro spider. 'Class' is the custody
+    classification (DETAINED BY JUDGE, DETAIN FOR HEARING 48 HRS, NO BOND,
+    DETAINABLE OFFENSE, CONVICTED FELON, HOLD FOR OTHER AGENCY); CONVICTED
+    reads as serving a sentence and the rest feed hold detection. Bond is a
+    bare number per charge, 0 meaning none.
+    """
+    name = clean_text(record.get('Name'))
+    race, _, sex = (clean_text(record.get('Race/Sex')) or '').partition('/')
+    custody_class = (clean_text(record.get('Class')) or '').upper()
+    entries = record.get('Charges') or []
+    charges = [charge_from_text(c.get('TCA Description')) for c in entries if clean_text(c.get('TCA Description'))]
+    bonds = [parse_money(c.get('Bond')) for c in entries]
+    court_dates = [iso_datetime(c.get('Court Date')) for c in entries]
+    booking = Booking(
+        booking_date=iso_datetime(record.get('Intake Date')),
+        next_court_date=max(filter(None, court_dates), default=None),
+        detention_status='sentenced' if 'CONVICTED' in custody_class else None,
+        financial_hold=max((b for b in bonds if b), default=0.0 if bonds else None),
+        hold_type=hold_type_for(custody_class, *(c.description for c in charges)),
+        charges=charges,
+        raw=record,
+    ).finish()
+    return Person(
+        county_person_key=clean_text(record.get('Id')) or person_key(name),
+        name=name,
+        age=parse_int(record.get('Age')),
+        sex=normalize_sex(sex),
+        race=normalize_race(race),
+        bookings=[booking],
+        raw=record,
+    )
+
+
 def normalize_newworld(record: dict) -> Person:
     """a detail-page record from the NewWorld InmateInquiry spider"""
     name = clean_text(record.get('Name'))
@@ -389,6 +424,7 @@ def normalize_generic(record: dict) -> Person:
 NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
     'lawrence': normalize_lawrence,
+    'mmmicro': normalize_mmmicro,
     'newworld': normalize_newworld,
     'randolph': normalize_randolph,
     'recordssearch': normalize_recordssearch,
