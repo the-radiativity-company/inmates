@@ -23,7 +23,8 @@ INMATES_DEBUG_MODE = bool(envvars.get('INMATES_DEBUG_MODE'))
 # timeout, 2 retries) let one dead county hold a scheduled run for most of an hour.
 DOWNLOAD_TIMEOUT = 30
 DNS_TIMEOUT = 15
-RETRY_TIMES = 1
+RETRY_TIMES = 4           # five attempts in all
+RETRY_BACKOFF_BASE = 2    # seconds before the first retry, doubled each time: 2, 4, 8, 16
 CLOSESPIDER_TIMEOUT = 900  # hard cap per spider, seconds
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -55,17 +56,12 @@ ROBOTSTXT_OBEY = False
 #   'Accept-Language': 'en',
 #}
 
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'inmates.scraper.middlewares.InmatesScraperSpiderMiddleware': 543,
-#}
 
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'inmates.scraper.middlewares.InmatesScraperDownloaderMiddleware': 543,
-#}
+# retries wait before trying again (see inmates.scraper.middlewares)
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+    'inmates.scraper.middlewares.BackoffRetryMiddleware': 550,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
