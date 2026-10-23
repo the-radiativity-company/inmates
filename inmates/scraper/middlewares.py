@@ -1,7 +1,11 @@
 """Downloader middleware: retries that wait before trying again."""
+import logging
 import random
 
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
+
+
+logger = logging.getLogger(__name__)
 
 
 class BackoffRetryMiddleware(RetryMiddleware):
@@ -35,11 +39,11 @@ class BackoffRetryMiddleware(RetryMiddleware):
             return 0.0
         return min(self.initial * 2 ** (attempt - 1) + self.uniform(0, self.jitter), self.max)
 
-    def process_request(self, request, spider):
+    def process_request(self, request):
         delay = self.delay_for(request)
         if not delay:
             return None
         from twisted.internet import reactor  # after Scrapy has installed its reactor
         from twisted.internet.task import deferLater
-        spider.logger.info('waiting %.1fs before retry %d of %s', delay, request.meta['retry_times'], request.url)
+        logger.info('waiting %.1fs before retry %d of %s', delay, request.meta['retry_times'], request.url)
         return deferLater(reactor, delay, lambda: None)

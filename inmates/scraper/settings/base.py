@@ -35,6 +35,9 @@ CLOSESPIDER_TIMEOUT = 900  # hard cap per spider, seconds
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+# some county sites answer a bot user agent with 404 or 403 (Lee's document center, Adams); browse like a browser
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
