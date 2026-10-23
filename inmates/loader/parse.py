@@ -15,6 +15,8 @@ MONEY_RE = re.compile(r'-?\d[\d,]*(?:\.\d+)?')
 
 DATETIME_FORMATS = (
     '%m/%d/%Y %I:%M %p',
+    '%m/%d/%Y @ %I:%M%p',
+    '%m/%d/%y',
     '%m/%d/%Y %H:%M',
     '%m/%d/%Y',
     '%m-%d-%Y - %I:%M %p',

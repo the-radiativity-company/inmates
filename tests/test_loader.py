@@ -189,3 +189,16 @@ def test_current_custody_view(conn):
         ('stclair', 'DOE JANE Q.', 'hold', 'warrant', '720 ILCS 5/9-1 FIRST DEGREE MURDER; 720 ILCS 5/32-10(A) IN STATE WARRANT'),
         ('will', 'DOE, JOHN', 'hold', 'out_of_state', 'FUGITIVE WARRANT; RETAIL THEFT'),
     ]
+
+
+def test_person_the_roster_lists_as_released_is_loaded_but_not_in_custody(conn):
+    gone = {'Name': 'GONE, GILLIAN', 'Subject Number': '10009', 'Age': '40', 'Gender': 'FEMALE', 'Race': 'WHITE',
+            'Bookings': [{'Booking Number': '2026-9', 'Booking Date': '10/01/2026 9:00 AM', 'Release Date': '10/21/2026 3:00 PM',
+                          'Prisoner Type': 'NEW CHARGES - ADULT', 'Bonds': [], 'Court Dates': [], 'Charges': []}]}
+    result = load_county(conn, 'macon', MACON + [gone], '2026-10-22T06:00:00', platform='newworld')
+    assert (result.loaded, result.released) == (3, 1)
+    assert conn.execute("SELECT in_custody FROM person WHERE county_person_key = '10009'").fetchone() == (0,)
+    assert conn.execute("SELECT COUNT(*) FROM booking b JOIN person p ON p.id = b.person_id WHERE p.county_person_key = '10009'").fetchone() == (1,)
+    assert 'GONE, GILLIAN' not in [row[0] for row in conn.execute('SELECT name FROM current_custody')]
+    assert conn.execute("SELECT COUNT(*) FROM current_custody WHERE county = 'macon'").fetchone() == (2,)
+

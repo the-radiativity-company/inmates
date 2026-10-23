@@ -101,12 +101,17 @@ def connect(path) -> sqlite3.Connection:
     return conn
 
 
+def still_held(person: Person) -> bool:
+    """a roster can list someone it has just released (McHenry keeps them a day or two); they are not in custody"""
+    return not person.bookings or any(b.release_date is None for b in person.bookings)
+
+
 def upsert_person(conn: sqlite3.Connection, county: str, person: Person, scraped_at: str, source_url: Optional[str]) -> int:
     row = conn.execute(
         """
         INSERT INTO person (county, county_person_key, name, dob, age, sex, race, facility,
                             in_custody, first_seen, last_seen, source_url, raw)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (county, county_person_key) DO UPDATE SET
             name       = excluded.name,
             dob        = COALESCE(excluded.dob, person.dob),
@@ -114,14 +119,14 @@ def upsert_person(conn: sqlite3.Connection, county: str, person: Person, scraped
             sex        = COALESCE(excluded.sex, person.sex),
             race       = COALESCE(excluded.race, person.race),
             facility   = excluded.facility,
-            in_custody = 1,
+            in_custody = excluded.in_custody,
             last_seen  = excluded.last_seen,
             source_url = excluded.source_url,
             raw        = excluded.raw
         RETURNING id
         """,
         (county, person.county_person_key, person.name, person.dob, person.age, person.sex,
-         person.race, person.facility, scraped_at, scraped_at, source_url, person.as_json()),
+         person.race, person.facility, int(still_held(person)), scraped_at, scraped_at, source_url, person.as_json()),
     ).fetchone()
     return row[0]
 
@@ -161,6 +166,8 @@ def load_county(
 
     Only a successful, non-empty scrape marks absent people as no longer in custody;
     an empty or missing scrape is treated as a scraper failure, not a mass release.
+    Someone the roster itself lists as released (every booking has a release date)
+    is loaded, kept, and counted as released, but not as in custody.
     Loads must be applied in chronological order of scraped_at.
     """
     if records is None:
@@ -178,12 +185,14 @@ def load_county(
         if status != 'ok':
             return RunResult(county, status, 0)
 
+        released = 0
         for record in records:
             person = normalize(county, record, platform)
             person_id = upsert_person(conn, county, person, scraped_at, source_url)
             replace_bookings(conn, person_id, person)
+            released += not still_held(person)
 
-        released = conn.execute(
+        released += conn.execute(
             'UPDATE person SET in_custody = 0 WHERE county = ? AND in_custody = 1 AND last_seen < ?',
             (county, scraped_at),
         ).rowcount

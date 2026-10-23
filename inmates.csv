@@ -50,7 +50,7 @@ Knox County,https://www.knoxcountysheriffil.com/,https://www.knoxcountysheriffil
 Lake County,https://www.lakecountyil.gov/,https://www.lakecountyil.gov/2032/Locate-an-Inmate,FALSE,,ok,2026-10-22,County site behind Cloudflare; the lookup tool behind this page is unverified. The 2020 search app is gone
 LaSalle County,https://lasallecounty.org/lasalle-county-jail-2/,https://isoms.lasallecounty.org/portal/Jail,FALSE,isoms,ok,2026-10-22,iSOMS portal lists everyone after a reCAPTCHA; also 24 and 72 hour intake/release lists
 Lawrence County,https://www.lawrencecsd.com/,https://www.lawrencecsd.com/LCIMTS.htm,FALSE,,ok,2026-10-22,"Single static HTML page of everyone in custody: name, age, race/sex, intake date, arresting agency, charges"
-Lee County,https://www.leecountyil.com/index.php?option=com_content&view=article&id=37&Itemid=159,https://www.leecountyil.com/DocumentCenter/View/2814,TRUE,,ok,2026-10-22,"Scanned image PDF (2 pages) of the jail list, needs OCR; View/2815 is the last 7 days of arrests"
+Lee County,https://www.leecountyil.com/index.php?option=com_content&view=article&id=37&Itemid=159,https://www.leecountyil.com/DocumentCenter/View/2814,TRUE,,ok,2026-10-22,"Text PDF of the current inmate list: name and booking number only, dated; View/2815 is the last 7 days of arrests"
 Livingston County,https://www.livingstoncountyil.gov/department/jail/index.php,,FALSE,,none,,"No roster; jail page links only to IDOC search and visitation. The 2026-10 link (livcoso.org) was Livingston County, Missouri"
 Logan County,,,,,none,,VINELink only (name search); no roster as of 2026-10
 Macon County,,http://50.77.170.147/NewWorld.InmateInquiry/IL0580000,FALSE,newworld,ok,2026-10-22,"NewWorld inquiry; InCustody=True lists everyone; [' 100 per page', ' with a detail page per person']"
@@ -61,7 +61,7 @@ Marshall County,,,,,none,,
 Mason County,,,,,none,,
 Massac County,http://massacsheriffsdept.com/,https://massacsheriffsdept.com/inmate-listing.html,FALSE,,http 500,2026-10-22,Listing page returns HTTP 500; homepage advertises a mobile app with current inmate information
 McDonough County,https://www.mcdonoughcountysheriff.com/,https://mcdonough-911-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,"Zuercher portal found by probing <county>-911-il.zuercherportal.com; no arrest dates, statutes in ""Converted Statute"" form"
-McHenry County,https://www.mchenrysheriff.org/,https://www.mchenrysheriff.org/wp-content/uploads/pdf-uploads/InmateSearch_ByName.pdf,TRUE,,ok,2026-10-22,"PDF updated every hour, excludes federal detainees; sibling InmateSearch_ByDate.pdf"
+McHenry County,https://www.mchenrysheriff.org/,https://www.mchenrysheriff.org/wp-content/uploads/pdf-uploads/InmateSearch_ByName.pdf,TRUE,,ok,2026-10-22,"Hourly text PDF, one block per person with DOB, bond, hold flag, and a charges table with court status, class, case, next court date; excludes federal detainees; sibling InmateSearch_ByDate.pdf"
 McLean County,,,,,none,,
 Menard County,https://menardcountyil.com/elected-officials/sh/,https://menard-911-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,Zuercher portal launched 2026 (sheriff site announces it); hold reasons carry held-for agency and bond notes
 Mercer County,http://mercercosheriff.org/index.html,,,,none,,its just a really bad website and I wanted someone to see it
@@ -81,7 +81,7 @@ Randolph County,https://randolphcountyil.gov/sheriff/current-inmate-listing/,htt
 Richland County,http://www.richlandcso.com/default.htm,http://www.richlandcso.com/aaa%20DETAINEES%20IN%20CUSTODY.htm,FALSE,,ok,2026-10-22,text uodates daily
 Rock Island County,https://www.rockislandcountyil.gov/318/Sheriffs-Office,https://rockisland-911-il.zuercherportal.com/#/inmates,FALSE,zuercher,ok,2026-10-22,"Zuercher portal; POST api/portal/inmates/load with empty name lists everyone (name, age, race, sex, arrest date, charges, hold reasons)"
 Saline County,,,,,none,,VINELink only (name search); no roster as of 2026-10
-Sangamon County,,https://www.sangamoncounty-sheriff.com/resources/994c3fa6-c810-4057-8620-316fd9d415c7/printingreport.pdf?trackid=printingreport.pdf,TRUE,,ok,2026-10-22,huge pdf
+Sangamon County,https://sangamonil.gov/departments/s-z/sheriff/,https://sangamonil.gov/departments/s-z/sheriff/inmate-roster,FALSE,,ok,2026-10-22,"The old printingreport.pdf is now a one-page notice pointing here. DNN ActionGrid roster: POST DesktopModules/DnnSharp/ActionGrid/Api.ashx?method=GetData&_mid=9990&_tabid=2618&page=N, 20 per page, with name, booking number and time, prisoner type; details page per SCinmateId"
 Schuyler County,https://schuylersheriffredshaw.godaddysites.com/,,FALSE,ocv,none,,Moving to the sheriff mobile app; the 2020 domain is squatted
 Scott County,,,,,none,,No jail (Illinois Sheriffs Association directory)
 Shelby County,,,,,none,,

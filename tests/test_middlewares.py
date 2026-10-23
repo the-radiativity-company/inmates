@@ -1,6 +1,5 @@
 """The backoff retry middleware, exercised without a reactor."""
 from scrapy import Request
-from scrapy import Spider
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 
@@ -22,7 +21,7 @@ def test_first_attempt_goes_straight_out_and_retries_wait_twice_as_long_each_tim
     retry = middleware()
     assert retry.delay_for(Request('http://x/')) == 0
     assert [retry.delay_for(retried(n)) for n in (1, 2, 3, 4)] == [3, 5, 9, 17]
-    assert retry.process_request(Request('http://x/'), Spider('x')) is None
+    assert retry.process_request(Request('http://x/')) is None
 
 
 def test_jitter_is_a_random_slice_of_its_setting_and_the_cap_wins():

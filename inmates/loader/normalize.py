@@ -94,6 +94,66 @@ def normalize_adams(record: dict) -> Person:
     return Person(county_person_key=person_key(name), name=name, raw=record)
 
 
+def normalize_lee(record: dict) -> Person:
+    """a row of the sheriff's PDF inmate list: a name and a booking number, nothing more"""
+    name = clean_text(record.get('Name'))
+    number = clean_text(record.get('Booking #'))
+    booking = Booking(booking_number=number, raw=record).finish()
+    return Person(county_person_key=number or person_key(name), name=name, bookings=[booking], raw=record)
+
+
+MCHENRY_SENTENCED = ('SENTENCED', 'SENT TO PRISON', 'REMAND FOR SENTENCE', 'END OF SENTENCE')
+MCHENRY_CLOSED = ('DISMISSED', 'NOLLE PROS', 'RELEASED AT COURT')
+MCHENRY_RELEASED = re.compile(r'RECENTLY RELEASED ON\s+(?P<when>[\d/]+\s*@\s*[\d:]+\s*[AP]M)', re.I)
+
+
+def normalize_mchenry(record: dict) -> Person:
+    """
+    a block of the sheriff's in-custody PDF. Each charge carries a court
+    status; a person whose live charges (not dismissed, nolle prossed, or
+    released at court) are all sentenced is serving a sentence. The report
+    keeps people released in the last day or two with their release time in
+    the custody line. 'No Bond At This Time' is a 0.0 hold; 'Bond Is Set At
+    $x' is x. The hold flag names no agency, so it is a plain hold.
+    """
+    name = clean_text(record.get('Name'))
+    custody = clean_text(record.get('Custody')) or ''
+    released = MCHENRY_RELEASED.search(custody)
+    charges = []
+    live = []
+    for c in record.get('Charges') or []:
+        status = (clean_text(c.get('Status')) or '').upper()
+        charge = Charge(
+            description=clean_text(c.get('Charge')),
+            offense_class=clean_text(c.get('Class')),
+            docket_number=clean_text(c.get('Case #')),
+        )
+        charges.append(charge)
+        if not status.startswith(MCHENRY_CLOSED):
+            live.append(status)
+    court_dates = [iso_datetime(c.get('Next Court Date')) for c in record.get('Charges') or []]
+    bond = clean_text(record.get('Bond'))
+    booking = Booking(
+        booking_number=clean_text(record.get('JCA#')),
+        booking_date=iso_datetime(record.get('Date Confined')),
+        release_date=iso_datetime(released.group('when')) if released else None,
+        next_court_date=max(filter(None, court_dates), default=None),
+        detention_status='sentenced' if live and all(s.startswith(MCHENRY_SENTENCED) for s in live) and not released else None,
+        financial_hold=parse_money(bond) if bond and bond.startswith('Bond Is Set') else 0.0 if bond else None,
+        hold_type='hold' if record.get('Hold') else None,
+        charges=charges,
+        raw=record,
+    ).finish()
+    return Person(
+        county_person_key=clean_text(record.get('JCA#')) or person_key(name, iso_date(record.get('Date Confined'))),
+        name=name,
+        dob=iso_date(record.get('Date of Birth')),
+        age=parse_int(record.get('Age')),
+        bookings=[booking],
+        raw=record,
+    )
+
+
 def normalize_mmmicro(record: dict) -> Person:
     """
     a details-page record from the M&M Micro spider. 'Class' is the custody
@@ -447,6 +507,8 @@ NORMALIZERS: Dict[str, Callable[[dict], Person]] = {
     'adams': normalize_adams,
     'jasper': normalize_jasper,
     'lawrence': normalize_lawrence,
+    'lee': normalize_lee,
+    'mchenry': normalize_mchenry,
     'mmmicro': normalize_mmmicro,
     'newworld': normalize_newworld,
     'randolph': normalize_randolph,
