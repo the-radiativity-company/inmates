@@ -1,0 +1,165 @@
+{
+ "query": {
+  "PageIndex": 1,
+  "PageSize": 2
+ },
+ "totalResults": 3,
+ "totalPages": 2,
+ "firstResult": 0,
+ "results": [
+  {
+   "id": "265929",
+   "fields": [
+    {
+     "Name": "FirstName",
+     "Value": "JANE",
+     "FormattedValue": "JANE",
+     "Title": "FirstName"
+    },
+    {
+     "Name": "MIddleName",
+     "Value": "Q",
+     "FormattedValue": "Q",
+     "Title": "MIddleName"
+    },
+    {
+     "Name": "LastName",
+     "Value": "DOE",
+     "FormattedValue": "<p><a href=\"/details?SCinmateId=265929\">DOE</a></p>",
+     "Title": "LastName"
+    },
+    {
+     "Name": "BookingNumber",
+     "Value": "2026-00006018",
+     "FormattedValue": "2026-00006018",
+     "Title": "BookingNumber"
+    },
+    {
+     "Name": "City",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "City"
+    },
+    {
+     "Name": "State",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "State"
+    },
+    {
+     "Name": "PrisonerType",
+     "Value": "Felony",
+     "FormattedValue": "Felony",
+     "Title": "PrisonerType"
+    },
+    {
+     "Name": "BookingDateTime",
+     "Value": "2026-10-22T00:57:19Z",
+     "FormattedValue": "2026-10-22T00:57:19Z",
+     "Title": "BookingDateTime"
+    },
+    {
+     "Name": "ReleaseDateTime",
+     "Value": "Not Given",
+     "FormattedValue": "Not Given",
+     "Title": "ReleaseDateTime"
+    },
+    {
+     "Name": "ScheduledReleaseDateTime",
+     "Value": "Not Given",
+     "FormattedValue": "Not Given",
+     "Title": "ScheduledReleaseDateTime"
+    },
+    {
+     "Name": "PhotoURL",
+     "Value": null,
+     "FormattedValue": "/portals/0/x.jpg",
+     "Title": "PhotoURL"
+    },
+    {
+     "Name": "FirstMiddleName",
+     "Value": null,
+     "FormattedValue": "JANE Q",
+     "Title": "FirstMiddleName"
+    }
+   ]
+  },
+  {
+   "id": "265933",
+   "fields": [
+    {
+     "Name": "FirstName",
+     "Value": "RICHARD",
+     "FormattedValue": "RICHARD",
+     "Title": "FirstName"
+    },
+    {
+     "Name": "MIddleName",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "MIddleName"
+    },
+    {
+     "Name": "LastName",
+     "Value": "ROE",
+     "FormattedValue": "<p><a href=\"/details?SCinmateId=265933\">ROE</a></p>",
+     "Title": "LastName"
+    },
+    {
+     "Name": "BookingNumber",
+     "Value": "2026-00006010",
+     "FormattedValue": "2026-00006010",
+     "Title": "BookingNumber"
+    },
+    {
+     "Name": "City",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "City"
+    },
+    {
+     "Name": "State",
+     "Value": "",
+     "FormattedValue": "",
+     "Title": "State"
+    },
+    {
+     "Name": "PrisonerType",
+     "Value": "Misdemeanor",
+     "FormattedValue": "Misdemeanor",
+     "Title": "PrisonerType"
+    },
+    {
+     "Name": "BookingDateTime",
+     "Value": "2026-10-20T13:05:00Z",
+     "FormattedValue": "2026-10-20T13:05:00Z",
+     "Title": "BookingDateTime"
+    },
+    {
+     "Name": "ReleaseDateTime",
+     "Value": "Not Given",
+     "FormattedValue": "Not Given",
+     "Title": "ReleaseDateTime"
+    },
+    {
+     "Name": "ScheduledReleaseDateTime",
+     "Value": "Not Given",
+     "FormattedValue": "Not Given",
+     "Title": "ScheduledReleaseDateTime"
+    },
+    {
+     "Name": "PhotoURL",
+     "Value": null,
+     "FormattedValue": "/portals/0/x.jpg",
+     "Title": "PhotoURL"
+    },
+    {
+     "Name": "FirstMiddleName",
+     "Value": null,
+     "FormattedValue": "RICHARD",
+     "Title": "FirstMiddleName"
+    }
+   ]
+  }
+ ]
+}
